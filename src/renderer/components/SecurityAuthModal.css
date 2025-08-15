@@ -1,0 +1,315 @@
+/* SecurityAuthModal Desktop Styles - 화이트 계열 유지 */
+
+.security-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.security-modal-container {
+  background: #ffffff;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 모달 헤더 */
+.security-modal-header {
+  display: flex;
+  align-items: center;
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.security-modal-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  color: #ff9500;
+}
+
+.security-modal-title {
+  flex: 1;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.security-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #86868b;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.security-modal-close:hover {
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+/* 모달 내용 */
+.security-modal-content {
+  padding: 24px;
+}
+
+.security-memo-info {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.security-memo-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0 0 8px 0;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #ff9500;
+}
+
+.security-description {
+  font-size: 14px;
+  color: #86868b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 에러 메시지 */
+.security-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.error-icon {
+  font-size: 16px;
+  color: #ff3b30;
+}
+
+.error-text {
+  font-size: 14px;
+  color: #ff3b30;
+  flex: 1;
+}
+
+/* 입력 그룹 */
+.security-input-group {
+  margin-bottom: 24px;
+}
+
+.security-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.security-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d2d2d7;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1d1d1f;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.security-input:focus {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.security-input:disabled {
+  background: #f5f5f7;
+  color: #86868b;
+  cursor: not-allowed;
+}
+
+.security-input::placeholder {
+  color: #86868b;
+}
+
+/* 모달 푸터 */
+.security-modal-footer {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px 24px 24px;
+}
+
+.security-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border: 1px solid #d2d2d7;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.security-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.security-btn-cancel {
+  background: #ffffff;
+  color: #86868b;
+  border-color: #d2d2d7;
+}
+
+.security-btn-cancel:hover:not(:disabled) {
+  background: #f5f5f7;
+  color: #1d1d1f;
+}
+
+.security-btn-auth {
+  background: #007AFF;
+  color: #ffffff;
+  border-color: #007AFF;
+}
+
+.security-btn-auth:hover:not(:disabled) {
+  background: #0051D0;
+  border-color: #0051D0;
+}
+
+.security-btn-auth:disabled {
+  background: #86868b;
+  border-color: #86868b;
+}
+
+/* 인증 스피너 */
+.auth-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 도움말 */
+.security-help {
+  padding: 0 24px 20px 24px;
+  text-align: center;
+}
+
+.security-help small {
+  color: #86868b;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .security-modal-container {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .security-modal-header {
+    padding: 20px 20px 16px 20px;
+  }
+  
+  .security-modal-content {
+    padding: 20px;
+  }
+  
+  .security-modal-footer {
+    padding: 0 20px 20px 20px;
+    flex-direction: column;
+  }
+  
+  .security-btn {
+    width: 100%;
+  }
+  
+  .security-help {
+    padding: 0 20px 16px 20px;
+  }
+}
+
+/* 접근성 개선 */
+.security-modal-overlay:focus {
+  outline: none;
+}
+
+.security-input:focus {
+  outline: none;
+}
+
+.security-btn:focus {
+  outline: 2px solid #007AFF;
+  outline-offset: 2px;
+}
+
+/* 다크 모드 대응 (향후 확장용) */
+@media (prefers-color-scheme: dark) {
+  /* 현재는 화이트 계열 유지하므로 주석 처리 */
+  /*
+  .security-modal-container {
+    background: #2c2c2e;
+    color: #ffffff;
+  }
+  */
+}

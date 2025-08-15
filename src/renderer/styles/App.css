@@ -1,0 +1,512 @@
+/* MemoBee Desktop - App Styles */
+
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 로딩 화면 ===== */
+.app-loading {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f7;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top: 3px solid #007AFF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 24px auto;
+}
+
+.loading-content h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.loading-content p {
+  font-size: 16px;
+  color: #86868b;
+  margin-bottom: 16px;
+}
+
+.connection-status {
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.connection-status span {
+  padding: 6px 12px;
+  border-radius: 16px;
+  display: inline-block;
+}
+
+.app-info {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  font-size: 12px;
+  color: #86868b;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== 로그인 화면 ===== */
+.login-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 모바일 AuthScreen과 동일한 그라디언트 배경 */
+  background: linear-gradient(135deg, #AD9BFF 0%, #C4B5FD 50%, #E0E7FF 100%);
+  /* 애니메이션 효과 추가 */
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.login-content {
+  /* 모바일 AuthScreen과 동일한 글래스모피즘 스타일 */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 48px;
+  /* 개선된 그림자 효과 */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 1px 8px rgba(0, 0, 0, 0.05);
+  width: 420px;
+  text-align: center;
+  /* 부드러운 애니메이션 */
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-logo h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  /* 모바일과 동일한 흰색 텍스트 + 그림자 */
+  color: white;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.app-logo p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  /* 글래스모피즘 배경에서 잘 보이는 색상 */
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.login-form p {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+  background: rgba(255, 59, 48, 0.1);
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.error-message p {
+  color: #ff3b30;
+  font-size: 14px;
+  margin: 0;
+}
+
+.error-message button {
+  background: none;
+  border: none;
+  color: #ff3b30;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-message button:hover {
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  /* 모바일과 동일한 글래스모피즘 스타일 */
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(0, 0, 0, 0.8);
+  gap: 12px;
+  cursor: pointer;
+  /* 모바일과 동일한 그림자 효과 */
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.login-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 3px 8px rgba(0, 0, 0, 0.1),
+    0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.login-btn:disabled:hover {
+  background: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.8);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Google 버튼 특화 스타일 */
+.google-btn:hover {
+  background: #4285f4 !important;
+  color: white !important;
+  border-color: #4285f4 !important;
+  box-shadow: 
+    0 6px 16px rgba(66, 133, 244, 0.3),
+    0 2px 8px rgba(66, 133, 244, 0.15) !important;
+}
+
+.google-btn:active {
+  background: #3367d6 !important;
+}
+
+/* Apple 버튼 특화 스타일 */
+.apple-btn:hover {
+  background: #000 !important;
+  color: white !important;
+  border-color: #000 !important;
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.apple-btn:active {
+  background: #333 !important;
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+.login-footer {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 1.4;
+  margin-top: 16px;
+}
+
+.login-footer a {
+  color: rgba(0, 0, 0, 0.7);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ===== 메인 데스크톱 레이아웃 ===== */
+.app-container.authenticated {
+  background: #f5f5f7;
+}
+
+.desktop-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* ===== 사이드바 ===== */
+.sidebar {
+  width: 240px;
+  background: #f8f9fa;
+  border-right: 1px solid #d1d1d6;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-shadow: inset -1px 0 0 0 rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-header {
+  padding: 16px 20px 12px 20px;
+  border-bottom: 1px solid #d1d1d6;
+  background: #f0f0f0;
+}
+
+.sidebar-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+  text-align: center;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+}
+
+.sidebar-nav li {
+  margin-bottom: 4px;
+}
+
+.sidebar-nav button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #424242;
+  text-align: left;
+  transition: all 0.15s ease;
+  gap: 10px;
+  border-radius: 4px;
+  margin: 0 8px;
+}
+
+.sidebar-nav button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-nav li.active button {
+  background: #007AFF;
+  color: white;
+  font-weight: 600;
+}
+
+.sidebar-nav .icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 8px 0 16px 0;
+  border-top: 1px solid #d1d1d6;
+  background: #f0f0f0;
+}
+
+.settings-btn,
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  font-size: 13px;
+  color: #424242;
+  text-align: left;
+  transition: all 0.15s ease;
+  gap: 10px;
+  border-radius: 4px;
+  margin: 2px 8px;
+}
+
+.settings-btn:hover,
+.logout-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.logout-btn {
+  color: #ff3b30;
+  margin-top: 4px;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 59, 48, 0.08);
+}
+
+/* ===== 메인 콘텐츠 영역 ===== */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content.full-page {
+  /* MemoList가 전체 화면을 차지하는 페이지 */
+  padding: 0;
+}
+
+.page-content.with-header {
+  /* 헤더가 있는 일반 페이지 */
+}
+
+.page-header {
+  padding: 20px 32px 16px 32px;
+  border-bottom: 1px solid #e5e5e7;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.page-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.page-body {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+}
+
+.page-content h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1d1d1f;
+}
+
+.page-content p {
+  font-size: 16px;
+  color: #86868b;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.placeholder-content {
+  background: #f5f5f7;
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.placeholder-content h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.placeholder-content p {
+  font-size: 16px;
+  color: #86868b;
+}
+
+/* ===== 반응형 레이아웃 ===== */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px;
+  }
+  
+  .content-body {
+    padding: 20px 24px;
+  }
+}
+
+/* ===== 다크 모드 대응 (나중에 구현) ===== */
+@media (prefers-color-scheme: dark) {
+  /* 다크 모드 스타일은 나중에 추가 */
+}

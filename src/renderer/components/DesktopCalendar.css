@@ -1,0 +1,264 @@
+/* DesktopCalendar.css - 데스크탑용 달력 스타일 */
+
+.desktop-calendar {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  /* 사용 가능한 공간을 최대한 활용 */
+  height: 100%;
+  width: 100%;
+  /* 컨텐츠가 넘칠 때 스크롤 */
+  overflow: auto;
+  /* flex 컨테이너로 설정하여 내부 요소들을 정렬 */
+  display: flex;
+  flex-direction: column;
+  /* 달력을 위한 최소 높이 설정 */
+  min-height: 500px;
+}
+
+/* 달력 헤더 */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.month-navigation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.month-navigation button {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #495057;
+  transition: all 0.2s ease;
+}
+
+.month-navigation button:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+  transform: scale(1.1);
+}
+
+.month-year h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #333;
+  min-width: 180px;
+  text-align: center;
+}
+
+.today-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.today-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+  background: linear-gradient(135deg, #0056b3, #003d82);
+}
+
+/* 요일 헤더 */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin-bottom: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px 8px;
+}
+
+.weekday {
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #495057;
+  padding: 8px 4px;
+}
+
+.weekday.sunday {
+  color: #dc3545;
+}
+
+.weekday.saturday {
+  color: #007bff;
+}
+
+/* 달력 그리드 */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  background: #f8f9fa;
+  padding: 2px;
+  border-radius: 8px;
+  flex: 1; /* 남은 공간을 모두 차지 */
+  min-height: 0; /* flex 아이템이 축소될 수 있도록 */
+  /* 달력 그리드 높이 최적화 */
+  max-height: calc(100vh - 200px); /* 헤더, 여백을 위한 공간 확보 */
+}
+
+.calendar-day {
+  background: white;
+  /* 동적 높이 설정 - 그리드 공간에 맞게 조정 */
+  min-height: 70px; /* 6주 달력을 위해 최소 높이 줄임 */
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  /* 그리드 셀이 균등한 높이를 갖도록 */
+  aspect-ratio: 1 / 1.1; /* 가로:세로 비율 조정 - 더 좁게 */
+}
+
+.calendar-day:hover {
+  background: #e3f2fd;
+  transform: scale(1.02);
+}
+
+.calendar-day.other-month {
+  background: #f8f9fa;
+  color: #adb5bd;
+}
+
+.calendar-day.other-month:hover {
+  background: #e9ecef;
+}
+
+.calendar-day.today {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border: 2px solid #ffc107;
+  font-weight: 700;
+}
+
+.calendar-day.today .day-number {
+  color: #856404;
+}
+
+.calendar-day.selected {
+  background: linear-gradient(135deg, #cfe2ff, #b6d7ff);
+  border: 2px solid #007bff;
+  transform: scale(1.05);
+}
+
+.calendar-day.selected .day-number {
+  color: #0d47a1;
+  font-weight: 700;
+}
+
+.calendar-day.has-schedules {
+  background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+}
+
+.calendar-day.has-schedules:hover {
+  background: linear-gradient(135deg, #e8f5e8, #d4edda);
+}
+
+.day-number {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+  align-self: flex-start;
+  line-height: 1;
+}
+
+/* 일정 아이템들 (텍스트) */
+.schedule-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 100%;
+  flex: 1;
+  margin-top: 2px;
+}
+
+.schedule-item-mini {
+  font-size: 9px;
+  font-weight: 500;
+  padding: 1px 4px;
+  border-radius: 2px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-item-more {
+  font-size: 8px;
+  font-weight: 600;
+  padding: 1px 4px;
+  background: #999999;
+  color: white;
+  border-radius: 2px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* 일정 개수 배지는 제거 - 텍스트로 대체됨 */
+
+
+/* 데스크톱 전용 앱이므로 반응형 스타일 제거 */
+
+/* 애니메이션 */
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.calendar-day.selected {
+  animation: popIn 0.2s ease-out;
+}
+
+/* 접근성 */
+.calendar-day:focus {
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
+.calendar-day[aria-pressed="true"] {
+  background: linear-gradient(135deg, #cfe2ff, #b6d7ff);
+}
+
+/* 데스크톱 전용 앱이므로 다크모드 자동 감지 제거 - 필요시 수동으로 테마 전환 구현 */
+/* 데스크톱 전용 앱이므로 모바일 반응형 스타일 제거 */

@@ -1,0 +1,471 @@
+/* HybridEditor Desktop Styles - 화이트 계열 유지 */
+
+.hybrid-editor {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  overflow-y: auto;
+}
+
+
+
+/* 에디터 블록 */
+.editor-block {
+  margin-bottom: 16px;
+}
+
+.editor-block:last-child {
+  margin-bottom: 0;
+}
+
+/* 텍스트 블록 */
+.text-block {
+  width: 100%;
+}
+
+.text-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 12px 16px;
+  border: 1px solid #e5e5e7;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1d1d1f;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  resize: none;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.text-input:focus,
+.text-input.focused {
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.text-input::placeholder {
+  color: #86868b;
+}
+
+.text-input:read-only {
+  background: #f8f9fa;
+  cursor: default;
+}
+
+/* 이미지 블록 */
+.image-block {
+  width: 100%;
+  margin: 16px 0;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fa;
+  min-height: 200px;
+}
+
+.image-container img {
+  display: block;
+  border-radius: 8px 8px 0 0;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.image-container img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  color: #86868b;
+}
+
+.placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.placeholder-icon {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+.placeholder-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.image-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-top: 1px solid #f0f0f0;
+}
+
+.image-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+  flex: 1;
+}
+
+.image-size {
+  font-size: 12px;
+  color: #86868b;
+  margin-left: 8px;
+}
+
+/* 파일 블록 */
+.file-block {
+  width: 100%;
+  margin: 16px 0;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+}
+
+.file-icon {
+  font-size: 24px;
+  color: #007AFF;
+  min-width: 32px;
+  text-align: center;
+}
+
+.file-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+  word-break: break-all;
+  margin-bottom: 4px;
+}
+
+.file-size {
+  font-size: 12px;
+  color: #86868b;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 공통 버튼 스타일 */
+.delete-block-btn,
+.download-btn {
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: #f5f5f7;
+  color: #86868b;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+  min-width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-block-btn:hover {
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
+}
+
+.download-btn:hover {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007AFF;
+}
+
+.delete-block-btn:active,
+.download-btn:active {
+  transform: scale(0.95);
+}
+
+/* 에디터 도움말 */
+.editor-help {
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.editor-help small {
+  color: #86868b;
+  font-size: 12px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .hybrid-editor {
+    padding: 16px;
+  }
+  
+  .text-input {
+    font-size: 16px; /* iOS에서 줌 방지 */
+  }
+  
+  .image-container {
+    min-height: 150px;
+  }
+  
+  .file-info {
+    padding: 12px;
+  }
+  
+  .file-name {
+    font-size: 13px;
+  }
+}
+
+/* 스크롤바 스타일 (WebKit 기반 브라우저) */
+.hybrid-editor::-webkit-scrollbar {
+  width: 8px;
+}
+
+.hybrid-editor::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.hybrid-editor::-webkit-scrollbar-thumb {
+  background: #d2d2d7;
+  border-radius: 4px;
+}
+
+.hybrid-editor::-webkit-scrollbar-thumb:hover {
+  background: #86868b;
+}
+
+/* 포커스 상태 개선 */
+.text-input:focus {
+  outline: none;
+}
+
+/* 애니메이션 */
+.editor-block {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 읽기 전용 모드 */
+.hybrid-editor[data-readonly="true"] .text-input {
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.hybrid-editor[data-readonly="true"] .delete-block-btn,
+.hybrid-editor[data-readonly="true"] .editor-help {
+  display: none;
+}/* 드래그 앤
+ 드롭 스타일 */
+.hybrid-editor.drag-over {
+  position: relative;
+  border: 2px dashed #007AFF;
+  background: rgba(0, 122, 255, 0.05);
+}
+
+.drag-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 122, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border-radius: 8px;
+}
+
+.drag-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 122, 255, 0.2);
+  border: 2px dashed #007AFF;
+}
+
+.drag-icon {
+  font-size: 48px;
+  opacity: 0.8;
+}
+
+.drag-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #007AFF;
+}
+
+/* 업로드 로딩 오버레이 */
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  border-radius: 8px;
+}
+
+.upload-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e5e7;
+}
+
+.upload-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f0f0f0;
+  border-top: 3px solid #007AFF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.upload-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+}
+
+/* 파일 메타데이터 개선 */
+.file-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.file-type {
+  font-size: 10px;
+  color: #86868b;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* 파일 아이콘 크기 조정 */
+.file-icon {
+  font-size: 28px;
+  color: #007AFF;
+  min-width: 36px;
+  text-align: center;
+}
+
+/* 업로드 중 상태 */
+.hybrid-editor.uploading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* 반응형 개선 */
+@media (max-width: 768px) {
+  .drag-message {
+    padding: 20px;
+  }
+  
+  .drag-icon {
+    font-size: 36px;
+  }
+  
+  .drag-text {
+    font-size: 14px;
+  }
+  
+  .upload-message {
+    padding: 20px;
+  }
+  
+  .editor-help small {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+}
+
+/* 접근성 개선 */
+.drag-overlay,
+.upload-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* 파일 블록 호버 효과 */
+.file-block:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.image-block:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}

@@ -1,0 +1,334 @@
+/* ImageModal.css - 이미지 확대 보기 모달 스타일 */
+
+.image-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+.image-modal-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* 상단 툴바 */
+.image-modal-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-modal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.image-name {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.image-scale {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+
+.image-modal-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.control-btn {
+  min-width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  user-select: none;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.control-btn.close-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.control-btn.close-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* 벡터 스타일 아이콘들 */
+.btn-icon {
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+}
+
+.btn-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 확대 아이콘 */
+.icon-zoom-in::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+}
+
+.icon-zoom-in::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 2px;
+  background: currentColor;
+  top: 5px;
+  left: 3px;
+  box-shadow: 
+    0 -2px 0 0 currentColor,
+    0 2px 0 0 currentColor;
+}
+
+/* 축소 아이콘 */
+.icon-zoom-out::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+}
+
+.icon-zoom-out::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 2px;
+  background: currentColor;
+  top: 5px;
+  left: 3px;
+}
+
+/* 리셋 아이콘 (target/crosshair) */
+.icon-reset::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+}
+
+.icon-reset::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  top: 6px;
+  left: 6px;
+  background: currentColor;
+}
+
+/* 닫기 아이콘 */
+.icon-close::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  top: 7px;
+  left: 2px;
+  transform: rotate(45deg);
+}
+
+.icon-close::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 2px;
+  background: currentColor;
+  top: 7px;
+  left: 2px;
+  transform: rotate(-45deg);
+}
+
+/* 이미지 컨테이너 */
+.image-modal-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-modal-content img {
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: white;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* 로딩 상태 */
+.image-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: white;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 하단 도움말 */
+.image-modal-help {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.image-modal-help span {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(5px);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .image-modal-toolbar {
+    padding: 0 15px;
+    height: 50px;
+  }
+  
+  .control-btn {
+    min-width: 35px;
+    height: 35px;
+    font-size: 11px;
+    padding: 0 8px;
+  }
+  
+  .btn-icon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .image-modal-content {
+    padding: 60px 15px 50px;
+  }
+  
+  .image-modal-help {
+    height: 40px;
+  }
+  
+  .image-modal-help span {
+    font-size: 11px;
+    padding: 0 10px;
+  }
+}
+
+/* 다크모드 대응 */
+@media (prefers-color-scheme: dark) {
+  .image-modal-content img {
+    background: rgba(255, 255, 255, 0.95);
+  }
+}
+
+/* 고해상도 디스플레이 최적화 */
+@media (min-resolution: 2dppx) {
+  .image-modal-content img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

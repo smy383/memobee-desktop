@@ -1,0 +1,792 @@
+{
+  "app": {
+    "name": "MemoBee",
+    "welcome": "MemoBee Desktopへようこそ！",
+    "subtitle": "macOS用スマートメモアプリ"
+  },
+  "auth": {
+    "welcome_title": "MemoBeeへようこそ",
+    "welcome_message": "続行するにはログインしてください",
+    "google_login": "Googleで続行",
+    "apple_login": "Appleで続行（開発中）",
+    "logging_in": "ログイン中...",
+    "logout": "ログアウト",
+    "features": {
+      "firebase_auth": "Firebase Google認証",
+      "auto_login": "自動ログインサポート",
+      "secure_oauth": "安全なOAuth 2.0"
+    },
+    "checking_auth": "Firebase認証を確認中..."
+  },
+  "menu": {
+    "memo": "メモ",
+    "schedule": "スケジュール",
+    "todo": "タスク",
+    "security": "セキュリティ",
+    "analytics": "分析",
+    "share": "共有",
+    "files": "ファイル",
+    "links": "リンク",
+    "trash": "ゴミ箱",
+    "support": "サポート",
+    "settings": "設定"
+  },
+  "memo": {
+    "new_memo": "新しいメモ",
+    "title_placeholder": "メモタイトル",
+    "content_placeholder": "メモの内容を入力...",
+    "no_title": "無題",
+    "loading": "メモを読み込み中...",
+    "welcome_title": "MemoBee Desktopへようこそ！",
+    "welcome_message": "左からメモを選択するか、新しいメモを作成してください。",
+    "load_error": "メモの読み込みに失敗しました。ネットワーク接続を確認してください。",
+    "save_error": "メモの保存に失敗しました。",
+    "create_error": "新しいメモの作成に失敗しました。",
+    "add_favorite": "お気に入りに追加",
+    "remove_favorite": "お気に入りから削除",
+    "delete_memo": "メモを削除",
+    "save": "保存",
+    "saving": "保存中...",
+    "save_completed": "保存完了！"
+  },
+  "schedule": {
+    "new_schedule": "新しいスケジュール",
+    "title": "スケジュール管理",
+    "welcome_message": "左からスケジュールを選択してください。", 
+    "loading": "スケジュールを読み込み中...",
+    "categories": {
+      "work": "仕事",
+      "personal": "個人",
+      "appointment": "約束",
+      "meeting": "会議", 
+      "other": "その他"
+    },
+    "statuses": {
+      "upcoming": "予定",
+      "completed": "完了",
+      "cancelled": "キャンセル"
+    },
+    "filters": {
+      "filter": "フィルター",
+      "reset": "リセット",
+      "category": "カテゴリ",
+      "status": "ステータス",
+      "all": "すべて",
+      "hide_completed": "完了したスケジュールを非表示"
+    },
+    "time": {
+      "all_day": "終日",
+      "time_undecided": "時間未定",
+      "today": "今日",
+      "tomorrow": "明日"
+    },
+    "all_day": "終日",
+    "dashboard": {
+      "title": "ダッシュボード",
+      "calendar": "カレンダー",
+      "total": "総数",
+      "upcoming": "予定",
+      "completed": "完了",
+      "cancelled": "キャンセル",
+      "this_week": "今週",
+      "this_month": "今月",
+      "recent_schedules": "最近のスケジュール",
+      "this_week_count": "今週: {{count}}件",
+      "this_month_count": "今月: {{count}}件"
+    },
+    "modal": {
+      "new_title": "新しいスケジュール作成",
+      "edit_title": "スケジュール編集",
+      "title_label": "タイトル",
+      "title_required": "タイトル *",
+      "title_placeholder": "スケジュールタイトルを入力",
+      "description_label": "説明",
+      "description_placeholder": "スケジュール説明を入力",
+      "is_all_day": "終日イベント",
+      "start_date": "開始日",
+      "start_time": "開始時間",
+      "end_date": "終了日", 
+      "end_time": "終了時間",
+      "location_label": "場所",
+      "location_placeholder": "場所を入力",
+      "category_label": "カテゴリ",
+      "delete": "削除",
+      "cancel": "キャンセル",
+      "create": "作成",
+      "update": "更新"
+    },
+    "messages": {
+      "load_error": "スケジュールの読み込みに失敗しました。",
+      "no_schedules": "スケジュールがありません",
+      "no_schedules_selected_date": "選択した日付にスケジュールがありません",
+      "title_required": "タイトルを入力してください。",
+      "created": "スケジュールが作成されました。",
+      "updated": "スケジュールが更新されました。",
+      "save_error": "スケジュールの保存に失敗しました。",
+      "delete_confirm": "このスケジュールを削除しますか？",
+      "deleted": "スケジュールが削除されました。",
+      "delete_error": "スケジュールの削除に失敗しました。",
+      "selected_date": "選択された日付"
+    }
+  },
+  "todo": {
+    "new_todo": "新しいタスク",
+    "title": "タスク管理",
+    "welcome_message": "タスク機能は開発中です。",
+    "implementing": "タスク機能を実装中...",
+    "loading": "タスクを読み込み中...",
+    "categories": {
+      "work": "仕事",
+      "personal": "個人",
+      "study": "学習",
+      "shopping": "買い物",
+      "health": "健康"
+    },
+    "priorities": {
+      "high": "高い",
+      "medium": "普通",
+      "low": "低い"
+    },
+    "statuses": {
+      "pending": "待機中",
+      "in_progress": "進行中",
+      "completed": "完了"
+    },
+    "filters": {
+      "filter": "フィルター",
+      "reset": "リセット",
+      "category": "カテゴリー",
+      "priority": "優先度",
+      "status": "ステータス",
+      "all": "すべて",
+      "show_completed": "完了したタスクを表示"
+    },
+    "dashboard": {
+      "title": "タスクダッシュボード",
+      "total": "合計",
+      "pending": "待機中",
+      "in_progress": "進行中",
+      "completed": "完了",
+      "high_priority_count": "高優先度: {{count}}個",
+      "due_today_count": "今日期限: {{count}}個",
+      "recent_tasks": "最近のタスク"
+    },
+    "due_date": {
+      "today": "今日",
+      "tomorrow": "明日"
+    },
+    "messages": {
+      "no_tasks": "タスクがありません",
+      "title_required": "タイトルを入力してください。",
+      "created": "タスクが作成されました。",
+      "updated": "タスクが更新されました。",
+      "deleted": "タスクが削除されました。",
+      "save_error": "タスクの保存に失敗しました。",
+      "delete_error": "タスクの削除に失敗しました。",
+      "delete_confirm": "このタスクを削除しますか？"
+    }
+  },
+  "security": {
+    "title": "セキュリティ管理",
+    "settings": "セキュリティ設定",
+    "welcome_message": "左からセキュリティ設定を選択してください。",
+    "description": {
+      "comprehensive_security": "AIが分析した個人情報を安全に管理します"
+    },
+    "loading": {
+      "checking_status": "セキュリティ状態を確認中..."
+    },
+    "setup": {
+      "required_title": "セキュリティ設定が必要です",
+      "required_description": "セキュリティ機能を使用するには、まずセキュリティパスワードを設定してください。",
+      "go_to_settings": "設定に移動"
+    },
+    "auth": {
+      "title": "セキュリティ認証",
+      "access_description": "セキュリティ情報にアクセスするには、セキュリティパスワードを入力してください。",
+      "enter_password": "セキュリティパスワードを入力",
+      "authenticate": "認証する",
+      "authenticating": "認証中...",
+      "success": "認証成功"
+    },
+    "password": {
+      "not_set": "セキュリティパスワードが設定されていません",
+      "required": "パスワードを入力してください",
+      "incorrect": "パスワードが正しくありません"
+    },
+    "errors": {
+      "initialization_failed": "セキュリティ機能の初期化に失敗しました",
+      "status_check_failed": "セキュリティ状態の確認に失敗しました",
+      "auth_failed": "セキュリティ認証に失敗しました",
+      "info_load_failed": "セキュリティ情報の読み込みに失敗しました",
+      "memo_load_failed": "関連するメモを読み込めません"
+    },
+    "dashboard": {
+      "status_title": "セキュリティ状況",
+      "total": "合計",
+      "high_risk": "高リスク",
+      "medium_risk": "中リスク",
+      "low_risk": "低リスク",
+      "type_distribution": "情報タイプ別分布",
+      "risk_analysis": "リスク詳細分析",
+      "recent_findings": "最近発見されたセキュリティ情報"
+    },
+    "dashboard_title": "セキュリティ状況ダッシュボード",
+    "dashboard_description": "AIが分析した個人情報を安全に管理・監視します。",
+    "search": {
+      "placeholder": "セキュリティ情報を検索...",
+      "results": "検索結果",
+      "count": "件"
+    },
+    "filter": {
+      "title": "フィルター選択",
+      "all": "すべて",
+      "phone": "電話番号",
+      "email": "メール",
+      "password": "パスワード",
+      "account": "口座/カード",
+      "website": "ウェブサイト",
+      "id_number": "身分証",
+      "bank": "銀行情報",
+      "address": "住所"
+    },
+    "list": {
+      "title": "セキュリティ情報一覧",
+      "loading": "セキュリティ情報を読み込み中...",
+      "empty": {
+        "title": "セキュリティ情報がありません",
+        "description": "AIが分析した個人情報がここに表示されます。"
+      }
+    },
+    "info": {
+      "confidence": "信頼度",
+      "memo_button": "関連メモ",
+      "no_related_memo": "関連するメモがありません",
+      "risk": {
+        "high": "高リスク",
+        "medium": "中リスク",
+        "low": "低リスク"
+      }
+    },
+    "detail": {
+      "value": "セキュリティ情報値",
+      "risk_level": "リスクレベル",
+      "related_memo": "関連メモ"
+    },
+    "info_types": {
+      "phone": "電話番号",
+      "email": "メール",
+      "password": "パスワード",
+      "account": "口座番号",
+      "card": "カード番号",
+      "website": "ウェブサイト",
+      "address": "住所",
+      "resident_number": "住民登録番号",
+      "id_number": "身分証番号",
+      "financial_info": "金融情報"
+    },
+    "encryption": {
+      "title": "暗号化設定",
+      "description": "メモの暗号化と復号化設定",
+      "category": "セキュリティ"
+    },
+    "login_history": {
+      "title": "ログイン履歴",
+      "description": "最近のログイン記録を確認",
+      "category": "監視"
+    },
+    "permissions": {
+      "title": "権限管理",
+      "description": "アプリの権限とアクセス制御",
+      "category": "設定"
+    },
+    "backup_security": {
+      "title": "バックアップセキュリティ",
+      "description": "バックアップファイルの暗号化設定",
+      "category": "バックアップ"
+    }
+  },
+  "analytics": {
+    "title": "使用統計分析",
+    "refresh": "更新",
+    "dashboard_title": "ユーザー分析ダッシュボード",
+    "dashboard_description": "メモ作成パターンと使用統計を確認できます。",
+    "periods": {
+      "day": "日別",
+      "week": "週別",
+      "month": "月別"
+    },
+    "summary": {
+      "title": "データ要約",
+      "selected_period": "選択期間",
+      "last_updated": "最終更新"
+    },
+    "overview": {
+      "title": "概要統計",
+      "total_memos": "総メモ数",
+      "this_week": "今週",
+      "active_days": "活動日数",
+      "avg_sentiment": "平均感情"
+    },
+    "categories": {
+      "title": "カテゴリ分析",
+      "other": "その他"
+    },
+    "trends": {
+      "title": "作成傾向"
+    },
+    "activity": {
+      "title": "時間帯別活動",
+      "count_suffix": "個"
+    },
+    "tags": {
+      "title": "人気タグ"
+    },
+    "sentiment": {
+      "title": "感情分析",
+      "positive": "ポジティブ",
+      "neutral": "中性",
+      "negative": "ネガティブ",
+      "distribution": {
+        "positive": "ポジティブ",
+        "neutral": "中性",
+        "negative": "ネガティブ"
+      },
+      "keywords": "主要キーワード"
+    },
+    "loading": "分析データを読み込み中...",
+    "error": "分析データの読み込みに失敗しました。",
+    "new_report": "新しいレポート",
+    "welcome_message": "左からレポートを選択してください。",
+    "weekly_report": {
+      "title": "週間レポート",
+      "description": "今週のメモ作成統計",
+      "period": "2024.01.08 - 01.14"
+    },
+    "monthly_report": {
+      "title": "月間レポート",
+      "description": "今月の活動分析",
+      "period": "2024年1月"
+    },
+    "category_analysis": {
+      "title": "カテゴリ分析",
+      "description": "メモカテゴリ別統計",
+      "period": "全期間"
+    },
+    "usage_pattern": {
+      "title": "使用パターン",
+      "description": "アプリ使用時間とパターン分析",
+      "period": "過去30日"
+    }
+  },
+  "share": {
+    "title": "共有",
+    "total_shared": "合計{{count}}個共有中",
+    "search_placeholder": "共有メモを検索...",
+    "sort_by_date": "日付順",
+    "sort_by_views": "閲覧数順",
+    "view_count": "{{count}}回閲覧",
+    "no_shared_notes": "共有されたメモがありません",
+    "no_search_results": "検索結果がありません",
+    "created_at": "{{date}}に作成",
+    "copy_link": "リンクをコピー",
+    "share_link": "共有",
+    "unshare": "共有解除",
+    "share_url": "共有URL",
+    "welcome_title": "メモ共有",
+    "welcome_message": "共有されたメモを管理し、他の人と協力しましょう。",
+    "getting_started_title": "はじめに",
+    "getting_started_message": "メモを共有するには、メモ編集画面で共有ボタンをクリックしてください。",
+    "confirm_unshare": "このメモの共有を解除しますか？",
+    "unshare_success": "共有が解除されました。",
+    "unshare_error": "共有解除に失敗しました。",
+    "copy_success": "リンクがクリップボードにコピーされました。",
+    "copy_error": "リンクのコピーに失敗しました。",
+    "share_title": "メモ共有",
+    "share_fallback": "共有リンクがクリップボードにコピーされました。"
+  },
+  "linkManagement": {
+    "title": "リンク管理",
+    "refresh": "更新",
+    "welcome_message": "メモから抽出されたリンクを管理しましょう。",
+    "search": {
+      "placeholder": "リンクを検索..."
+    },
+    "stats": {
+      "total_links": "合計{{count}}個のリンク"
+    },
+    "selection": {
+      "select_all": "すべて選択",
+      "deselect_all": "すべて解除",
+      "selected_count": "{{count}}個選択中",
+      "delete": "削除",
+      "cancel": "キャンセル"
+    },
+    "actions": {
+      "copy_link": "リンクをコピー",
+      "open_link": "リンクを開く",
+      "related_memo": "関連メモ"
+    },
+    "modal": {
+      "title": "リンク詳細",
+      "close": "✕",
+      "no_title": "タイトルなし",
+      "site": "サイト: {{siteName}}",
+      "domain": "ドメイン: {{domain}}",
+      "created_date": "作成日: {{date}}",
+      "related_memo_section": "関連メモ",
+      "go_to_memo": "メモへ移動"
+    },
+    "loading": {
+      "text": "リンクを読み込み中..."
+    },
+    "empty": {
+      "no_results": "検索結果がありません。",
+      "no_links": "保存されたリンクがありません。",
+      "description": "メモのリンクがここに表示されます。"
+    },
+    "alerts": {
+      "auth_error": "認証が必要です。",
+      "auth_expired": "セッションが期限切れです。再ログインしてください。",
+      "fetch_error": "リンク一覧の取得に失敗しました。",
+      "copy_success": "URLがクリップボードにコピーされました。",
+      "copy_error": "リンクのコピーに失敗しました。",
+      "open_browser": "ブラウザで開く",
+      "link_error": "リンクを開けません。",
+      "memo_not_found": "関連するメモが見つかりません。",
+      "memo_load_error": "メモの読み込みに失敗しました。",
+      "delete_confirm": "選択した{{count}}個のリンクを削除しますか？",
+      "delete_success": "{{count}}個のリンクが削除されました。",
+      "delete_error": "リンクの削除に失敗しました。",
+      "delete_error_occurred": "リンク削除中にエラーが発生しました。"
+    },
+    "errors": {
+      "auth_token": "認証トークンを取得できません。"
+    },
+    "preview": "プレビュー",
+    "no_preview": "プレビュー画像がありません。",
+    "dashboard": {
+      "title": "リンク統計",
+      "total_links": "総リンク数",
+      "accessible_links": "アクセス可能"
+    }
+  },
+  "files": {
+    "title": "ファイル管理",
+    "upload": "ファイルアップロード",
+    "welcome_message": "左からファイルを選択して詳細を確認してください。",
+    "loading": "ファイルリストを読み込み中...",
+    "refresh": "更新",
+    "stats": {
+      "title": "ファイル統計",
+      "images": "画像",
+      "files": "ファイル",
+      "total_size": "合計サイズ"
+    },
+    "tabs": {
+      "images": "画像",
+      "files": "ファイル"
+    },
+    "empty": {
+      "no_images": "画像がありません",
+      "no_images_desc": "メモに添付された画像がここに表示されます。",
+      "no_files": "ファイルがありません",
+      "no_files_desc": "メモに添付されたファイルがここに表示されます。"
+    },
+    "detail": {
+      "preview": "プレビュー",
+      "no_preview": "プレビューできません",
+      "filename": "ファイル名",
+      "filetype": "ファイル形式",
+      "filesize": "ファイルサイズ",
+      "created_at": "作成日",
+      "related_memo": "関連メモ"
+    },
+    "actions": {
+      "download": "ダウンロード",
+      "view_full": "全体表示",
+      "delete": "削除",
+      "view_memo": "メモを見る"
+    },
+    "dashboard": {
+      "title": "ファイル概要",
+      "total_files": "総ファイル数",
+      "images": "画像",
+      "documents": "文書",
+      "storage_used": "使用容量",
+      "file_distribution": "ファイルタイプ別分布",
+      "recent_uploads": "最近アップロードされたファイル"
+    },
+    "dashboard_title": "ファイル管理ダッシュボード",
+    "dashboard_description": "アップロードされたファイルを効率的に管理・監視します。",
+    "confirm": {
+      "delete": "{{filename}}を削除しますか？"
+    },
+    "errors": {
+      "delete_failed": "ファイルの削除に失敗しました。",
+      "memo_load_failed": "関連メモを読み込めません。",
+      "no_download_url": "ダウンロードURLがありません。"
+    },
+    "types": {
+      "image": "スクリーンショット画像",
+      "pdf": "月次業務報告書",
+      "audio": "会議録音ファイル",
+      "excel": "分析用Excelファイル"
+    },
+    "times": {
+      "today": "今日",
+      "yesterday": "昨日",
+      "days_ago": "{{count}}日前",
+      "week_ago": "1週間前"
+    }
+  },
+  "links": {
+    "title": "リンク管理",
+    "add_link": "リンク追加",
+    "welcome_message": "左からリンクを選択してください。",
+    "categories": {
+      "development": "開発",
+      "learning": "学習",
+      "news": "ニュース",
+      "shopping": "ショッピング"
+    },
+    "tags": {
+      "frequent": "よく訪問",
+      "bookmark": "ブックマーク",
+      "subscribe": "購読",
+      "wishlist": "ウィッシュリスト"
+    }
+  },
+  "trash": {
+    "title": "ゴミ箱",
+    "loading": "ゴミ箱データを読み込み中...",
+    "empty_all": "ゴミ箱を空にする",
+    "restore": "復元",
+    "permanent_delete": "完全削除",
+    "select_all": "すべて選択",
+    "restore_selected": "選択項目を復元",
+    "delete_selected": "選択項目を削除",
+    "no_title": "無題",
+    "expired": "期限切れ",
+    "expires_in_minutes": "{{minutes}}分後に期限切れ",
+    "expires_in_hours": "{{hours}}時間後に期限切れ",
+    "types": {
+      "memo": "メモ",
+      "schedule": "スケジュール", 
+      "task": "タスク",
+      "file": "ファイル"
+    },
+    "filters": {
+      "filter": "フィルター",
+      "reset": "リセット",
+      "item_type": "アイテム種類",
+      "all": "すべて"
+    },
+    "dashboard": {
+      "title": "ゴミ箱ダッシュボード",
+      "total": "合計",
+      "memos": "メモ",
+      "schedules": "スケジュール",
+      "tasks": "タスク", 
+      "files": "ファイル",
+      "expiring_soon": "まもなく期限切れ"
+    },
+    "info": {
+      "about_title": "ゴミ箱について",
+      "about_description": "削除されたアイテムは24時間ゴミ箱に保管されます。",
+      "rule_1": "アイテムは削除から24時間後に自動的に完全削除されます",
+      "rule_2": "復元により元の場所に戻すことができます",
+      "rule_3": "完全削除されたアイテムは復旧できません",
+      "urgent_title": "注意が必要",
+      "urgent_description": "{{count}}個のアイテムがまもなく期限切れになります。必要であれば復元してください。"
+    },
+    "messages": {
+      "no_items": "ゴミ箱は空です",
+      "no_items_selected": "選択されたアイテムがありません",
+      "restored": "アイテムが復元されました",
+      "permanently_deleted": "アイテムが完全削除されました",
+      "emptied": "{{count}}個のアイテムが削除されました",
+      "restored_count": "{{count}}個のアイテムが復元されました",
+      "permanently_deleted_count": "{{count}}個のアイテムが完全削除されました",
+      "restore_error": "復元に失敗しました",
+      "delete_error": "削除に失敗しました",
+      "empty_error": "ゴミ箱を空にするのに失敗しました"
+    },
+    "restore_confirm": "\\\"{{title}}\\\"アイテムを復元しますか？",
+    "permanent_delete_confirm": "\\\"{{title}}\\\"アイテムを完全削除しますか？",
+    "empty_trash_confirm": "ゴミ箱のすべてのアイテムを完全削除しますか？",
+    "restore_selected_confirm": "選択した{{count}}個のアイテムを復元しますか？",
+    "permanent_delete_selected_confirm": "選択した{{count}}個のアイテムを完全削除しますか？"
+  },
+  "support": {
+    "title": "サポート",
+    "contact": "お問い合わせ",
+    "welcome_message": "左からヘルプカテゴリを選択してください。",
+    "header": {
+      "subtitle": "ご質問や改善提案がございましたら、いつでもお気軽にご連絡ください。"
+    },
+    "tabs": {
+      "submit": "フィードバック送信",
+      "history": "問い合わせ履歴"
+    },
+    "categories": {
+      "bug": "バグ報告",
+      "feature": "機能要望", 
+      "support": "技術サポート",
+      "general": "一般的な問い合わせ",
+      "complaint": "苦情"
+    },
+    "status": {
+      "pending": "受付済み",
+      "in_progress": "処理中", 
+      "resolved": "回答完了",
+      "closed": "終了"
+    },
+    "priority": {
+      "low": "低い",
+      "medium": "普通",
+      "high": "高い", 
+      "urgent": "緊急"
+    },
+    "form": {
+      "section_title": "フィードバック送信",
+      "category_label": "カテゴリ",
+      "priority_label": "優先度", 
+      "title_label": "タイトル",
+      "title_placeholder": "お問い合わせのタイトルを入力してください",
+      "content_label": "内容",
+      "content_placeholder": "詳細な内容を入力してください。バグ報告の場合は再現手順を含めていただくと、より迅速な解決が可能です。",
+      "anonymous_checkbox": "匿名で送信する",
+      "submit_button": "フィードバック送信",
+      "char_count": "{{current}}/{{max}}"
+    },
+    "history": {
+      "section_title": "問い合わせ履歴",
+      "loading": "問い合わせ履歴を読み込み中...",
+      "empty_title": "まだ問い合わせ履歴がありません",
+      "empty_description": "ご質問がございましたら、いつでもフィードバックをお送りください。",
+      "submit_first": "最初のフィードバックを送信",
+      "detail_title": "問い合わせ内容",
+      "response_title": "管理者回答",
+      "response_date": "回答日: {{date}}",
+      "status": "状態",
+      "select_feedback": "左から問い合わせを選択して詳細を確認してください。",
+      "updated_label": "最終更新",
+      "created_label": "作成日"
+    },
+    "alerts": {
+      "validation_error": "入力エラー",
+      "title_content_required": "タイトルと内容を両方入力してください。",
+      "title_too_long": "タイトルは200文字以内で入力してください。",
+      "content_too_long": "内容は2000文字以内で入力してください。",
+      "submit_success": "送信完了",
+      "submit_success_message": "フィードバックが正常に送信されました。速やかに確認の上、回答いたします。",
+      "submitting": "送信中...",
+      "confirm": "確認",
+      "error": "エラー",
+      "submit_error": "フィードバック送信中にエラーが発生しました。もう一度お試しください。",
+      "history_load_error": "問い合わせ履歴の読み込み中にエラーが発生しました。"
+    },
+    "faq": {
+      "title": "よくある質問",
+      "items": {
+        "0": {
+          "question": "メモが保存されません",
+          "answer": "インターネット接続を確認し、アプリを再起動してみてください。問題が続く場合は、フィードバックをお送りください。"
+        },
+        "1": {
+          "question": "AI機能が動作しません",
+          "answer": "AI質問は完全な文章形式で入力する必要があります。例：「今日のタスクを整理してください」"
+        },
+        "2": {
+          "question": "ログインできません",
+          "answer": "メールアドレスとパスワードを再度確認し、パスワードを忘れた場合はリセットをお試しください。"
+        }
+      }
+    },
+    "getting_started": {
+      "title": "はじめに",
+      "description": "MemoBee使用ガイド",
+      "category": "基本使用法"
+    },
+    "troubleshooting": {
+      "title": "トラブルシューティング",
+      "description": "一般的な問題と解決法",
+      "category": "問題解決"
+    },
+    "customer_support": {
+      "title": "カスタマーサポート",
+      "description": "直接お問い合わせとフィードバック",
+      "category": "連絡先"
+    }
+  },
+  "settings": {
+    "title": "環境設定",
+    "manage": "設定管理",
+    "dashboard_title": "設定ダッシュボード",
+    "dashboard_description": "アプリ設定を管理し、バージョン情報を確認します。",
+    "language": {
+      "title": "言語設定",
+      "description": "アプリインターフェース言語を変更します",
+      "category": "言語",
+      "current": "現在の言語",
+      "auto_save_notice": "言語は自動保存され、次回起動時にも維持されます。"
+    },
+    "version": {
+      "title": "バージョン情報",
+      "description": "現在のアプリバージョンとプラットフォーム情報を確認します",
+      "category": "情報",
+      "current": "現在のバージョン",
+      "platform": "プラットフォーム",
+      "last_updated": "最終更新"
+    }
+  },
+  "calendar": {
+    "today": "今日",
+    "year": "年",
+    "more_items": "件追加",
+    "months": {
+      "january": "1月",
+      "february": "2月",
+      "march": "3月",
+      "april": "4月",
+      "may": "5月",
+      "june": "6月",
+      "july": "7月",
+      "august": "8月",
+      "september": "9月",
+      "october": "10月",
+      "november": "11月",
+      "december": "12月"
+    },
+    "days": {
+      "sunday": "日",
+      "monday": "月",
+      "tuesday": "火",
+      "wednesday": "水",
+      "thursday": "木",
+      "friday": "金",
+      "saturday": "土"
+    },
+    "legend": {
+      "category_colors": "カテゴリー別色",
+      "note": "* 各日付にスケジュールタイトルがカテゴリー色で表示されます"
+    }
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "ok": "OK",
+    "yes": "はい",
+    "no": "いいえ",
+    "apply": "適用",
+    "reset": "リセット",
+    "developing": "開発中",
+    "coming_soon": "近日公開",
+    "feature_implementing": "{{feature}}機能を実装中です。"
+  }
+}

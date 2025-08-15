@@ -1,0 +1,770 @@
+{
+  "app": {
+    "name": "MemoBee",
+    "welcome": "欢迎使用MemoBee Desktop！",
+    "subtitle": "macOS智能备忘录应用"
+  },
+  "auth": {
+    "welcome_title": "欢迎使用MemoBee",
+    "welcome_message": "请登录以继续",
+    "google_login": "使用Google继续",
+    "apple_login": "使用Apple继续（开发中）",
+    "logging_in": "登录中...",
+    "logout": "登出",
+    "features": {
+      "firebase_auth": "Firebase Google身份验证",
+      "auto_login": "自动登录支持",
+      "secure_oauth": "安全OAuth 2.0"
+    },
+    "checking_auth": "正在检查Firebase身份验证..."
+  },
+  "menu": {
+    "memo": "备忘录",
+    "schedule": "日程",
+    "todo": "待办",
+    "security": "安全",
+    "analytics": "分析",
+    "share": "分享",
+    "files": "文件",
+    "links": "链接",
+    "trash": "回收站",
+    "support": "支持",
+    "settings": "设置"
+  },
+  "memo": {
+    "new_memo": "新建备忘录",
+    "title_placeholder": "备忘录标题",
+    "content_placeholder": "输入备忘录内容...",
+    "no_title": "无标题",
+    "loading": "正在加载备忘录...",
+    "welcome_title": "欢迎使用MemoBee Desktop！",
+    "welcome_message": "从左侧选择备忘录或创建新的备忘录。",
+    "load_error": "加载备忘录失败。请检查网络连接。",
+    "save_error": "备忘录保存失败。",
+    "create_error": "创建新备忘录失败。",
+    "add_favorite": "添加到收藏",
+    "remove_favorite": "从收藏中移除",
+    "delete_memo": "删除备忘录",
+    "save": "保存",
+    "saving": "保存中...",
+    "save_completed": "保存完成！"
+  },
+  "schedule": {
+    "new_schedule": "新建日程",
+    "title": "日程管理",
+    "welcome_message": "从左侧选择日程。",
+    "loading": "正在加载日程...",
+    "categories": {
+      "work": "工作",
+      "personal": "个人",
+      "appointment": "约会",
+      "meeting": "会议",
+      "other": "其他"
+    },
+    "statuses": {
+      "upcoming": "即将到来",
+      "completed": "已完成",
+      "cancelled": "已取消"
+    },
+    "filters": {
+      "filter": "筛选",
+      "reset": "重置",
+      "category": "分类",
+      "status": "状态",
+      "all": "全部",
+      "hide_completed": "隐藏已完成日程"
+    },
+    "time": {
+      "all_day": "全天",
+      "time_undecided": "时间待定",
+      "today": "今天",
+      "tomorrow": "明天"
+    },
+    "all_day": "全天",
+    "dashboard": {
+      "title": "仪表板",
+      "calendar": "日历",
+      "total": "总计",
+      "upcoming": "即将到来",
+      "completed": "已完成",
+      "cancelled": "已取消",
+      "this_week": "本周",
+      "this_month": "本月",
+      "recent_schedules": "最近日程",
+      "this_week_count": "本周: {{count}}个",
+      "this_month_count": "本月: {{count}}个"
+    },
+    "modal": {
+      "new_title": "创建新日程",
+      "edit_title": "编辑日程",
+      "title_label": "标题",
+      "title_required": "标题 *",
+      "title_placeholder": "输入日程标题",
+      "description_label": "描述",
+      "description_placeholder": "输入日程描述",
+      "is_all_day": "全天事件",
+      "start_date": "开始日期",
+      "start_time": "开始时间",
+      "end_date": "结束日期",
+      "end_time": "结束时间",
+      "location_label": "地点",
+      "location_placeholder": "输入地点",
+      "category_label": "分类",
+      "delete": "删除",
+      "cancel": "取消",
+      "create": "创建",
+      "update": "更新"
+    },
+    "messages": {
+      "load_error": "加载日程失败。",
+      "no_schedules": "没有日程",
+      "no_schedules_selected_date": "所选日期没有日程",
+      "title_required": "请输入标题。",
+      "created": "日程已创建。",
+      "updated": "日程已更新。",
+      "save_error": "保存日程失败。",
+      "delete_confirm": "您要删除此日程吗？",
+      "deleted": "日程已删除。",
+      "delete_error": "删除日程失败。",
+      "selected_date": "所选日期"
+    }
+  },
+  "todo": {
+    "new_todo": "新建待办",
+    "title": "待办管理",
+    "welcome_message": "待办功能正在开发中。",
+    "implementing": "正在实现待办功能...",
+    "loading": "正在加载待办...",
+    "categories": {
+      "work": "工作",
+      "personal": "个人",
+      "study": "学习",
+      "shopping": "购物",
+      "health": "健康"
+    },
+    "priorities": {
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    },
+    "statuses": {
+      "pending": "待办",
+      "in_progress": "进行中",
+      "completed": "已完成"
+    },
+    "filters": {
+      "filter": "筛选",
+      "reset": "重置",
+      "category": "分类",
+      "priority": "优先级",
+      "status": "状态",
+      "all": "全部",
+      "show_completed": "显示已完成任务"
+    },
+    "dashboard": {
+      "title": "待办仪表板",
+      "total": "总计",
+      "pending": "待办",
+      "in_progress": "进行中",
+      "completed": "已完成",
+      "high_priority_count": "高优先级: {{count}}个",
+      "due_today_count": "今日到期: {{count}}个",
+      "recent_tasks": "最近任务"
+    },
+    "due_date": {
+      "today": "今天",
+      "tomorrow": "明天"
+    },
+    "messages": {
+      "no_tasks": "没有任务",
+      "title_required": "请输入标题。",
+      "created": "任务创建成功。",
+      "updated": "任务更新成功。",
+      "deleted": "任务删除成功。",
+      "save_error": "任务保存失败。",
+      "delete_error": "任务删除失败。",
+      "delete_confirm": "确定要删除这个任务吗？"
+    }
+  },
+  "security": {
+    "title": "安全管理",
+    "settings": "安全设置",
+    "welcome_message": "从左侧选择安全设置。",
+    "description": {
+      "comprehensive_security": "安全管理AI分析的个人信息"
+    },
+    "loading": {
+      "checking_status": "正在检查安全状态..."
+    },
+    "setup": {
+      "required_title": "需要安全设置",
+      "required_description": "要使用安全功能，请先设置安全密码。",
+      "go_to_settings": "前往设置"
+    },
+    "auth": {
+      "title": "安全认证",
+      "access_description": "请输入安全密码以访问安全信息。",
+      "enter_password": "输入安全密码",
+      "authenticate": "认证",
+      "authenticating": "认证中...",
+      "success": "认证成功"
+    },
+    "password": {
+      "not_set": "未设置安全密码",
+      "required": "请输入密码",
+      "incorrect": "密码不正确"
+    },
+    "errors": {
+      "initialization_failed": "安全功能初始化失败",
+      "status_check_failed": "安全状态检查失败",
+      "auth_failed": "安全认证失败",
+      "info_load_failed": "安全信息加载失败",
+      "memo_load_failed": "无法加载相关备忘录"
+    },
+    "dashboard": {
+      "status_title": "安全状况",
+      "total": "总计",
+      "high_risk": "高风险",
+      "medium_risk": "中风险",
+      "low_risk": "低风险",
+      "type_distribution": "信息类型分布",
+      "risk_analysis": "风险详细分析",
+      "recent_findings": "最近发现的安全信息"
+    },
+    "dashboard_title": "安全状况仪表板",
+    "dashboard_description": "安全管理和监控AI分析的个人信息。",
+    "search": {
+      "placeholder": "搜索安全信息...",
+      "results": "搜索结果",
+      "count": "项"
+    },
+    "filter": {
+      "title": "选择筛选器",
+      "all": "全部",
+      "phone": "电话",
+      "email": "邮箱",
+      "password": "密码",
+      "account": "账户/卡片",
+      "website": "网站",
+      "id_number": "身份证",
+      "bank": "银行信息",
+      "address": "地址"
+    },
+    "list": {
+      "title": "安全信息列表",
+      "loading": "正在加载安全信息...",
+      "empty": {
+        "title": "没有安全信息",
+        "description": "AI分析的个人信息将显示在这里。"
+      }
+    },
+    "info": {
+      "confidence": "置信度",
+      "memo_button": "相关备忘录",
+      "no_related_memo": "没有相关备忘录",
+      "risk": {
+        "high": "高风险",
+        "medium": "中风险",
+        "low": "低风险"
+      }
+    },
+    "detail": {
+      "value": "安全信息值",
+      "risk_level": "风险等级",
+      "related_memo": "相关备忘录"
+    },
+    "info_types": {
+      "phone": "电话号码",
+      "email": "邮箱",
+      "password": "密码",
+      "account": "账户号码",
+      "card": "卡号",
+      "website": "网站",
+      "address": "地址",
+      "resident_number": "居民身份证号",
+      "id_number": "身份证号",
+      "financial_info": "金融信息"
+    },
+    "encryption": {
+      "title": "加密设置",
+      "description": "备忘录加密和解密设置",
+      "category": "安全"
+    },
+    "login_history": {
+      "title": "登录历史",
+      "description": "查看最近的登录记录",
+      "category": "监控"
+    },
+    "permissions": {
+      "title": "权限管理",
+      "description": "应用权限和访问控制",
+      "category": "设置"
+    },
+    "backup_security": {
+      "title": "备份安全",
+      "description": "备份文件加密设置",
+      "category": "备份"
+    }
+  },
+  "analytics": {
+    "title": "使用统计分析",
+    "refresh": "刷新",
+    "dashboard_title": "用户分析仪表板",
+    "dashboard_description": "查看您的备忘录写作模式和使用统计。",
+    "periods": {
+      "day": "按日",
+      "week": "按周",
+      "month": "按月"
+    },
+    "summary": {
+      "title": "数据摘要",
+      "selected_period": "选择的时间段",
+      "last_updated": "最后更新"
+    },
+    "overview": {
+      "title": "概览统计",
+      "total_memos": "总备忘录",
+      "this_week": "本周",
+      "active_days": "活跃天数",
+      "avg_sentiment": "平均情感"
+    },
+    "categories": {
+      "title": "分类分析",
+      "other": "其他"
+    },
+    "trends": {
+      "title": "写作趋势"
+    },
+    "activity": {
+      "title": "按小时活动",
+      "count_suffix": "个"
+    },
+    "tags": {
+      "title": "热门标签"
+    },
+    "sentiment": {
+      "title": "情感分析",
+      "positive": "积极",
+      "neutral": "中性",
+      "negative": "消极",
+      "distribution": {
+        "positive": "积极",
+        "neutral": "中性",
+        "negative": "消极"
+      },
+      "keywords": "主要关键词"
+    },
+    "loading": "正在加载分析数据...",
+    "error": "加载分析数据失败。"
+  },
+  "share": {
+    "title": "分享",
+    "total_shared": "共分享{{count}}个",
+    "search_placeholder": "搜索分享的备忘录...",
+    "sort_by_date": "按日期排序",
+    "sort_by_views": "按浏览量排序",
+    "view_count": "{{count}}次浏览",
+    "no_shared_notes": "没有分享的备忘录",
+    "no_search_results": "没有搜索结果",
+    "created_at": "创建于{{date}}",
+    "copy_link": "复制链接",
+    "share_link": "分享",
+    "unshare": "取消分享",
+    "share_url": "分享链接",
+    "welcome_title": "备忘录分享",
+    "welcome_message": "管理分享的备忘录，与他人协作。",
+    "getting_started_title": "开始使用",
+    "getting_started_message": "要分享备忘录，请在备忘录编辑界面点击分享按钮。",
+    "confirm_unshare": "确定要取消分享这个备忘录吗？",
+    "unshare_success": "已取消分享。",
+    "unshare_error": "取消分享失败。",
+    "copy_success": "链接已复制到剪贴板。",
+    "copy_error": "复制链接失败。",
+    "share_title": "分享备忘录",
+    "share_fallback": "分享链接已复制到剪贴板。"
+  },
+  "linkManagement": {
+    "title": "链接管理",
+    "refresh": "刷新",
+    "welcome_message": "管理从备忘录中提取的链接。",
+    "search": {
+      "placeholder": "搜索链接..."
+    },
+    "stats": {
+      "total_links": "共{{count}}个链接"
+    },
+    "selection": {
+      "select_all": "全选",
+      "deselect_all": "取消全选",
+      "selected_count": "已选择{{count}}个",
+      "delete": "删除",
+      "cancel": "取消"
+    },
+    "actions": {
+      "copy_link": "复制链接",
+      "open_link": "打开链接",
+      "related_memo": "相关备忘录"
+    },
+    "modal": {
+      "title": "链接详情",
+      "close": "✕",
+      "no_title": "无标题",
+      "site": "网站: {{siteName}}",
+      "domain": "域名: {{domain}}",
+      "created_date": "创建时间: {{date}}",
+      "related_memo_section": "相关备忘录",
+      "go_to_memo": "前往备忘录"
+    },
+    "loading": {
+      "text": "正在加载链接..."
+    },
+    "empty": {
+      "no_results": "未找到搜索结果。",
+      "no_links": "没有保存的链接。",
+      "description": "备忘录中的链接将显示在这里。"
+    },
+    "alerts": {
+      "auth_error": "需要身份验证。",
+      "auth_expired": "会话已过期。请重新登录。",
+      "fetch_error": "获取链接列表失败。",
+      "copy_success": "URL已复制到剪贴板。",
+      "copy_error": "复制链接失败。",
+      "open_browser": "在浏览器中打开",
+      "link_error": "无法打开链接。",
+      "memo_not_found": "未找到相关备忘录。",
+      "memo_load_error": "加载备忘录失败。",
+      "delete_confirm": "删除选中的{{count}}个链接？",
+      "delete_success": "已删除{{count}}个链接。",
+      "delete_error": "删除链接失败。",
+      "delete_error_occurred": "删除链接时发生错误。"
+    },
+    "errors": {
+      "auth_token": "无法获取身份验证令牌。"
+    },
+    "preview": "预览",
+    "no_preview": "无预览图片。",
+    "dashboard": {
+      "title": "链接统计",
+      "total_links": "总链接数",
+      "accessible_links": "可访问"
+    }
+  },
+  "files": {
+    "title": "文件管理",
+    "upload": "上传文件",
+    "welcome_message": "从左侧选择文件查看详细信息。",
+    "loading": "正在加载文件列表...",
+    "refresh": "刷新",
+    "stats": {
+      "title": "文件统计",
+      "images": "图片",
+      "files": "文件",
+      "total_size": "总大小"
+    },
+    "tabs": {
+      "images": "图片",
+      "files": "文件"
+    },
+    "empty": {
+      "no_images": "没有图片",
+      "no_images_desc": "附加到备忘录的图片将显示在这里。",
+      "no_files": "没有文件",
+      "no_files_desc": "附加到备忘录的文件将显示在这里。"
+    },
+    "detail": {
+      "preview": "预览",
+      "no_preview": "无法预览",
+      "filename": "文件名",
+      "filetype": "文件类型",
+      "filesize": "文件大小",
+      "created_at": "创建时间",
+      "related_memo": "相关备忘录"
+    },
+    "actions": {
+      "download": "下载",
+      "view_full": "全屏查看",
+      "delete": "删除",
+      "view_memo": "查看备忘录"
+    },
+    "dashboard": {
+      "title": "文件概览",
+      "total_files": "总文件数",
+      "images": "图片",
+      "documents": "文档",
+      "storage_used": "已用存储",
+      "file_distribution": "文件类型分布",
+      "recent_uploads": "最近上传的文件"
+    },
+    "dashboard_title": "文件管理仪表板",
+    "dashboard_description": "高效管理和监控您的上传文件。",
+    "confirm": {
+      "delete": "确定要删除{{filename}}吗？"
+    },
+    "errors": {
+      "delete_failed": "删除文件失败。",
+      "memo_load_failed": "无法加载相关备忘录。",
+      "no_download_url": "没有下载链接。"
+    },
+    "types": {
+      "image": "屏幕截图",
+      "pdf": "月度工作报告",
+      "audio": "会议录音文件",
+      "excel": "分析用Excel文件"
+    },
+    "times": {
+      "today": "今天",
+      "yesterday": "昨天",
+      "days_ago": "{{count}}天前",
+      "week_ago": "1周前"
+    }
+  },
+  "links": {
+    "title": "链接管理",
+    "add_link": "添加链接",
+    "welcome_message": "从左侧选择链接。",
+    "categories": {
+      "development": "开发",
+      "learning": "学习",
+      "news": "新闻",
+      "shopping": "购物"
+    },
+    "tags": {
+      "frequent": "经常访问",
+      "bookmark": "书签",
+      "subscribe": "订阅",
+      "wishlist": "愿望清单"
+    }
+  },
+  "trash": {
+    "title": "回收站",
+    "loading": "正在加载回收站数据...",
+    "empty_all": "清空回收站",
+    "restore": "恢复",
+    "permanent_delete": "永久删除",
+    "select_all": "全选",
+    "restore_selected": "恢复选中项",
+    "delete_selected": "删除选中项",
+    "no_title": "无标题",
+    "expired": "已过期",
+    "expires_in_minutes": "{{minutes}}分钟后过期",
+    "expires_in_hours": "{{hours}}小时后过期",
+    "types": {
+      "memo": "备忘录",
+      "schedule": "日程", 
+      "task": "任务",
+      "file": "文件"
+    },
+    "filters": {
+      "filter": "筛选",
+      "reset": "重置",
+      "item_type": "项目类型",
+      "all": "全部"
+    },
+    "dashboard": {
+      "title": "回收站仪表板",
+      "total": "总计",
+      "memos": "备忘录",
+      "schedules": "日程",
+      "tasks": "任务", 
+      "files": "文件",
+      "expiring_soon": "即将过期"
+    },
+    "info": {
+      "about_title": "关于回收站",
+      "about_description": "已删除的项目在回收站中保留24小时。",
+      "rule_1": "项目在删除24小时后将自动永久删除",
+      "rule_2": "您可以将项目恢复到原始位置",
+      "rule_3": "永久删除的项目无法恢复",
+      "urgent_title": "需要注意",
+      "urgent_description": "{{count}}个项目即将过期。如果需要，请尽快恢复。"
+    },
+    "messages": {
+      "no_items": "回收站为空",
+      "no_items_selected": "未选择任何项目",
+      "restored": "项目已恢复",
+      "permanently_deleted": "项目已永久删除",
+      "emptied": "已删除{{count}}个项目",
+      "restored_count": "已恢复{{count}}个项目",
+      "permanently_deleted_count": "已永久删除{{count}}个项目",
+      "restore_error": "恢复失败",
+      "delete_error": "删除失败",
+      "empty_error": "清空回收站失败"
+    },
+    "restore_confirm": "恢复\\\"{{title}}\\\"项目？",
+    "permanent_delete_confirm": "永久删除\\\"{{title}}\\\"项目？",
+    "empty_trash_confirm": "永久删除回收站中的所有项目？",
+    "restore_selected_confirm": "恢复选中的{{count}}个项目？",
+    "permanent_delete_selected_confirm": "永久删除选中的{{count}}个项目？"
+  },
+  "support": {
+    "title": "支持",
+    "contact": "联系我们",
+    "welcome_message": "从左侧选择帮助类别。",
+    "header": {
+      "subtitle": "如果您有任何问题或改进建议，请随时与我们联系。"
+    },
+    "tabs": {
+      "submit": "发送反馈",
+      "history": "我的咨询记录"
+    },
+    "categories": {
+      "bug": "错误报告",
+      "feature": "功能建议", 
+      "support": "技术支持",
+      "general": "一般咨询",
+      "complaint": "投诉"
+    },
+    "status": {
+      "pending": "已受理",
+      "in_progress": "处理中", 
+      "resolved": "已回复",
+      "closed": "已关闭"
+    },
+    "priority": {
+      "low": "低",
+      "medium": "中",
+      "high": "高", 
+      "urgent": "紧急"
+    },
+    "form": {
+      "section_title": "发送反馈",
+      "category_label": "类别",
+      "priority_label": "优先级", 
+      "title_label": "标题",
+      "title_placeholder": "请输入咨询标题",
+      "content_label": "内容",
+      "content_placeholder": "请输入详细内容。如果是错误报告，请包含重现步骤以便我们更快解决问题。",
+      "anonymous_checkbox": "匿名提交",
+      "submit_button": "提交反馈",
+      "char_count": "{{current}}/{{max}}"
+    },
+    "history": {
+      "section_title": "我的咨询记录",
+      "loading": "正在加载咨询记录...",
+      "empty_title": "暂无咨询记录",
+      "empty_description": "如有疑问，请随时发送反馈。",
+      "submit_first": "发送第一个反馈",
+      "detail_title": "咨询内容",
+      "response_title": "管理员回复",
+      "response_date": "回复日期: {{date}}",
+      "status": "状态",
+      "select_feedback": "从左侧选择咨询以查看详细内容。",
+      "updated_label": "最后更新",
+      "created_label": "创建日期"
+    },
+    "alerts": {
+      "validation_error": "输入错误",
+      "title_content_required": "请输入标题和内容。",
+      "title_too_long": "标题不能超过200字符。",
+      "content_too_long": "内容不能超过2000字符。",
+      "submit_success": "提交成功",
+      "submit_success_message": "反馈已成功提交。我们会尽快审核并回复。",
+      "submitting": "提交中...",
+      "confirm": "确认",
+      "error": "错误",
+      "submit_error": "提交反馈时出现错误，请重试。",
+      "history_load_error": "加载咨询记录时出现错误。"
+    },
+    "faq": {
+      "title": "常见问题",
+      "items": {
+        "0": {
+          "question": "备忘录无法保存",
+          "answer": "请检查网络连接并重启应用。如果问题持续，请发送反馈。"
+        },
+        "1": {
+          "question": "AI功能无法使用",
+          "answer": "AI问题必须以完整句子形式输入。例如：\"请整理今天的任务\""
+        },
+        "2": {
+          "question": "无法登录",
+          "answer": "请重新检查邮箱和密码，如忘记密码请尝试重置。"
+        }
+      }
+    },
+    "getting_started": {
+      "title": "入门指南",
+      "description": "MemoBee使用指南",
+      "category": "基本使用"
+    },
+    "troubleshooting": {
+      "title": "故障排除",
+      "description": "常见问题和解决方案",
+      "category": "故障排除"
+    },
+    "customer_support": {
+      "title": "客户支持",
+      "description": "直接咨询和反馈",
+      "category": "联系方式"
+    }
+  },
+  "settings": {
+    "title": "环境设置",
+    "manage": "设置管理",
+    "dashboard_title": "设置仪表板",
+    "dashboard_description": "管理应用设置并查看版本信息。",
+    "language": {
+      "title": "语言设置",
+      "description": "更改应用界面语言",
+      "category": "语言",
+      "current": "当前语言",
+      "auto_save_notice": "语言将自动保存，下次启动时保持设置。"
+    },
+    "version": {
+      "title": "版本信息",
+      "description": "查看当前应用版本和平台信息",
+      "category": "信息",
+      "current": "当前版本",
+      "platform": "平台",
+      "last_updated": "最后更新"
+    }
+  },
+  "calendar": {
+    "today": "今天",
+    "year": "年",
+    "more_items": "个更多",
+    "months": {
+      "january": "1月",
+      "february": "2月",
+      "march": "3月",
+      "april": "4月",
+      "may": "5月",
+      "june": "6月",
+      "july": "7月",
+      "august": "8月",
+      "september": "9月",
+      "october": "10月",
+      "november": "11月",
+      "december": "12月"
+    },
+    "days": {
+      "sunday": "日",
+      "monday": "一",
+      "tuesday": "二",
+      "wednesday": "三",
+      "thursday": "四",
+      "friday": "五",
+      "saturday": "六"
+    },
+    "legend": {
+      "category_colors": "分类颜色",
+      "note": "* 每个日期的日程标题将以分类颜色显示"
+    }
+  },
+  "common": {
+    "loading": "加载中...",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭",
+    "ok": "确定",
+    "yes": "是",
+    "no": "否",
+    "apply": "应用",
+    "reset": "重置",
+    "developing": "开发中",
+    "coming_soon": "即将推出",
+    "feature_implementing": "{{feature}}功能正在开发中。"
+  }
+}

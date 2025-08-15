@@ -1,0 +1,779 @@
+{
+  "app": {
+    "name": "MemoBee",
+    "welcome": "MemoBee Desktop에 오신 것을 환영합니다!",
+    "subtitle": "macOS용 스마트 메모 앱"
+  },
+  "auth": {
+    "welcome_title": "MemoBee에 오신 것을 환영합니다",
+    "welcome_message": "계속하려면 로그인하세요",
+    "google_login": "Google로 계속하기",
+    "apple_login": "Apple로 계속하기 (개발 중)",
+    "logging_in": "로그인 중...",
+    "logout": "로그아웃",
+    "features": {
+      "firebase_auth": "Firebase Google 인증",
+      "auto_login": "자동 로그인 지원",
+      "secure_oauth": "안전한 OAuth 2.0"
+    },
+    "checking_auth": "Firebase 인증 확인 중..."
+  },
+  "menu": {
+    "memo": "메모",
+    "schedule": "일정",
+    "todo": "할일",
+    "security": "보안",
+    "analytics": "분석",
+    "share": "공유",
+    "files": "파일",
+    "links": "링크",
+    "trash": "휴지통",
+    "support": "지원",
+    "settings": "설정"
+  },
+  "memo": {
+    "new_memo": "새 메모",
+    "title_placeholder": "메모 제목",
+    "content_placeholder": "메모 내용을 입력하세요...",
+    "no_title": "제목 없음",
+    "loading": "메모 로딩 중...",
+    "welcome_title": "MemoBee Desktop에 오신 것을 환영합니다!",
+    "welcome_message": "왼쪽에서 메모를 선택하거나 새 메모를 작성해보세요.",
+    "load_error": "메모를 불러오는데 실패했습니다. 네트워크 연결을 확인해주세요.",
+    "save_error": "메모 저장에 실패했습니다.",
+    "create_error": "새 메모를 생성하는데 실패했습니다.",
+    "add_favorite": "즐겨찾기 추가",
+    "remove_favorite": "즐겨찾기 제거",
+    "delete_memo": "메모 삭제",
+    "save": "저장",
+    "saving": "저장 중...",
+    "save_completed": "저장 완료!"
+  },
+  "search": {
+    "placeholder": "AI에게 질문하거나 메모를 검색하세요...",
+    "ai_question": "AI 질문",
+    "processing": "처리중...",
+    "clear": "지우기",
+    "results": "검색 결과",
+    "no_results": "검색 결과가 없습니다",
+    "show_all": "전체 보기"
+  },
+  "schedule": {
+    "new_schedule": "새 일정",
+    "title": "일정 관리",
+    "welcome_message": "왼쪽에서 일정을 선택하세요.",
+    "loading": "일정 로딩 중...",
+    "categories": {
+      "work": "업무",
+      "personal": "개인",
+      "appointment": "약속",
+      "meeting": "회의",
+      "other": "기타"
+    },
+    "statuses": {
+      "upcoming": "예정",
+      "completed": "완료",
+      "cancelled": "취소"
+    },
+    "filters": {
+      "filter": "필터",
+      "reset": "초기화",
+      "category": "카테고리",
+      "status": "상태",
+      "all": "전체",
+      "hide_completed": "완료된 일정 숨기기"
+    },
+    "time": {
+      "all_day": "종일",
+      "time_undecided": "시간 미정",
+      "today": "오늘",
+      "tomorrow": "내일"
+    },
+    "all_day": "종일",
+    "dashboard": {
+      "title": "대시보드",
+      "calendar": "달력",
+      "total": "전체",
+      "upcoming": "예정",
+      "completed": "완료",
+      "cancelled": "취소",
+      "this_week": "이번 주",
+      "this_month": "이번 달",
+      "recent_schedules": "최근 일정",
+      "this_week_count": "이번 주: {{count}}개",
+      "this_month_count": "이번 달: {{count}}개"
+    },
+    "modal": {
+      "new_title": "새 일정 생성",
+      "edit_title": "일정 편집",
+      "title_label": "제목",
+      "title_required": "제목 *",
+      "title_placeholder": "일정 제목을 입력하세요",
+      "description_label": "설명",
+      "description_placeholder": "일정 설명을 입력하세요",
+      "is_all_day": "종일 일정",
+      "start_date": "시작 날짜",
+      "start_time": "시작 시간",
+      "end_date": "종료 날짜",
+      "end_time": "종료 시간",
+      "location_label": "장소",
+      "location_placeholder": "장소를 입력하세요",
+      "category_label": "카테고리",
+      "delete": "삭제",
+      "cancel": "취소",
+      "create": "생성",
+      "update": "수정"
+    },
+    "messages": {
+      "load_error": "일정을 불러오는데 실패했습니다.",
+      "no_schedules": "일정이 없습니다",
+      "no_schedules_selected_date": "선택한 날짜에 일정이 없습니다",
+      "title_required": "제목을 입력해주세요.",
+      "created": "일정이 생성되었습니다.",
+      "updated": "일정이 수정되었습니다.",
+      "save_error": "일정 저장에 실패했습니다.",
+      "delete_confirm": "일정을 삭제하시겠습니까?",
+      "deleted": "일정이 삭제되었습니다.",
+      "delete_error": "일정 삭제에 실패했습니다.",
+      "selected_date": "선택된 날짜"
+    }
+  },
+  "todo": {
+    "new_todo": "새 할일",
+    "title": "할일 관리",
+    "welcome_message": "할일 기능을 구현 중입니다.",
+    "implementing": "할일 기능 구현 중...",
+    "loading": "할일 로딩 중...",
+    "categories": {
+      "work": "업무",
+      "personal": "개인",
+      "study": "학습",
+      "shopping": "쇼핑",
+      "health": "건강"
+    },
+    "priorities": {
+      "high": "높음",
+      "medium": "보통",
+      "low": "낮음"
+    },
+    "statuses": {
+      "pending": "대기중",
+      "in_progress": "진행중",
+      "completed": "완료"
+    },
+    "filters": {
+      "filter": "필터",
+      "reset": "초기화",
+      "category": "카테고리",
+      "priority": "우선순위",
+      "status": "상태",
+      "all": "전체",
+      "show_completed": "완료된 할일 표시"
+    },
+    "dashboard": {
+      "title": "할일 대시보드",
+      "total": "전체",
+      "pending": "대기중",
+      "in_progress": "진행중",
+      "completed": "완료",
+      "high_priority_count": "높은 우선순위: {{count}}개",
+      "due_today_count": "오늘 마감: {{count}}개",
+      "recent_tasks": "최근 할일"
+    },
+    "due_date": {
+      "today": "오늘",
+      "tomorrow": "내일"
+    },
+    "messages": {
+      "no_tasks": "할일이 없습니다",
+      "title_required": "제목을 입력해주세요.",
+      "created": "할일이 생성되었습니다.",
+      "updated": "할일이 수정되었습니다.",
+      "deleted": "할일이 삭제되었습니다.",
+      "save_error": "할일 저장에 실패했습니다.",
+      "delete_error": "할일 삭제에 실패했습니다.",
+      "delete_confirm": "이 할일을 삭제하시겠습니까?"
+    }
+  },
+  "security": {
+    "title": "보안 관리",
+    "settings": "보안 설정",
+    "welcome_message": "왼쪽에서 보안 설정을 선택하세요.",
+    "description": {
+      "comprehensive_security": "AI가 분석한 개인정보를 안전하게 관리하세요"
+    },
+    "loading": {
+      "checking_status": "보안 상태 확인 중..."
+    },
+    "setup": {
+      "required_title": "보안 설정이 필요합니다",
+      "required_description": "보안 기능을 사용하려면 먼저 보안 비밀번호를 설정해주세요.",
+      "go_to_settings": "설정으로 이동"
+    },
+    "auth": {
+      "title": "보안 인증",
+      "access_description": "보안 정보에 접근하려면 보안 비밀번호를 입력하세요.",
+      "enter_password": "보안 비밀번호 입력",
+      "authenticate": "인증하기",
+      "authenticating": "인증 중...",
+      "success": "인증 성공"
+    },
+    "password": {
+      "not_set": "보안 비밀번호가 설정되지 않았습니다",
+      "required": "비밀번호를 입력해주세요",
+      "incorrect": "비밀번호가 올바르지 않습니다"
+    },
+    "errors": {
+      "initialization_failed": "보안 기능 초기화에 실패했습니다",
+      "status_check_failed": "보안 상태 확인에 실패했습니다",
+      "auth_failed": "보안 인증에 실패했습니다",
+      "info_load_failed": "보안 정보 로드에 실패했습니다",
+      "memo_load_failed": "연결된 메모를 불러올 수 없습니다"
+    },
+    "dashboard": {
+      "status_title": "보안 현황",
+      "total": "전체",
+      "high_risk": "높은 위험",
+      "medium_risk": "보통 위험",
+      "low_risk": "낮은 위험",
+      "type_distribution": "정보 유형별 분포",
+      "risk_analysis": "위험도별 상세 분석",
+      "recent_findings": "최근 발견된 보안 정보"
+    },
+    "dashboard_title": "보안 현황 대시보드",
+    "dashboard_description": "AI가 분석한 개인정보를 안전하게 관리하고 모니터링하세요.",
+    "search": {
+      "placeholder": "보안 정보 검색...",
+      "results": "검색 결과",
+      "count": "개"
+    },
+    "filter": {
+      "title": "필터 선택",
+      "all": "전체",
+      "phone": "전화번호",
+      "email": "이메일",
+      "password": "비밀번호",
+      "account": "계좌/카드",
+      "website": "웹사이트",
+      "id_number": "신분증",
+      "bank": "은행정보",
+      "address": "주소"
+    },
+    "list": {
+      "title": "보안 정보 목록",
+      "loading": "보안 정보 로딩 중...",
+      "empty": {
+        "title": "보안 정보가 없습니다",
+        "description": "AI가 분석한 개인정보가 여기에 표시됩니다."
+      }
+    },
+    "info": {
+      "confidence": "신뢰도",
+      "memo_button": "연결된 메모",
+      "no_related_memo": "연결된 메모가 없습니다",
+      "risk": {
+        "high": "높은 위험",
+        "medium": "보통 위험",
+        "low": "낮은 위험"
+      }
+    },
+    "detail": {
+      "value": "보안 정보 값",
+      "risk_level": "위험도",
+      "related_memo": "연결된 메모"
+    },
+    "info_types": {
+      "phone": "전화번호",
+      "email": "이메일",
+      "password": "비밀번호",
+      "account": "계좌번호",
+      "card": "카드번호",
+      "website": "웹사이트",
+      "address": "주소",
+      "resident_number": "주민등록번호",
+      "id_number": "신분증번호",
+      "financial_info": "금융정보"
+    },
+    "encryption": {
+      "title": "암호화 설정",
+      "description": "메모 암호화 및 복호화 설정",
+      "category": "보안"
+    },
+    "login_history": {
+      "title": "로그인 내역",
+      "description": "최근 로그인 기록 확인",
+      "category": "모니터링"
+    },
+    "permissions": {
+      "title": "권한 관리",
+      "description": "앱 권한 및 접근 관리",
+      "category": "설정"
+    },
+    "backup_security": {
+      "title": "백업 보안",
+      "description": "백업 파일 암호화 설정",
+      "category": "백업"
+    }
+  },
+  "analytics": {
+    "title": "사용 통계 분석",
+    "refresh": "새로고침",
+    "dashboard_title": "사용자 분석 대시보드",
+    "dashboard_description": "메모 작성 패턴과 사용 통계를 확인하세요.",
+    "periods": {
+      "day": "일별",
+      "week": "주별", 
+      "month": "월별"
+    },
+    "summary": {
+      "title": "데이터 요약",
+      "selected_period": "선택된 기간",
+      "last_updated": "마지막 업데이트"
+    },
+    "overview": {
+      "title": "개요 통계",
+      "total_memos": "총 메모",
+      "this_week": "이번 주",
+      "active_days": "활동 일수",
+      "avg_sentiment": "평균 감성"
+    },
+    "categories": {
+      "title": "카테고리 분석",
+      "other": "기타"
+    },
+    "trends": {
+      "title": "작성 추이"
+    },
+    "activity": {
+      "title": "시간대별 활동",
+      "count_suffix": "개"
+    },
+    "tags": {
+      "title": "인기 태그"
+    },
+    "sentiment": {
+      "title": "감성 분석",
+      "positive": "긍정적",
+      "neutral": "중립적",
+      "negative": "부정적",
+      "distribution": {
+        "positive": "긍정",
+        "neutral": "중립",
+        "negative": "부정"
+      },
+      "keywords": "주요 키워드"
+    },
+    "loading": "분석 데이터를 불러오는 중...",
+    "error": "분석 데이터를 불러오는데 실패했습니다."
+  },
+  "share": {
+    "title": "공유",
+    "total_shared": "총 {{count}}개 공유됨",
+    "search_placeholder": "공유된 메모 검색...",
+    "sort_by_date": "날짜순",
+    "sort_by_views": "조회수순",
+    "view_count": "{{count}}회 조회",
+    "no_shared_notes": "공유된 메모가 없습니다",
+    "no_search_results": "검색 결과가 없습니다",
+    "created_at": "{{date}}에 생성됨",
+    "copy_link": "링크 복사",
+    "share_link": "공유하기",
+    "unshare": "공유 해제",
+    "share_url": "공유 URL",
+    "welcome_title": "메모 공유",
+    "welcome_message": "공유된 메모를 관리하고 다른 사람들과 협업하세요.",
+    "getting_started_title": "시작하기",
+    "getting_started_message": "메모를 공유하려면 메모 편집 화면에서 공유 버튼을 클릭하세요.",
+    "confirm_unshare": "이 메모의 공유를 해제하시겠습니까?",
+    "unshare_success": "공유가 해제되었습니다.",
+    "unshare_error": "공유 해제에 실패했습니다.",
+    "copy_success": "링크가 클립보드에 복사되었습니다.",
+    "copy_error": "링크 복사에 실패했습니다.",
+    "share_title": "메모 공유",
+    "share_fallback": "공유 링크가 클립보드에 복사되었습니다."
+  },
+  "linkManagement": {
+    "title": "링크 관리",
+    "refresh": "새로고침",
+    "welcome_message": "메모에서 추출된 링크들을 관리하세요.",
+    "search": {
+      "placeholder": "링크 검색..."
+    },
+    "stats": {
+      "total_links": "총 {{count}}개 링크"
+    },
+    "selection": {
+      "select_all": "전체 선택",
+      "deselect_all": "전체 해제",
+      "selected_count": "{{count}}개 선택됨",
+      "delete": "삭제",
+      "cancel": "취소"
+    },
+    "actions": {
+      "copy_link": "링크 복사",
+      "open_link": "링크 열기",
+      "related_memo": "관련 메모"
+    },
+    "modal": {
+      "title": "링크 상세 정보",
+      "close": "✕",
+      "no_title": "제목 없음",
+      "site": "사이트: {{siteName}}",
+      "domain": "도메인: {{domain}}",
+      "created_date": "생성일: {{date}}",
+      "related_memo_section": "관련 메모",
+      "go_to_memo": "메모로 이동"
+    },
+    "loading": {
+      "text": "링크를 불러오는 중..."
+    },
+    "empty": {
+      "no_results": "검색 결과가 없습니다.",
+      "no_links": "저장된 링크가 없습니다.",
+      "description": "메모에 링크를 추가하면 여기에 표시됩니다."
+    },
+    "alerts": {
+      "auth_error": "로그인이 필요합니다.",
+      "auth_expired": "로그인이 만료되었습니다. 다시 로그인해주세요.",
+      "fetch_error": "링크 목록을 가져오는데 실패했습니다.",
+      "copy_success": "URL이 클립보드에 복사되었습니다.",
+      "copy_error": "링크 복사에 실패했습니다.",
+      "open_browser": "브라우저에서 열기",
+      "link_error": "링크를 열 수 없습니다.",
+      "memo_not_found": "관련된 메모를 찾을 수 없습니다.",
+      "memo_load_error": "메모를 불러오는데 실패했습니다.",
+      "delete_confirm": "선택된 {{count}}개의 링크를 삭제하시겠습니까?",
+      "delete_success": "{{count}}개의 링크가 삭제되었습니다.",
+      "delete_error": "링크 삭제에 실패했습니다.",
+      "delete_error_occurred": "링크 삭제 중 오류가 발생했습니다."
+    },
+    "errors": {
+      "auth_token": "인증 토큰을 가져올 수 없습니다."
+    },
+    "preview": "미리보기",
+    "no_preview": "미리보기 이미지가 없습니다.",
+    "dashboard": {
+      "title": "링크 통계",
+      "total_links": "총 링크 수",
+      "accessible_links": "접근 가능"
+    }
+  },
+  "files": {
+    "title": "파일 관리",
+    "upload": "파일 업로드",
+    "welcome_message": "왼쪽에서 파일을 선택하여 상세 정보를 확인하세요.",
+    "loading": "파일 목록을 불러오는 중...",
+    "refresh": "새로고침",
+    "stats": {
+      "title": "파일 통계",
+      "images": "이미지",
+      "files": "파일",
+      "total_size": "전체 크기"
+    },
+    "tabs": {
+      "images": "이미지",
+      "files": "파일"
+    },
+    "empty": {
+      "no_images": "이미지가 없습니다",
+      "no_images_desc": "메모에 이미지를 첨부하면 여기에 표시됩니다.",
+      "no_files": "파일이 없습니다",
+      "no_files_desc": "메모에 파일을 첨부하면 여기에 표시됩니다."
+    },
+    "detail": {
+      "preview": "미리보기",
+      "no_preview": "미리보기를 사용할 수 없습니다",
+      "filename": "파일명",
+      "filetype": "파일 형식",
+      "filesize": "파일 크기",
+      "created_at": "생성일",
+      "related_memo": "연결된 메모"
+    },
+    "actions": {
+      "download": "다운로드",
+      "view_full": "전체 보기",
+      "delete": "삭제",
+      "view_memo": "메모 보기"
+    },
+    "dashboard": {
+      "title": "파일 현황",
+      "total_files": "전체 파일",
+      "images": "이미지",
+      "documents": "문서",
+      "storage_used": "사용 용량",
+      "file_distribution": "파일 유형별 분포",
+      "recent_uploads": "최근 업로드된 파일"
+    },
+    "dashboard_title": "파일 관리 대시보드",
+    "dashboard_description": "업로드된 파일들을 효율적으로 관리하고 모니터링하세요.",
+    "confirm": {
+      "delete": "{{filename}} 파일을 삭제하시겠습니까?"
+    },
+    "errors": {
+      "delete_failed": "파일 삭제에 실패했습니다.",
+      "memo_load_failed": "연결된 메모를 불러올 수 없습니다.",
+      "no_download_url": "다운로드 URL이 없습니다."
+    },
+    "types": {
+      "image": "스크린샷 이미지",
+      "pdf": "월간 업무 보고서",
+      "audio": "회의 녹음 파일",
+      "excel": "분석용 엑셀 파일"
+    },
+    "times": {
+      "today": "오늘",
+      "yesterday": "어제",
+      "days_ago": "{{count}}일 전",
+      "week_ago": "1주 전"
+    }
+  },
+  "links": {
+    "title": "링크 관리",
+    "add_link": "링크 추가",
+    "welcome_message": "왼쪽에서 링크를 선택하세요.",
+    "categories": {
+      "development": "개발",
+      "learning": "학습",
+      "news": "뉴스",
+      "shopping": "쇼핑"
+    },
+    "tags": {
+      "frequent": "자주 방문",
+      "bookmark": "북마크",
+      "subscribe": "구독",
+      "wishlist": "위시리스트"
+    }
+  },
+  "trash": {
+    "title": "휴지통",
+    "loading": "휴지통 데이터 로딩 중...",
+    "empty_all": "휴지통 비우기",
+    "restore": "복원",
+    "permanent_delete": "영구 삭제",
+    "select_all": "전체 선택",
+    "restore_selected": "선택 항목 복원",
+    "delete_selected": "선택 항목 삭제",
+    "no_title": "제목 없음",
+    "expired": "만료됨",
+    "expires_in_minutes": "{{minutes}}분 후 만료",
+    "expires_in_hours": "{{hours}}시간 후 만료",
+    "types": {
+      "memo": "메모",
+      "schedule": "일정", 
+      "task": "할일",
+      "file": "파일"
+    },
+    "filters": {
+      "filter": "필터",
+      "reset": "초기화",
+      "item_type": "항목 유형",
+      "all": "전체"
+    },
+    "dashboard": {
+      "title": "휴지통 대시보드",
+      "total": "전체",
+      "memos": "메모",
+      "schedules": "일정",
+      "tasks": "할일", 
+      "files": "파일",
+      "expiring_soon": "곧 만료"
+    },
+    "info": {
+      "about_title": "휴지통 안내",
+      "about_description": "삭제된 항목은 24시간 동안 휴지통에 보관됩니다.",
+      "rule_1": "항목은 삭제 후 24시간 후 자동으로 영구 삭제됩니다",
+      "rule_2": "복원을 통해 원래 위치로 되돌릴 수 있습니다",
+      "rule_3": "영구 삭제된 항목은 복구할 수 없습니다",
+      "urgent_title": "주의 필요",
+      "urgent_description": "{{count}}개 항목이 곧 만료됩니다. 복원을 원하시면 서둘러 주세요."
+    },
+    "messages": {
+      "no_items": "휴지통이 비어있습니다",
+      "no_items_selected": "선택된 항목이 없습니다",
+      "restored": "항목이 복원되었습니다",
+      "permanently_deleted": "항목이 영구 삭제되었습니다",
+      "emptied": "{{count}}개 항목이 삭제되었습니다",
+      "restored_count": "{{count}}개 항목이 복원되었습니다",
+      "permanently_deleted_count": "{{count}}개 항목이 영구 삭제되었습니다",
+      "restore_error": "복원에 실패했습니다",
+      "delete_error": "삭제에 실패했습니다",
+      "empty_error": "휴지통 비우기에 실패했습니다"
+    },
+    "restore_confirm": "\"{{title}}\" 항목을 복원하시겠습니까?",
+    "permanent_delete_confirm": "\"{{title}}\" 항목을 영구 삭제하시겠습니까?",
+    "empty_trash_confirm": "휴지통의 모든 항목을 영구 삭제하시겠습니까?",
+    "restore_selected_confirm": "선택한 {{count}}개 항목을 복원하시겠습니까?",
+    "permanent_delete_selected_confirm": "선택한 {{count}}개 항목을 영구 삭제하시겠습니까?"
+  },
+  "support": {
+    "title": "지원",
+    "contact": "문의하기",
+    "welcome_message": "왼쪽에서 도움말 카테고리를 선택하세요.",
+    "header": {
+      "subtitle": "문의사항이나 개선 제안이 있으시면 언제든지 연락해주세요."
+    },
+    "tabs": {
+      "submit": "피드백 보내기",
+      "history": "내 문의 내역"
+    },
+    "categories": {
+      "bug": "버그 신고",
+      "feature": "기능 제안", 
+      "support": "기술 지원",
+      "general": "일반 문의",
+      "complaint": "불만 사항"
+    },
+    "status": {
+      "pending": "접수됨",
+      "in_progress": "처리중", 
+      "resolved": "답변완료",
+      "closed": "종료됨"
+    },
+    "priority": {
+      "low": "낮음",
+      "medium": "보통",
+      "high": "높음", 
+      "urgent": "긴급"
+    },
+    "form": {
+      "section_title": "피드백 보내기",
+      "category_label": "카테고리",
+      "priority_label": "우선순위", 
+      "title_label": "제목",
+      "title_placeholder": "문의 제목을 입력해주세요",
+      "content_label": "내용",
+      "content_placeholder": "자세한 내용을 입력해주세요. 버그 신고의 경우 재현 방법을 포함해주시면 더 빠른 해결이 가능합니다.",
+      "anonymous_checkbox": "익명으로 제출하기",
+      "submit_button": "피드백 제출",
+      "char_count": "{{current}}/{{max}}"
+    },
+    "history": {
+      "section_title": "내 문의 내역",
+      "loading": "문의 내역을 불러오는 중...",
+      "empty_title": "아직 문의 내역이 없습니다",
+      "empty_description": "궁금한 점이 있으시면 언제든지 피드백을 보내주세요.",
+      "submit_first": "첫 번째 피드백 보내기",
+      "detail_title": "문의 내용",
+      "response_title": "관리자 답변",
+      "response_date": "답변일: {{date}}",
+      "status": "상태",
+      "select_feedback": "왼쪽에서 문의를 선택하여 상세 내용을 확인하세요.",
+      "updated_label": "최종 업데이트",
+      "created_label": "생성일"
+    },
+    "alerts": {
+      "validation_error": "입력 오류",
+      "title_content_required": "제목과 내용을 모두 입력해주세요.",
+      "title_too_long": "제목은 200자 이내로 입력해주세요.",
+      "content_too_long": "내용은 2000자 이내로 입력해주세요.",
+      "submit_success": "제출 완료",
+      "submit_success_message": "피드백이 성공적으로 제출되었습니다. 빠른 시일 내에 검토 후 답변드리겠습니다.",
+      "submitting": "제출 중...",
+      "confirm": "확인",
+      "error": "오류",
+      "submit_error": "피드백 제출 중 오류가 발생했습니다. 다시 시도해주세요.",
+      "history_load_error": "문의 내역을 불러오는 중 오류가 발생했습니다."
+    },
+    "faq": {
+      "title": "자주 묻는 질문",
+      "items": {
+        "0": {
+          "question": "메모가 저장되지 않아요",
+          "answer": "인터넷 연결을 확인하시고, 앱을 재시작해보세요. 문제가 지속되면 피드백을 보내주세요."
+        },
+        "1": {
+          "question": "AI 기능이 작동하지 않아요",
+          "answer": "AI 질문은 완전한 문장 형태로 입력해야 합니다. 예: \"오늘 할 일을 정리해줘\""
+        },
+        "2": {
+          "question": "로그인이 안 돼요",
+          "answer": "이메일과 비밀번호를 다시 확인해보시고, 비밀번호를 잊으셨다면 재설정을 시도해보세요."
+        }
+      }
+    },
+    "getting_started": {
+      "title": "시작하기",
+      "description": "MemoBee 사용법 가이드",
+      "category": "기본 사용법"
+    },
+    "troubleshooting": {
+      "title": "문제 해결",
+      "description": "일반적인 문제와 해결법",
+      "category": "트러블슈팅"
+    },
+    "customer_support": {
+      "title": "고객지원",
+      "description": "직접 문의 및 피드백",
+      "category": "연락처"
+    }
+  },
+  "settings": {
+    "title": "환경 설정",
+    "manage": "설정 관리",
+    "dashboard_title": "환경 설정 대시보드",
+    "dashboard_description": "앱 설정을 관리하고 버전 정보를 확인하세요.",
+    "language": {
+      "title": "언어 설정",
+      "description": "앱 인터페이스 언어를 변경합니다",
+      "category": "언어",
+      "current": "현재 언어",
+      "auto_save_notice": "언어는 자동으로 저장되며 다음 실행 시에도 유지됩니다."
+    },
+    "version": {
+      "title": "버전 정보",
+      "description": "현재 앱 버전과 플랫폼 정보를 확인합니다",
+      "category": "정보",
+      "current": "현재 버전",
+      "platform": "플랫폼",
+      "last_updated": "마지막 업데이트"
+    }
+  },
+  "calendar": {
+    "today": "오늘",
+    "year": "년",
+    "more_items": "개 더 있음",
+    "months": {
+      "january": "1월",
+      "february": "2월",
+      "march": "3월",
+      "april": "4월",
+      "may": "5월",
+      "june": "6월",
+      "july": "7월",
+      "august": "8월",
+      "september": "9월",
+      "october": "10월",
+      "november": "11월",
+      "december": "12월"
+    },
+    "days": {
+      "sunday": "일",
+      "monday": "월",
+      "tuesday": "화",
+      "wednesday": "수",
+      "thursday": "목",
+      "friday": "금",
+      "saturday": "토"
+    },
+    "legend": {
+      "category_colors": "카테고리별 색상",
+      "note": "* 각 날짜에 일정 제목이 카테고리 색상으로 표시됩니다"
+    }
+  },
+  "common": {
+    "loading": "로딩 중...",
+    "save": "저장",
+    "cancel": "취소",
+    "delete": "삭제",
+    "edit": "편집",
+    "close": "닫기",
+    "ok": "확인",
+    "yes": "예",
+    "no": "아니오",
+    "apply": "적용",
+    "reset": "초기화",
+    "developing": "개발 중",
+    "coming_soon": "곧 출시",
+    "feature_implementing": "{{feature}} 기능을 구현 중입니다."
+  }
+}
