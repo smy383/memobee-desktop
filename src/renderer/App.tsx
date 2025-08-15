@@ -757,7 +757,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       {/* 헤더 */}
       <header className="layout-header">
         <div className="header-left">
-          <h1>MemoBee AI</h1>
+          <h1>MemoBee AI v1.0.2</h1>
         </div>
         <div className="header-right">
           {currentUser && (
@@ -1340,7 +1340,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                   <div className="version-info">
                     <div className="version-item">
                       <div className="version-label">{t('settings.version.current')}</div>
-                      <div className="version-value">v1.0.0</div>
+                      <div className="version-value">v1.0.2</div>
                     </div>
                     <div className="version-item">
                       <div className="version-label">{t('settings.version.platform')}</div>
