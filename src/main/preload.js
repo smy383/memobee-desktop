@@ -75,10 +75,42 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   isDev: () => {
     return process.env.NODE_ENV === 'development';
+  },
+
+  // 수동 업데이트 관련 API
+  checkForUpdates: async () => {
+    try {
+      const result = await ipcRenderer.invoke('manual-check-for-updates');
+      return result;
+    } catch (error) {
+      console.error('Manual Update Check Error:', error);
+      return { available: false, error: error.message };
+    }
+  },
+
+  downloadUpdate: async () => {
+    try {
+      const result = await ipcRenderer.invoke('manual-download-update');
+      return result;
+    } catch (error) {
+      console.error('Manual Download Update Error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
+  installUpdate: async () => {
+    try {
+      const result = await ipcRenderer.invoke('manual-install-update');
+      return result;
+    } catch (error) {
+      console.error('Manual Install Update Error:', error);
+      return { success: false, error: error.message };
+    }
   }
 });
 
 // 전역 memobeeDesktop 객체 노출 (App.tsx에서 사용)
+// 참고: preload에서는 app.isPackaged 접근 불가, 따라서 main process와 다른 판단 기준 사용
 const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--dev');
 contextBridge.exposeInMainWorld('memobeeDesktop', {
   platform: process.platform,

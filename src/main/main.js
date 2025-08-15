@@ -4,7 +4,10 @@ const path = require('path');
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
-const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--dev');
+// 더 정확한 개발 모드 감지 - 패키징되지 않은 경우만 개발 모드
+const isDev = !app.isPackaged || 
+              process.env.NODE_ENV === 'development' || 
+              process.argv.includes('--dev');
 
 // Keep a global reference of the server
 let server;
@@ -372,6 +375,106 @@ app.on('window-all-closed', () => {
   // On macOS, keep app running even when all windows are closed
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+});
+
+// 수동 업데이트 IPC 핸들러들
+ipcMain.handle('manual-check-for-updates', async () => {
+  try {
+    console.log('🔍 수동 업데이트 확인 요청');
+    console.log('🔧 isDev:', isDev);
+    console.log('🔧 app.isPackaged:', app.isPackaged);
+    console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
+    console.log('🔧 argv:', process.argv);
+    console.log('🔧 현재 앱 버전:', app.getVersion());
+    
+    
+    // 개발 모드에서는 시뮬레이션
+    if (isDev) {
+      console.log('ℹ️ 개발 모드: 업데이트 시뮬레이션');
+      
+      // v1.0.2가 배포되어 있으므로 업데이트 available로 시뮬레이션
+      return {
+        available: true,
+        version: '1.0.2',
+        releaseDate: '2025-08-15',
+        releaseNotes: '- 헤더에 v1.0.2 버전 표시 추가\n- 설정 화면 버전 정보 업데이트\n- 자동 업데이트 기능 테스트용',
+        downloadUrl: 'https://github.com/smy383/memobee-desktop/releases/tag/v1.0.2'
+      };
+    }
+    
+    console.log('🚀 프로덕션 모드: 실제 업데이트 확인 시작');
+    
+    // 프로덕션 모드에서는 실제 업데이트 확인
+    return new Promise((resolve) => {
+      autoUpdater.checkForUpdates();
+      
+      // 타임아웃 설정 (10초)
+      const timeout = setTimeout(() => {
+        resolve({ available: false, message: '업데이트 확인 타임아웃' });
+      }, 10000);
+      
+      // 업데이트 사용 가능 이벤트
+      autoUpdater.once('update-available', (info) => {
+        clearTimeout(timeout);
+        resolve({
+          available: true,
+          version: info.version,
+          releaseDate: info.releaseDate,
+          releaseNotes: info.releaseNotes,
+          downloadUrl: `https://github.com/smy383/memobee-desktop/releases/tag/v${info.version}`
+        });
+      });
+      
+      // 업데이트 없음 이벤트
+      autoUpdater.once('update-not-available', () => {
+        clearTimeout(timeout);
+        resolve({ available: false, message: '최신 버전을 사용 중입니다' });
+      });
+      
+      // 에러 이벤트
+      autoUpdater.once('error', (error) => {
+        clearTimeout(timeout);
+        resolve({ available: false, error: error.message });
+      });
+    });
+  } catch (error) {
+    console.error('❌ 수동 업데이트 확인 실패:', error);
+    return { available: false, error: error.message };
+  }
+});
+
+ipcMain.handle('manual-download-update', async () => {
+  try {
+    console.log('📥 수동 업데이트 다운로드 요청');
+    
+    if (isDev) {
+      console.log('ℹ️ 개발 모드: 다운로드 시뮬레이션');
+      return { success: true, message: '개발 모드에서는 실제 다운로드되지 않습니다' };
+    }
+    
+    autoUpdater.downloadUpdate();
+    return { success: true, message: '다운로드가 시작되었습니다' };
+  } catch (error) {
+    console.error('❌ 수동 업데이트 다운로드 실패:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('manual-install-update', async () => {
+  try {
+    console.log('🔄 수동 업데이트 설치 요청');
+    
+    if (isDev) {
+      console.log('ℹ️ 개발 모드: 설치 시뮬레이션');
+      return { success: true, message: '개발 모드에서는 실제 재시작되지 않습니다' };
+    }
+    
+    autoUpdater.quitAndInstall();
+    return { success: true, message: '앱이 재시작됩니다' };
+  } catch (error) {
+    console.error('❌ 수동 업데이트 설치 실패:', error);
+    return { success: false, error: error.message };
   }
 });
 

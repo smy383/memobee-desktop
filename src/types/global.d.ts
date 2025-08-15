@@ -21,6 +21,18 @@ declare global {
       getAppVersion: () => string;
       getPlatform: () => string;
       isDev: () => boolean;
+      // 수동 업데이트 관련 API
+      checkForUpdates: () => Promise<{
+        available: boolean;
+        version?: string;
+        releaseDate?: string;
+        releaseNotes?: string;
+        downloadUrl?: string;
+        message?: string;
+        error?: string;
+      }>;
+      downloadUpdate: () => Promise<{ success: boolean; message?: string; error?: string }>;
+      installUpdate: () => Promise<{ success: boolean; message?: string; error?: string }>;
     };
   }
 }

@@ -60,6 +60,11 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const [showAiResult, setShowAiResult] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // 수동 업데이트 관련 상태
+  const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
+  const [updateInfo, setUpdateInfo] = useState<any>(null);
+  const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'available' | 'not-available' | 'downloading' | 'ready'>('idle');
+
   // 실제 API를 통한 메모 목록 로드
   useEffect(() => {
     loadMemos();
@@ -749,6 +754,72 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     }
   };
 
+  // 수동 업데이트 확인 핸들러
+  const handleCheckUpdate = async () => {
+    if (isCheckingUpdate) return;
+    
+    try {
+      setIsCheckingUpdate(true);
+      setUpdateStatus('checking');
+      console.log('🔍 수동 업데이트 확인 시작...');
+      
+      // Electron Main 프로세스에 업데이트 확인 요청
+      if (window.electronAPI?.checkForUpdates) {
+        const result = await window.electronAPI.checkForUpdates();
+        console.log('✅ 업데이트 확인 결과:', result);
+        
+        if (result.available) {
+          setUpdateInfo(result);
+          setUpdateStatus('available');
+        } else {
+          setUpdateStatus('not-available');
+          setTimeout(() => {
+            setUpdateStatus('idle');
+          }, 3000);
+        }
+      } else {
+        console.log('ℹ️ 개발 모드 또는 electronAPI 없음');
+        setUpdateStatus('not-available');
+        setTimeout(() => {
+          setUpdateStatus('idle');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('❌ 업데이트 확인 실패:', error);
+      setUpdateStatus('idle');
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  };
+
+  // 업데이트 다운로드 핸들러
+  const handleDownloadUpdate = async () => {
+    try {
+      setUpdateStatus('downloading');
+      console.log('📥 업데이트 다운로드 시작...');
+      
+      if (window.electronAPI?.downloadUpdate) {
+        await window.electronAPI.downloadUpdate();
+      }
+    } catch (error) {
+      console.error('❌ 업데이트 다운로드 실패:', error);
+      setUpdateStatus('available');
+    }
+  };
+
+  // 업데이트 설치 핸들러
+  const handleInstallUpdate = async () => {
+    try {
+      console.log('🔄 업데이트 설치 시작...');
+      
+      if (window.electronAPI?.installUpdate) {
+        await window.electronAPI.installUpdate();
+      }
+    } catch (error) {
+      console.error('❌ 업데이트 설치 실패:', error);
+    }
+  };
+
   return (
     <div className="layout">
       {/* 업데이트 알림 */}
@@ -757,7 +828,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       {/* 헤더 */}
       <header className="layout-header">
         <div className="header-left">
-          <h1>MemoBee AI v1.0.2</h1>
+          <h1>MemoBee AI v1.0.1</h1>
         </div>
         <div className="header-right">
           {currentUser && (
@@ -1340,7 +1411,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                   <div className="version-info">
                     <div className="version-item">
                       <div className="version-label">{t('settings.version.current')}</div>
-                      <div className="version-value">v1.0.2</div>
+                      <div className="version-value">v1.0.1</div>
                     </div>
                     <div className="version-item">
                       <div className="version-label">{t('settings.version.platform')}</div>
@@ -1349,6 +1420,89 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                     <div className="version-item">
                       <div className="version-label">{t('settings.version.last_updated')}</div>
                       <div className="version-value">{formatDate(new Date().toISOString())}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 수동 업데이트 섹션 */}
+                <div className="stats-section">
+                  <h3>🔄 앱 업데이트</h3>
+                  <div className="update-section">
+                    <p className="update-description">
+                      최신 버전의 MemoBee를 사용하여 새로운 기능과 개선사항을 경험하세요.
+                    </p>
+                    
+                    <div className="update-status">
+                      {updateStatus === 'checking' && (
+                        <div className="update-status-item checking">
+                          <FaSpinner className="update-spinner" />
+                          <span>업데이트 확인 중...</span>
+                        </div>
+                      )}
+                      
+                      {updateStatus === 'available' && updateInfo && (
+                        <div className="update-status-item available">
+                          <FaCheck className="update-icon" />
+                          <div className="update-info">
+                            <span className="update-title">새 업데이트 발견!</span>
+                            <span className="update-version">v{updateInfo.version} 사용 가능</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {updateStatus === 'not-available' && (
+                        <div className="update-status-item up-to-date">
+                          <FaCheck className="update-icon" />
+                          <span>최신 버전을 사용 중입니다</span>
+                        </div>
+                      )}
+                      
+                      {updateStatus === 'downloading' && (
+                        <div className="update-status-item downloading">
+                          <FaSpinner className="update-spinner" />
+                          <span>업데이트 다운로드 중...</span>
+                        </div>
+                      )}
+                      
+                      {updateStatus === 'ready' && (
+                        <div className="update-status-item ready">
+                          <FaCheck className="update-icon" />
+                          <span>업데이트 설치 준비 완료</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="update-actions">
+                      {updateStatus === 'idle' && (
+                        <button
+                          onClick={handleCheckUpdate}
+                          disabled={isCheckingUpdate}
+                          className="update-btn check-update-btn"
+                        >
+                          <FaSearch />
+                          업데이트 확인
+                        </button>
+                      )}
+                      
+                      {updateStatus === 'available' && (
+                        <button
+                          onClick={handleDownloadUpdate}
+                          className="update-btn download-update-btn"
+                        >
+                          <FaSave />
+                          지금 업데이트
+                        </button>
+                      )}
+                      
+                      {updateStatus === 'ready' && (
+                        <button
+                          onClick={handleInstallUpdate}
+                          className="update-btn install-update-btn"
+                        >
+                          <FaCheck />
+                          재시작 및 설치
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

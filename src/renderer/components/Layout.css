@@ -840,6 +840,138 @@
   font-size: 16px;
 }
 
+/* 수동 업데이트 섹션 스타일 */
+.update-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.update-description {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.update-status {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.update-status-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.update-status-item.checking {
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+.update-status-item.available {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.update-status-item.up-to-date {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.update-status-item.downloading {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.update-status-item.ready {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.update-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.update-title {
+  font-weight: 600;
+}
+
+.update-version {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.update-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.update-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.update-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.update-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.check-update-btn {
+  background: #007AFF;
+  color: white;
+}
+
+.check-update-btn:hover:not(:disabled) {
+  background: #0056CC;
+  transform: translateY(-1px);
+}
+
+.download-update-btn {
+  background: #34C759;
+  color: white;
+}
+
+.download-update-btn:hover:not(:disabled) {
+  background: #28A745;
+  transform: translateY(-1px);
+}
+
+.install-update-btn {
+  background: #FF9500;
+  color: white;
+}
+
+.install-update-btn:hover:not(:disabled) {
+  background: #E6820E;
+  transform: translateY(-1px);
+}
+
 /* 스크롤바 스타일 */
 .memo-list::-webkit-scrollbar {
   width: 8px;
