@@ -1,6 +1,6 @@
 {
   "name": "memobee-desktop",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "MemoBee Desktop App for macOS and Windows",
   "main": "src/main/main.js",
   "homepage": "./",
@@ -108,6 +108,13 @@
       "target": [
         {
           "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "zip",
           "arch": [
             "x64",
             "arm64"
