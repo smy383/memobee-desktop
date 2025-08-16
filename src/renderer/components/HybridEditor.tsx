@@ -73,15 +73,31 @@ const HybridEditor = forwardRef<HybridEditorRef, HybridEditorProps>(({
   const textareaRefs = useRef<{ [key: string]: HTMLTextAreaElement }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // value가 외부에서 변경될 때 에디터 상태 업데이트
+  // 내부 업데이트 플래그 - onChange로 인한 재렌더링 방지
+  const isInternalUpdate = useRef(false);
+  const lastExternalValue = useRef(value);
+  
+  // value가 외부에서 변경될 때만 에디터 상태 업데이트
   useEffect(() => {
-    const newEditorState = parseContentToBlocks(value, attachments);
-    setEditorState(newEditorState);
+    // 내부 업데이트인 경우 무시
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      return;
+    }
+    
+    // 실제로 값이 변경된 경우에만 업데이트
+    if (lastExternalValue.current !== value) {
+      const newEditorState = parseContentToBlocks(value, attachments);
+      setEditorState(newEditorState);
+      lastExternalValue.current = value;
+    }
   }, [value, attachments]);
 
   // 에디터 상태가 변경될 때 부모에게 알림
   const notifyChange = (newEditorState: EditorState) => {
     const htmlContent = blocksToHtml(newEditorState);
+    isInternalUpdate.current = true; // 내부 업데이트 플래그 설정
+    lastExternalValue.current = htmlContent; // 외부 값 참조 업데이트
     onChange(htmlContent);
   };
 

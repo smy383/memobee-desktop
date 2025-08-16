@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { authService } from '../shared/services/authService';
 import { api } from '../shared/services/apiService';
@@ -62,6 +62,25 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   
   // HybridEditor ref
   const hybridEditorRef = useRef<HybridEditorRef>(null);
+  
+  // 메모 업데이트 핸들러들 (useCallback으로 최적화 - 함수형 업데이트 사용)
+  const handleMemoTitleChange = useCallback((title: string) => {
+    setSelectedMemo((prevMemo) => {
+      if (prevMemo) {
+        return { ...prevMemo, title };
+      }
+      return prevMemo;
+    });
+  }, []);
+  
+  const handleMemoContentChange = useCallback((content: string) => {
+    setSelectedMemo((prevMemo) => {
+      if (prevMemo) {
+        return { ...prevMemo, content };
+      }
+      return prevMemo;
+    });
+  }, []);
   
   // 보안 인증 관련 상태
   const [showSecurityModal, setShowSecurityModal] = useState(false);
@@ -991,9 +1010,9 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
             <div className="user-info">
               <FaUser className="user-icon" />
               <span className="user-email">{currentUser.email}</span>
-              {userProfile && (
-                <div className={`subscription-badge ${userProfile.subscription_type === 'pro' ? 'pro' : 'free'}`}>
-                  {userProfile.subscription_type === 'pro' ? (
+              {!isSubscriptionLoading && (
+                <div className={`subscription-badge ${isPro ? 'pro' : 'free'}`}>
+                  {isPro ? (
                     <>
                       <FaCrown className="subscription-icon" />
                       <span>Pro</span>
@@ -1434,10 +1453,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                     <input
                       type="text"
                       value={selectedMemo.ai_title || selectedMemo.title || ''}
-                      onChange={(e) => {
-                        const updatedMemo = { ...selectedMemo, title: e.target.value };
-                        setSelectedMemo(updatedMemo);
-                      }}
+                      onChange={(e) => handleMemoTitleChange(e.target.value)}
                       onBlur={() => selectedMemo && handleSaveMemo(selectedMemo)}
                       placeholder={selectedMemo.ai_title ? '' : t('memo.title_placeholder')}
                       className="memo-title-input"
@@ -1449,10 +1465,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                     <HybridEditor
                       ref={hybridEditorRef}
                       value={selectedMemo.content || ''}
-                      onChange={(content) => {
-                        const updatedMemo = { ...selectedMemo, content };
-                        setSelectedMemo(updatedMemo);
-                      }}
+                      onChange={handleMemoContentChange}
                       attachments={selectedMemo.attachments}
                       placeholder={isPro ? t('memo.content_placeholder') : 'Pro 구독이 필요합니다. 현재는 읽기만 가능합니다.'}
                       readOnly={!isPro}
