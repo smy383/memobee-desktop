@@ -10,6 +10,7 @@ declare global {
     updateProgressHandler?: (progress: {percent: number; transferred: number; total: number}) => void;
     electronAPI?: {
       openOAuthWindow: (url: string) => Promise<{ success: boolean; error?: string; url?: string }>;
+      openExternalUrl: (url: string) => Promise<{ success: boolean; error?: string }>;
       showInputDialog: (title: string, message: string) => Promise<string | null>;
       onNewMemo: (callback: () => void) => void;
       onSaveMemo: (callback: () => void) => void;
