@@ -18,6 +18,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }
   },
 
+  // 외부 URL 열기 (외부 브라우저에서)
+  openExternalUrl: async (url) => {
+    try {
+      const result = await ipcRenderer.invoke('open-external-url', url);
+      return result;
+    } catch (error) {
+      console.error('External URL Error:', error);
+      return { success: false, error: error.message };
+    }
+  },
+
   // 입력 다이얼로그 표시
   showInputDialog: async (title, message) => {
     try {

@@ -15,9 +15,11 @@ import ShareView from './components/ShareView';
 import LinkManagementView from './components/LinkManagementView';
 import SupportView from './components/SupportView';
 import UpdateNotification from './components/UpdateNotification';
+import ProUpgradeModal from './components/ProUpgradeModal';
+import { useSubscription } from './hooks/useSubscription';
 import { changeLanguage, getCurrentLanguage, getLanguageLabel, getSupportedLanguages } from './i18n';
 // React Icons 추가
-import { FaStar, FaRegStar, FaSave, FaTrash, FaCheck, FaSpinner, FaRobot, FaSearch, FaComments, FaQuestion, FaTimes, FaLock, FaPaperclip, FaUser, FaCrown } from 'react-icons/fa';
+import { FaStar, FaRegStar, FaSave, FaTrash, FaCheck, FaSpinner, FaRobot, FaSearch, FaComments, FaQuestion, FaTimes, FaLock, FaPaperclip, FaUser, FaCrown, FaPlus } from 'react-icons/fa';
 import './i18n'; // i18n 초기화
 import './components/Layout.css';
 
@@ -32,6 +34,8 @@ interface LayoutProps {
 type ScreenType = 'memo' | 'schedule' | 'todo' | 'security' | 'analytics' | 'share' | 'files' | 'links' | 'trash' | 'support' | 'settings';
 
 const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
+  console.log('🏠 Layout 컴포넌트 시작!');
+  
   const { t } = useTranslation();
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('memo');
   const [memos, setMemos] = useState<Memo[]>([]);
@@ -43,6 +47,18 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const [currentLanguage, setCurrentLanguage] = useState(getCurrentLanguage());
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
+
+  console.log('📞 useSubscription 훅 호출 시작...');
+  // 구독 상태 관리
+  const { subscriptionData, isLoading: isSubscriptionLoading, isPro } = useSubscription();
+  console.log('📞 useSubscription 훅 호출 완료!');
+  
+  // 디버깅 로그 추가
+  console.log('🎯 App.tsx - isPro 상태:', isPro);
+  console.log('🎯 App.tsx - subscriptionData:', subscriptionData);
+
+  // Pro 업그레이드 모달 상태
+  const [showProUpgradeModal, setShowProUpgradeModal] = useState(false);
   
   // HybridEditor ref
   const hybridEditorRef = useRef<HybridEditorRef>(null);
@@ -827,6 +843,13 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   };
 
   const handleNewMemo = async () => {
+    // Free 사용자는 새 메모 생성 불가
+    if (!isPro) {
+      console.log('🚫 Free 사용자 - 메모 생성 차단');
+      setShowProUpgradeModal(true);
+      return;
+    }
+
     try {
       console.log('🔄 새 메모 생성 시작...');
       
@@ -846,6 +869,23 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       console.error('❌ 새 메모 생성 실패:', error);
       alert(t('memo.create_error'));
     }
+  };
+
+  // Pro 업그레이드 핸들러
+  const handleProUpgrade = () => {
+    console.log('🌐 Pro 업그레이드 요청 - 웹사이트 안내');
+    
+    // 데스크탑에서는 웹사이트 구독 페이지로 안내
+    const message = `MemoBee Pro 구독은 웹사이트에서 가능합니다.\n\n웹사이트에서 Pro 구독 후 모든 기기에서 이용하세요.`;
+    
+    if (window.confirm(message + '\n\n웹사이트로 이동하시겠습니까?')) {
+      // 외부 브라우저에서 웹사이트 구독 페이지 열기
+      if (window.electronAPI?.openExternalUrl) {
+        window.electronAPI.openExternalUrl('https://memobee-ai.pages.dev/subscription');
+      }
+    }
+    
+    setShowProUpgradeModal(false);
   };
 
   // 수동 업데이트 확인 핸들러
@@ -1098,8 +1138,14 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                   </div>
                 </div>
 
-                <button onClick={handleNewMemo} className="new-memo-btn">
-                  + {t('memo.new_memo')}
+                <button 
+                  onClick={handleNewMemo} 
+                  className={`new-memo-btn ${!isPro ? 'disabled' : ''}`}
+                  title={!isPro ? 'Pro 구독이 필요합니다' : t('memo.new_memo')}
+                >
+                  <FaPlus className="new-memo-icon" />
+                  {t('memo.new_memo')}
+                  {!isPro && <FaCrown className="pro-required-icon" />}
                 </button>
               </div>
               
@@ -1399,7 +1445,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                   </div>
 
                   {/* 하이브리드 에디터 영역 */}
-                  <div className="editor-content-section">
+                  <div className={`editor-content-section ${!isPro ? 'readonly' : ''}`}>
                     <HybridEditor
                       ref={hybridEditorRef}
                       value={selectedMemo.content || ''}
@@ -1408,7 +1454,8 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                         setSelectedMemo(updatedMemo);
                       }}
                       attachments={selectedMemo.attachments}
-                      placeholder={t('memo.content_placeholder')}
+                      placeholder={isPro ? t('memo.content_placeholder') : 'Pro 구독이 필요합니다. 현재는 읽기만 가능합니다.'}
+                      readOnly={!isPro}
                       onFileUpload={handleFileUpload}
                     />
                   </div>
@@ -1661,16 +1708,27 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         onAuthenticated={handleSecurityAuthenticated}
         memoTitle={pendingSecurityMemo?.ai_title || pendingSecurityMemo?.title || '보안 메모'}
       />
+
+      {/* Pro 업그레이드 모달 */}
+      <ProUpgradeModal
+        isOpen={showProUpgradeModal}
+        onClose={() => setShowProUpgradeModal(false)}
+        onUpgrade={handleProUpgrade}
+      />
     </div>
   );
 };
 
 const App: React.FC = () => {
+  console.log('🚀 App 컴포넌트 시작!');
+  
   const { t } = useTranslation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(true); // 초기화 상태 추가
   const [userInfo, setUserInfo] = useState<any>(null);
+  
+  console.log('🎯 App 상태 - isLoggedIn:', isLoggedIn, '/ initializing:', initializing);
 
   // Firebase 인증 상태 리스너 설정
   useEffect(() => {
@@ -1791,6 +1849,7 @@ const App: React.FC = () => {
 
   // 초기화 중일 때 로딩 화면 표시
   if (initializing) {
+    console.log('⏳ 초기화 중 - 로딩 화면 표시');
     return (
       <div style={{ 
         display: 'flex', 
@@ -1813,8 +1872,11 @@ const App: React.FC = () => {
   }
 
   if (isLoggedIn) {
+    console.log('✅ 로그인됨 - Layout 컴포넌트 렌더링');
     return <Layout onLogout={handleLogout} />;
   }
+
+  console.log('❌ 로그인되지 않음 - 로그인 화면 표시');
 
   return (
     <div style={{ padding: '50px', textAlign: 'center', maxWidth: '400px', margin: '0 auto' }}>
