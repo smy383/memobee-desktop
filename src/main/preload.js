@@ -64,9 +64,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.removeListener(channel, callback);
   },
 
-  // 앱 정보
-  getAppVersion: () => {
-    return '1.0.0'; // TODO: package.json에서 가져오기
+  // 앱 정보 - main process에서 가져오기
+  getAppVersion: async () => {
+    return await ipcRenderer.invoke('get-app-version');
   },
 
   getPlatform: () => {
@@ -112,10 +112,53 @@ contextBridge.exposeInMainWorld('electronAPI', {
 // 전역 memobeeDesktop 객체 노출 (App.tsx에서 사용)
 // 참고: preload에서는 app.isPackaged 접근 불가, 따라서 main process와 다른 판단 기준 사용
 const isDev = process.env.NODE_ENV === 'development' || process.argv.includes('--dev');
-contextBridge.exposeInMainWorld('memobeeDesktop', {
+
+// 버전을 담을 객체 생성 (참조로 공유)
+const memobeeDesktopAPI = {
   platform: process.platform,
   isDevelopment: isDev,
-  version: '1.0.0'
+  version: 'Loading...'
+};
+
+// contextBridge로 객체 노출 (먼저 실행)
+contextBridge.exposeInMainWorld('memobeeDesktop', memobeeDesktopAPI);
+
+// main process에서 버전 가져오기 (비동기)
+ipcRenderer.invoke('get-app-version').then(appVersion => {
+  console.log('✅ Main process에서 버전 수신:', appVersion);
+  
+  // 동일한 객체 참조를 업데이트
+  memobeeDesktopAPI.version = appVersion;
+  
+  // 직접 window.memobeeDesktop 업데이트도 시도
+  if (window.memobeeDesktop) {
+    window.memobeeDesktop.version = appVersion;
+    console.log('🔧 window.memobeeDesktop 직접 업데이트:', window.memobeeDesktop);
+  } else {
+    console.log('🔧 window.memobeeDesktop이 undefined입니다');
+  }
+  
+  console.log('🔧 memobeeDesktopAPI 업데이트 후:', memobeeDesktopAPI);
+  
+  // 즉시 이벤트 발송 (React가 준비되기를 기다리지 않음)
+  console.log('🚀 버전 업데이트 이벤트 발송:', appVersion);
+  
+  // 즉시 발송
+  if (window.dispatchEvent) {
+    window.dispatchEvent(new CustomEvent('version-updated', { detail: { version: appVersion } }));
+  }
+  
+  // DOM 로드 후에도 발송 (안전장치)
+  setTimeout(() => {
+    if (window.dispatchEvent) {
+      console.log('🔄 지연 버전 이벤트 발송:', appVersion);
+      window.dispatchEvent(new CustomEvent('version-updated', { detail: { version: appVersion } }));
+    }
+  }, 100);
+}).catch(err => {
+  console.error('❌ Main process 버전 가져오기 실패:', err);
+  // 실패 시 fallback 버전 사용
+  memobeeDesktopAPI.version = '1.0.5';
 });
 
 console.log('🔧 Preload - isDevelopment:', isDev);

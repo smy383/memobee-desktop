@@ -7,6 +7,7 @@ declare global {
       platform: string;
       version: string;
     };
+    updateProgressHandler?: (progress: {percent: number; transferred: number; total: number}) => void;
     electronAPI?: {
       openOAuthWindow: (url: string) => Promise<{ success: boolean; error?: string; url?: string }>;
       showInputDialog: (title: string, message: string) => Promise<string | null>;
@@ -18,7 +19,7 @@ declare global {
       removeAllListeners: (channel: string) => void;
       on: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
       removeListener: (channel: string, callback: (event: any, ...args: any[]) => void) => void;
-      getAppVersion: () => string;
+      getAppVersion: () => Promise<string>;
       getPlatform: () => string;
       isDev: () => boolean;
       // 수동 업데이트 관련 API

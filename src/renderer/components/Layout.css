@@ -2375,3 +2375,48 @@
     height: 14px;
   }
 }
+
+/* 다운로드 진행률 스타일 */
+.download-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 8px;
+  flex: 1;
+}
+
+.download-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progress-bar {
+  width: 200px;
+  height: 6px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #007AFF, #0051D0);
+  transition: width 0.3s ease;
+  border-radius: 3px;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #666;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.update-status-item.downloading {
+  align-items: flex-start;
+  padding: 12px;
+}
+
+.update-status-item.downloading .download-info {
+  margin-top: 2px;
+}

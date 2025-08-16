@@ -20,13 +20,57 @@ let updateAvailable = false;
 
 // Configure auto-updater
 function configureAutoUpdater() {
-  // 개발 모드에서는 업데이트 확인 하지 않음
+  console.log('🔄 자동 업데이트 초기화 시작...');
+  console.log('🔧 isDev:', isDev);
+  console.log('🔧 autoUpdater.getFeedURL():', autoUpdater.getFeedURL());
+  
+  // electron-updater 최대 디버그 로깅 활성화
+  process.env.ELECTRON_ENABLE_LOGGING = true;
+  process.env.DEBUG = 'electron-updater';
+  
+  // 상세한 로깅 시스템 설정
+  autoUpdater.logger = {
+    info: (message) => {
+      console.log('📝 autoUpdater INFO:', message);
+      if (typeof message === 'object') {
+        console.log('📝 INFO 상세:', JSON.stringify(message, null, 2));
+      }
+    },
+    warn: (message) => {
+      console.warn('⚠️ autoUpdater WARN:', message);
+      if (typeof message === 'object') {
+        console.warn('⚠️ WARN 상세:', JSON.stringify(message, null, 2));
+      }
+    },
+    error: (message) => {
+      console.error('❌ autoUpdater ERROR:', message);
+      if (typeof message === 'object') {
+        console.error('❌ ERROR 상세:', JSON.stringify(message, null, 2));
+      }
+    },
+    debug: (message) => {
+      console.log('🔧 autoUpdater DEBUG:', message);
+      if (typeof message === 'object') {
+        console.log('🔧 DEBUG 상세:', JSON.stringify(message, null, 2));
+      }
+    }
+  };
+  
+  // 개발 모드에서도 설정은 진행 (테스트용)
   if (isDev) {
-    console.log('🔄 개발 모드: 자동 업데이트 비활성화');
-    return;
+    console.log('🔄 개발 모드: 자동 업데이트 설정은 진행, 자동 확인만 비활성화');
   }
 
   console.log('🔄 자동 업데이트 초기화 중...');
+  
+  // 강제로 GitHub 설정
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'smy383',
+    repo: 'memobee-desktop'
+  });
+  
+  console.log('🔧 설정된 FeedURL:', autoUpdater.getFeedURL());
   
   // GitHub에서 업데이트 확인
   autoUpdater.checkForUpdatesAndNotify();
@@ -51,21 +95,57 @@ function configureAutoUpdater() {
 
   autoUpdater.on('error', (err) => {
     console.error('❌ 업데이트 오류:', err);
+    console.error('❌ 오류 상세:', {
+      message: err.message,
+      stack: err.stack,
+      name: err.name,
+      code: err.code,
+      errno: err.errno
+    });
+    console.error('❌ autoUpdater 상태:', {
+      feedURL: autoUpdater.getFeedURL(),
+      updateAvailable: updateAvailable
+    });
     updateAvailable = false;
   });
 
   autoUpdater.on('download-progress', (progressObj) => {
     let logMessage = `⬇️ 다운로드 진행률: ${progressObj.percent.toFixed(2)}%`;
     logMessage += ` (${progressObj.transferred}/${progressObj.total})`;
+    logMessage += ` 속도: ${(progressObj.bytesPerSecond / 1024 / 1024).toFixed(2)}MB/s`;
     console.log(logMessage);
+    console.log('🔧 전체 progressObj:', JSON.stringify(progressObj, null, 2));
+    
+    // 다운로드 스피드 및 상태 모니터링
+    console.log('⏱️ 다운로드 상태 체크:', {
+      percent: progressObj.percent,
+      transferred: progressObj.transferred,
+      total: progressObj.total,
+      bytesPerSecond: progressObj.bytesPerSecond,
+      delta: progressObj.delta || 0,
+      timestamp: new Date().toISOString()
+    });
     
     // 렌더러 프로세스에 진행률 전송
-    if (mainWindow) {
+    if (mainWindow && mainWindow.webContents) {
+      console.log('📡 진행률 이벤트 전송:', progressObj.percent);
       mainWindow.webContents.send('update-download-progress', {
         percent: progressObj.percent,
         transferred: progressObj.transferred,
         total: progressObj.total
       });
+      
+      // 추가: 브로드캐스트도 시도
+      mainWindow.webContents.executeJavaScript(`
+        console.log('🔄 진행률 업데이트:', ${progressObj.percent});
+        if (window.updateProgressHandler) {
+          window.updateProgressHandler({
+            percent: ${progressObj.percent},
+            transferred: ${progressObj.transferred},
+            total: ${progressObj.total}
+          });
+        }
+      `);
     }
   });
 
@@ -233,9 +313,8 @@ function createWindow() {
       console.log('🚀 서버 URL로 앱 로딩:', serverUrl);
       mainWindow.loadURL(serverUrl);
       
-      if (isDev) {
-        mainWindow.webContents.openDevTools();
-      }
+      // 임시: 디버깅을 위해 개발자 도구 활성화
+      mainWindow.webContents.openDevTools();
     }).catch((error) => {
       console.error('❌ 서버 시작 실패:', error);
       
@@ -277,6 +356,11 @@ ipcMain.handle('open-external-url', async (event, url) => {
     console.error('외부 URL 열기 실패:', error);
     return { success: false, error: error.message };
   }
+});
+
+// 앱 버전 가져오기 핸들러
+ipcMain.handle('get-app-version', async () => {
+  return app.getVersion();
 });
 
 // 입력 다이얼로그 핸들러
@@ -393,20 +477,50 @@ ipcMain.handle('manual-check-for-updates', async () => {
     if (isDev) {
       console.log('ℹ️ 개발 모드: 업데이트 시뮬레이션');
       
-      // v1.0.2가 배포되어 있으므로 업데이트 available로 시뮬레이션
+      // v1.0.7이 배포되어 있으므로 업데이트 available로 시뮬레이션
       return {
         available: true,
-        version: '1.0.2',
-        releaseDate: '2025-08-15',
-        releaseNotes: '- 헤더에 v1.0.2 버전 표시 추가\n- 설정 화면 버전 정보 업데이트\n- 자동 업데이트 기능 테스트용',
-        downloadUrl: 'https://github.com/smy383/memobee-desktop/releases/tag/v1.0.2'
+        version: '1.0.7',
+        releaseDate: '2025-08-16',
+        releaseNotes: '- 업데이트 시스템 전체 테스트 완료\n- 자동 업데이트 알림 검증\n- 다운로드 진행률 표시 안정화\n- 설치 프로세스 UX 개선',
+        downloadUrl: 'https://github.com/smy383/memobee-desktop/releases/tag/v1.0.7'
       };
     }
     
     console.log('🚀 프로덕션 모드: 실제 업데이트 확인 시작');
+    console.log('🔧 현재 Feed URL:', autoUpdater.getFeedURL());
+    
+    // GitHub API 직접 확인 추가
+    try {
+      const https = require('https');
+      const apiUrl = 'https://api.github.com/repos/smy383/memobee-desktop/releases/latest';
+      console.log('🌐 GitHub API 직접 확인:', apiUrl);
+      
+      https.get(apiUrl, { headers: { 'User-Agent': 'MemoBee-Desktop' } }, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          try {
+            const release = JSON.parse(data);
+            console.log('🔧 GitHub API 응답:', {
+              tag_name: release.tag_name,
+              published_at: release.published_at,
+              assets: release.assets.map(a => a.name)
+            });
+          } catch (e) {
+            console.error('GitHub API 파싱 실패:', e);
+          }
+        });
+      }).on('error', (e) => {
+        console.error('🌐 GitHub API 요청 실패:', e);
+      });
+    } catch (apiErr) {
+      console.error('🌐 GitHub API 확인 실패:', apiErr);
+    }
     
     // 프로덕션 모드에서는 실제 업데이트 확인
     return new Promise((resolve) => {
+      console.log('📡 autoUpdater.checkForUpdates() 호출');
       autoUpdater.checkForUpdates();
       
       // 타임아웃 설정 (10초)
@@ -450,11 +564,101 @@ ipcMain.handle('manual-download-update', async () => {
     
     if (isDev) {
       console.log('ℹ️ 개발 모드: 다운로드 시뮬레이션');
+      // 개발 모드에서 진행률 시뮬레이션
+      let progress = 0;
+      const simulateProgress = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress > 100) progress = 100;
+        
+        if (mainWindow) {
+          mainWindow.webContents.send('update-download-progress', {
+            percent: progress,
+            transferred: progress * 1000000,
+            total: 100000000
+          });
+        }
+        
+        if (progress >= 100) {
+          clearInterval(simulateProgress);
+          if (mainWindow) {
+            mainWindow.webContents.send('update-downloaded');
+          }
+        }
+      }, 500);
+      
       return { success: true, message: '개발 모드에서는 실제 다운로드되지 않습니다' };
     }
     
-    autoUpdater.downloadUpdate();
-    return { success: true, message: '다운로드가 시작되었습니다' };
+    // 다운로드 시작 이벤트 전송
+    if (mainWindow) {
+      mainWindow.webContents.send('update-download-started');
+    }
+    
+    // Promise로 다운로드 완료를 대기
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('다운로드 타임아웃 (10분 초과)'));
+      }, 10 * 60 * 1000);
+      
+      const handleDownloadComplete = () => {
+        clearTimeout(timeout);
+        autoUpdater.removeListener('update-downloaded', handleDownloadComplete);
+        autoUpdater.removeListener('error', handleDownloadError);
+        resolve({ success: true, message: '다운로드가 완료되었습니다' });
+      };
+      
+      const handleDownloadError = (error) => {
+        clearTimeout(timeout);
+        autoUpdater.removeListener('update-downloaded', handleDownloadComplete);
+        autoUpdater.removeListener('error', handleDownloadError);
+        reject(error);
+      };
+      
+      autoUpdater.once('update-downloaded', handleDownloadComplete);
+      autoUpdater.once('error', handleDownloadError);
+      
+      try {
+        console.log('🚀 autoUpdater.downloadUpdate() 호출 시작');
+        console.log('🔧 현재 Feed URL:', autoUpdater.getFeedURL());
+        console.log('🔧 사용 가능한 업데이트 정보:', updateAvailable);
+        console.log('🔧 앱 버전:', require('electron').app.getVersion());
+        console.log('🔧 플랫폼:', process.platform);
+        console.log('🔧 아키텍처:', process.arch);
+        
+        // autoUpdater 내부 상태 로깅
+        console.log('🔧 autoUpdater 객체 상태:', {
+          'autoUpdater.netSession': autoUpdater.netSession ? 'exists' : 'null',
+          'autoUpdater.requestHeaders': autoUpdater.requestHeaders || 'undefined',
+          'autoUpdater.autoDownload': autoUpdater.autoDownload,
+          'autoUpdater.autoInstallOnAppQuit': autoUpdater.autoInstallOnAppQuit
+        });
+        
+        const result = autoUpdater.downloadUpdate();
+        console.log('🔧 downloadUpdate 결과:', result);
+        console.log('🔧 downloadUpdate Promise 타입:', typeof result);
+        
+        // Promise 타입 확인
+        if (result && typeof result.then === 'function') {
+          console.log('📡 downloadUpdate가 Promise를 반환했습니다');
+          result.then(() => {
+            console.log('✅ downloadUpdate Promise resolved');
+          }).catch((promiseError) => {
+            console.error('❌ downloadUpdate Promise rejected:', promiseError);
+          });
+        } else {
+          console.log('⚠️ downloadUpdate가 Promise를 반환하지 않았습니다');
+        }
+      } catch (error) {
+        console.error('💥 downloadUpdate 호출 실패:', error);
+        console.error('💥 호출 실패 상세:', {
+          name: error.name,
+          message: error.message,
+          stack: error.stack
+        });
+        clearTimeout(timeout);
+        reject(error);
+      }
+    });
   } catch (error) {
     console.error('❌ 수동 업데이트 다운로드 실패:', error);
     return { success: false, error: error.message };

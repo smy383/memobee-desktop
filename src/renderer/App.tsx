@@ -64,10 +64,104 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
   const [updateInfo, setUpdateInfo] = useState<any>(null);
   const [updateStatus, setUpdateStatus] = useState<'idle' | 'checking' | 'available' | 'not-available' | 'downloading' | 'ready'>('idle');
+  const [downloadProgress, setDownloadProgress] = useState<{percent: number; transferred: number; total: number} | null>(null);
+  const [appVersion, setAppVersion] = useState<string>(window.memobeeDesktop?.version || 'Loading...');
 
   // 실제 API를 통한 메모 목록 로드
   useEffect(() => {
     loadMemos();
+  }, []);
+
+  // 버전 업데이트 이벤트 리스너
+  useEffect(() => {
+    console.log('🎯 버전 리스너 등록 시작');
+    
+    const handleVersionUpdate = (event: CustomEvent) => {
+      console.log('🔄 버전 업데이트 이벤트 수신:', event.detail.version);
+      setAppVersion(event.detail.version);
+    };
+
+    window.addEventListener('version-updated', handleVersionUpdate as EventListener);
+    
+    // 직접 electronAPI를 통해 버전 가져오기 (확실한 방법)
+    if (window.electronAPI?.getAppVersion) {
+      console.log('🚀 electronAPI로 버전 직접 요청');
+      window.electronAPI.getAppVersion().then(version => {
+        console.log('✅ electronAPI에서 버전 수신:', version);
+        setAppVersion(version);
+      }).catch(err => {
+        console.error('❌ electronAPI 버전 요청 실패:', err);
+      });
+    }
+    
+    // fallback: window.memobeeDesktop 확인
+    console.log('🔍 현재 window.memobeeDesktop:', window.memobeeDesktop);
+    if (window.memobeeDesktop?.version && window.memobeeDesktop.version !== 'Loading...') {
+      console.log('🔄 초기 버전 설정:', window.memobeeDesktop.version);
+      setAppVersion(window.memobeeDesktop.version);
+    }
+    
+    return () => {
+      window.removeEventListener('version-updated', handleVersionUpdate as EventListener);
+    };
+  }, []);
+
+  // 자동 업데이트 이벤트 리스너
+  useEffect(() => {
+    if (!window.electronAPI) return;
+
+    const handleDownloadProgress = (event: any, progress: {percent: number; transferred: number; total: number}) => {
+      console.log('📊 다운로드 진행률 수신:', progress);
+      console.log('📊 현재 상태:', updateStatus);
+      setDownloadProgress(progress);
+      
+      // 전역 핸들러도 설정
+      window.updateProgressHandler = (progress) => {
+        console.log('🌍 전역 진행률 핸들러:', progress);
+        setDownloadProgress(progress);
+      };
+    };
+
+    const handleDownloadComplete = () => {
+      console.log('✅ 다운로드 완료');
+      setUpdateStatus('ready');
+      setDownloadProgress(null);
+    };
+
+    const handleDownloadStarted = () => {
+      console.log('🚀 다운로드 시작됨');
+      setUpdateStatus('downloading');
+      setDownloadProgress(null);
+    };
+
+    // 이벤트 리스너 등록
+    window.electronAPI.on('update-download-progress', handleDownloadProgress);
+    window.electronAPI.on('update-downloaded', handleDownloadComplete);
+    window.electronAPI.on('update-download-started', handleDownloadStarted);
+
+    // 컴포넌트 언마운트 시 리스너 제거
+    return () => {
+      if (window.electronAPI) {
+        window.electronAPI.removeListener('update-download-progress', handleDownloadProgress);
+        window.electronAPI.removeListener('update-downloaded', handleDownloadComplete);
+        window.electronAPI.removeListener('update-download-started', handleDownloadStarted);
+      }
+    };
+  }, []);
+
+  // 버전 업데이트 이벤트 리스너
+  useEffect(() => {
+    const handleVersionUpdate = (event: any) => {
+      const newVersion = event.detail.version;
+      console.log('🔄 버전 업데이트 감지:', newVersion);
+      setAppVersion(newVersion);
+    };
+
+    window.addEventListener('version-updated', handleVersionUpdate);
+    
+    return () => {
+      window.removeEventListener('version-updated', handleVersionUpdate);
+    };
   }, []);
 
   // 현재 사용자 정보 로드
@@ -798,12 +892,34 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       setUpdateStatus('downloading');
       console.log('📥 업데이트 다운로드 시작...');
       
+      // 다운로드 타임아웃 설정 (10분)
+      const downloadTimeout = setTimeout(() => {
+        console.log('⏱️ 다운로드 타임아웃');
+        setUpdateStatus('available');
+        alert('다운로드가 너무 오래 걸리고 있습니다. 네트워크 상태를 확인하고 다시 시도해주세요.');
+      }, 10 * 60 * 1000);
+      
       if (window.electronAPI?.downloadUpdate) {
-        await window.electronAPI.downloadUpdate();
+        const result = await window.electronAPI.downloadUpdate();
+        clearTimeout(downloadTimeout);
+        
+        if (result.success) {
+          console.log('✅ 다운로드 완료:', result.message);
+          // auto-updater 이벤트에서 'ready' 상태로 변경될 것임
+        } else {
+          console.error('❌ 다운로드 실패:', result.error);
+          setUpdateStatus('available');
+          const retry = confirm(`다운로드 실패: ${result.error}\n\n다시 시도하시겠습니까?`);
+          if (retry) {
+            handleDownloadUpdate();
+          }
+        }
       }
     } catch (error) {
       console.error('❌ 업데이트 다운로드 실패:', error);
       setUpdateStatus('available');
+      const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
+      alert(`다운로드 중 오류 발생: ${errorMessage}`);
     }
   };
 
@@ -828,7 +944,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       {/* 헤더 */}
       <header className="layout-header">
         <div className="header-left">
-          <h1>MemoBee AI v1.0.1</h1>
+          <h1>MemoBee AI v{appVersion}</h1>
         </div>
         <div className="header-right">
           {currentUser && (
@@ -1411,7 +1527,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                   <div className="version-info">
                     <div className="version-item">
                       <div className="version-label">{t('settings.version.current')}</div>
-                      <div className="version-value">v1.0.1</div>
+                      <div className="version-value">v{appVersion}</div>
                     </div>
                     <div className="version-item">
                       <div className="version-label">{t('settings.version.platform')}</div>
@@ -1460,7 +1576,23 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                       {updateStatus === 'downloading' && (
                         <div className="update-status-item downloading">
                           <FaSpinner className="update-spinner" />
-                          <span>업데이트 다운로드 중...</span>
+                          <div className="download-info">
+                            <span>업데이트 다운로드 중...</span>
+                            {downloadProgress && (
+                              <div className="download-progress">
+                                <div className="progress-bar">
+                                  <div 
+                                    className="progress-fill" 
+                                    style={{ width: `${downloadProgress.percent}%` }}
+                                  ></div>
+                                </div>
+                                <span className="progress-text">
+                                  {downloadProgress.percent.toFixed(1)}% 
+                                  ({Math.round(downloadProgress.transferred / 1024 / 1024)}MB / {Math.round(downloadProgress.total / 1024 / 1024)}MB)
+                                </span>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       )}
                       
