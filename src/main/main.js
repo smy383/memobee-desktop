@@ -152,6 +152,16 @@ function configureAutoUpdater() {
   autoUpdater.on('update-downloaded', (info) => {
     console.log('✅ 업데이트 다운로드 완료:', info.version);
     
+    // 렌더러 프로세스에 다운로드 완료 알림
+    if (mainWindow && mainWindow.webContents) {
+      console.log('📡 렌더러에 update-downloaded 이벤트 전송');
+      mainWindow.webContents.send('update-downloaded', {
+        version: info.version,
+        releaseDate: info.releaseDate,
+        releaseName: info.releaseName
+      });
+    }
+    
     // 사용자에게 재시작 확인
     showUpdateReadyDialog(info);
   });
@@ -211,7 +221,15 @@ function showUpdateReadyDialog(info) {
     if (result.response === 1) {
       // 사용자가 재시작 선택
       console.log('🔄 사용자가 즉시 재시작 선택');
-      autoUpdater.quitAndInstall();
+      console.log('🔧 quitAndInstall() 호출 전 상태 확인...');
+      console.log('🔧 현재 플랫폼:', process.platform);
+      console.log('🔧 앱 버전:', app.getVersion());
+      
+      // macOS에서 더 안정적인 종료 및 설치
+      setTimeout(() => {
+        console.log('🚀 quitAndInstall() 실행...');
+        autoUpdater.quitAndInstall(false, true); // silent=false, forceRunAfter=true
+      }, 1000); // 1초 지연으로 UI 정리 시간 확보
     } else {
       // 나중에 재시작 선택 - 앱 종료 시 자동 업데이트
       console.log('⏰ 사용자가 나중에 재시작 선택');
@@ -674,7 +692,17 @@ ipcMain.handle('manual-install-update', async () => {
       return { success: true, message: '개발 모드에서는 실제 재시작되지 않습니다' };
     }
     
-    autoUpdater.quitAndInstall();
+    console.log('🔧 수동 설치 - quitAndInstall() 호출 전 상태:');
+    console.log('🔧 현재 플랫폼:', process.platform);
+    console.log('🔧 앱 버전:', app.getVersion());
+    console.log('🔧 업데이트 가능 여부:', updateAvailable);
+    
+    // macOS에서 더 안정적인 실행을 위해 지연 적용
+    setTimeout(() => {
+      console.log('🚀 수동 설치 - quitAndInstall() 실행...');
+      autoUpdater.quitAndInstall(false, true); // silent=false, forceRunAfter=true
+    }, 500);
+    
     return { success: true, message: '앱이 재시작됩니다' };
   } catch (error) {
     console.error('❌ 수동 업데이트 설치 실패:', error);
@@ -683,10 +711,13 @@ ipcMain.handle('manual-install-update', async () => {
 });
 
 // Handle app quit
-app.on('before-quit', () => {
+app.on('before-quit', (event) => {
+  console.log('🔄 앱 종료 시작...');
   if (server) {
+    console.log('🔧 HTTP 서버 종료 중...');
     server.close();
   }
+  console.log('✅ 앱 종료 완료');
 });
 
 // Security: Prevent new window creation

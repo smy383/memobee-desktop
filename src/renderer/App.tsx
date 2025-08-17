@@ -1004,7 +1004,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       <header className="layout-header">
         <div className="header-left">
           <h1>MemoBee AI v{appVersion}</h1>
-          <small style={{color: '#666', fontSize: '12px'}}>자동 업데이트 테스트 버전</small>
+          <small style={{color: '#666', fontSize: '12px'}}>quitAndInstall 개선 버전</small>
         </div>
         <div className="header-right">
           {currentUser && (
