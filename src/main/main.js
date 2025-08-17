@@ -217,19 +217,19 @@ function showUpdateReadyDialog(info) {
 
   const options = {
     type: 'info',
-    title: '업데이트 준비 완료',
-    message: `MemoBee ${info.version} 업데이트가 준비되었습니다.`,
-    detail: '지금 재시작하여 업데이트를 적용하시겠습니까?\n\n📋 예상 과정:\n1. 앱이 종료됩니다\n2. 자동으로 업데이트가 설치됩니다\n3. 사용자가 수동으로 앱을 다시 실행하세요',
-    buttons: ['나중에 재시작', '지금 업데이트'],
+    title: '업데이트 설치 준비 완료',
+    message: `MemoBee ${info.version} 업데이트가 다운로드되었습니다.`,
+    detail: '업데이트를 적용하려면 앱을 종료하고 다시 실행해주세요.\n\n📋 설치 과정:\n1. [앱 종료] 버튼 클릭\n2. 앱 종료 과정에서 자동 설치\n3. 앱을 다시 실행하면 새 버전으로 업데이트됩니다',
+    buttons: ['나중에 설치', '앱 종료'],
     defaultId: 1,
     cancelId: 0
   };
 
   dialog.showMessageBox(mainWindow, options).then((result) => {
     if (result.response === 1) {
-      // 사용자가 재시작 선택 - 자동 재시작 시도
-      console.log('🔄 사용자가 즉시 재시작 선택');
-      console.log('💾 autoInstallOnAppQuit=true 설정으로 앱 종료시 자동 설치');
+      // 사용자가 앱 종료 선택 - 종료시 자동 설치 진행
+      console.log('🚪 사용자가 앱 종료를 선택함');
+      console.log('💾 autoInstallOnAppQuit=true 설정으로 앱 종료시 자동 설치 진행');
       
       // macOS 자동 재시작 설정
       if (process.platform === 'darwin') {
@@ -275,7 +275,7 @@ function showUpdateReadyDialog(info) {
       
       // 간단하게 앱 종료 - autoInstallOnAppQuit이 처리
       setTimeout(() => {
-        console.log('🚪 앱 종료... (종료시 자동 업데이트 설치 + 재시작 시도)');
+        console.log('🚪 앱 종료 시작... (종료 과정에서 업데이트 자동 설치됨)');
         app.quit();
       }, 1000);
     } else {
