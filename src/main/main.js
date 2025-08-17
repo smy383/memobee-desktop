@@ -28,6 +28,14 @@ function configureAutoUpdater() {
   process.env.ELECTRON_ENABLE_LOGGING = true;
   process.env.DEBUG = 'electron-updater';
   
+  // 🔥 핵심 설정: 앱 종료시 자동 설치
+  autoUpdater.autoDownload = false; // 수동 다운로드 제어
+  autoUpdater.autoInstallOnAppQuit = true; // 앱 종료시 자동 설치!
+  
+  console.log('🔧 autoUpdater 설정 완료:');
+  console.log('🔧 autoDownload:', autoUpdater.autoDownload);
+  console.log('🔧 autoInstallOnAppQuit:', autoUpdater.autoInstallOnAppQuit);
+  
   // 상세한 로깅 시스템 설정
   autoUpdater.logger = {
     info: (message) => {
@@ -203,7 +211,7 @@ function showUpdateDialog(info) {
   });
 }
 
-// 업데이트 준비 완료 다이얼로그
+// 업데이트 준비 완료 다이얼로그 - 간단한 재시작 방식
 function showUpdateReadyDialog(info) {
   if (!mainWindow) return;
 
@@ -211,28 +219,68 @@ function showUpdateReadyDialog(info) {
     type: 'info',
     title: '업데이트 준비 완료',
     message: `MemoBee ${info.version} 업데이트가 준비되었습니다.`,
-    detail: '지금 재시작하여 업데이트를 적용하시겠습니까?\n\n작업 중인 내용을 저장하는 것을 잊지 마세요.',
-    buttons: ['나중에 재시작', '지금 재시작'],
+    detail: '지금 재시작하여 업데이트를 적용하시겠습니까?\n\n📋 예상 과정:\n1. 앱이 종료됩니다\n2. 자동으로 업데이트가 설치됩니다\n3. 사용자가 수동으로 앱을 다시 실행하세요',
+    buttons: ['나중에 재시작', '지금 업데이트'],
     defaultId: 1,
     cancelId: 0
   };
 
   dialog.showMessageBox(mainWindow, options).then((result) => {
     if (result.response === 1) {
-      // 사용자가 재시작 선택
+      // 사용자가 재시작 선택 - 자동 재시작 시도
       console.log('🔄 사용자가 즉시 재시작 선택');
-      console.log('🔧 quitAndInstall() 호출 전 상태 확인...');
-      console.log('🔧 현재 플랫폼:', process.platform);
-      console.log('🔧 앱 버전:', app.getVersion());
+      console.log('💾 autoInstallOnAppQuit=true 설정으로 앱 종료시 자동 설치');
       
-      // macOS에서 더 안정적인 종료 및 설치
+      // macOS 자동 재시작 설정
+      if (process.platform === 'darwin') {
+        console.log('🍎 macOS 자동 재시작 설정 시도...');
+        app.setLoginItemSettings({
+          openAtLogin: false,
+          openAsHidden: false,
+          path: process.execPath,
+          args: ['--reopen-after-update']
+        });
+        
+        // 추가: 재시작 스크립트 실행
+        const { spawn } = require('child_process');
+        const restartScript = `
+          sleep 3
+          open -a "${app.getName()}"
+        `;
+        
+        // 임시 스크립트 파일 생성
+        const fs = require('fs');
+        const path = require('path');
+        const tmpDir = require('os').tmpdir();
+        const scriptPath = path.join(tmpDir, 'memobee-restart.sh');
+        
+        try {
+          fs.writeFileSync(scriptPath, restartScript);
+          fs.chmodSync(scriptPath, '755');
+          
+          console.log('📝 재시작 스크립트 생성:', scriptPath);
+          
+          // 백그라운드에서 재시작 스크립트 실행
+          const restartProcess = spawn('sh', [scriptPath], {
+            detached: true,
+            stdio: 'ignore'
+          });
+          restartProcess.unref();
+          
+          console.log('🚀 백그라운드 재시작 프로세스 시작');
+        } catch (error) {
+          console.error('❌ 재시작 스크립트 생성 실패:', error);
+        }
+      }
+      
+      // 간단하게 앱 종료 - autoInstallOnAppQuit이 처리
       setTimeout(() => {
-        console.log('🚀 quitAndInstall() 실행...');
-        autoUpdater.quitAndInstall(false, true); // silent=false, forceRunAfter=true
-      }, 1000); // 1초 지연으로 UI 정리 시간 확보
+        console.log('🚪 앱 종료... (종료시 자동 업데이트 설치 + 재시작 시도)');
+        app.quit();
+      }, 1000);
     } else {
       // 나중에 재시작 선택 - 앱 종료 시 자동 업데이트
-      console.log('⏰ 사용자가 나중에 재시작 선택');
+      console.log('⏰ 사용자가 나중에 재시작 선택 (앱 종료시 자동 설치)');
     }
   });
 }
@@ -330,9 +378,6 @@ function createWindow() {
     createServer().then((serverUrl) => {
       console.log('🚀 서버 URL로 앱 로딩:', serverUrl);
       mainWindow.loadURL(serverUrl);
-      
-      // 임시: 디버깅을 위해 개발자 도구 활성화
-      mainWindow.webContents.openDevTools();
     }).catch((error) => {
       console.error('❌ 서버 시작 실패:', error);
       
@@ -685,28 +730,34 @@ ipcMain.handle('manual-download-update', async () => {
 
 ipcMain.handle('manual-install-update', async () => {
   try {
-    console.log('🔄 수동 업데이트 설치 요청');
+    console.log('🔄 수동 업데이트 설치 요청 - 간단한 재시작');
     
     if (isDev) {
       console.log('ℹ️ 개발 모드: 설치 시뮬레이션');
-      return { success: true, message: '개발 모드에서는 실제 재시작되지 않습니다' };
+      return { 
+        success: true, 
+        message: '개발 모드에서는 실제 재시작되지 않습니다'
+      };
     }
     
-    console.log('🔧 수동 설치 - quitAndInstall() 호출 전 상태:');
-    console.log('🔧 현재 플랫폼:', process.platform);
-    console.log('🔧 앱 버전:', app.getVersion());
-    console.log('🔧 업데이트 가능 여부:', updateAvailable);
+    console.log('💾 autoInstallOnAppQuit=true 설정으로 앱 종료');
     
-    // macOS에서 더 안정적인 실행을 위해 지연 적용
+    // 간단하게 앱 종료 - autoInstallOnAppQuit이 자동으로 설치 처리
     setTimeout(() => {
-      console.log('🚀 수동 설치 - quitAndInstall() 실행...');
-      autoUpdater.quitAndInstall(false, true); // silent=false, forceRunAfter=true
-    }, 500);
+      console.log('🚪 앱 종료... (종료시 자동 업데이트 설치)');
+      app.quit();
+    }, 1000);
     
-    return { success: true, message: '앱이 재시작됩니다' };
+    return { 
+      success: true, 
+      message: '앱이 종료되면서 자동으로 업데이트가 설치됩니다'
+    };
   } catch (error) {
     console.error('❌ 수동 업데이트 설치 실패:', error);
-    return { success: false, error: error.message };
+    return { 
+      success: false, 
+      error: error.message
+    };
   }
 });
 

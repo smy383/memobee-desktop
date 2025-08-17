@@ -1,6 +1,6 @@
 {
   "name": "memobee-desktop",
-  "version": "1.0.13",
+  "version": "1.0.17",
   "description": "MemoBee Desktop App for macOS and Windows",
   "main": "src/main/main.js",
   "homepage": "./",
@@ -105,6 +105,10 @@
     "mac": {
       "icon": "build/icon.png",
       "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
       "target": [
         {
           "target": "dmg",
