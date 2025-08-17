@@ -1,6 +1,6 @@
 {
   "name": "memobee-desktop",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "MemoBee Desktop App for macOS and Windows",
   "main": "src/main/main.js",
   "homepage": "./",
