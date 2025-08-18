@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api, AttachmentFileInfo, FileManagementResponse, FileStats } from '../../shared/services/apiService';
 import './FileManagementView.css';
@@ -38,7 +39,7 @@ const FileManagementView: React.FC<FileManagementViewProps> = () => {
         setLoading(true);
       }
 
-      console.log('📁 Desktop Files - 파일 데이터 로딩 시작');
+      uiLogger.debug('📁 Desktop Files - 파일 데이터 로딩 시작');
       
       // 파일 목록과 통계를 병렬로 로드
       const [fileResponse, statsResponse] = await Promise.all([
@@ -46,7 +47,7 @@ const FileManagementView: React.FC<FileManagementViewProps> = () => {
         api.files.getStats()
       ]);
 
-      console.log('✅ Desktop Files - 파일 데이터 로딩 성공:', {
+      uiLogger.debug('✅ Desktop Files - 파일 데이터 로딩 성공:', {
         images: fileResponse.total_images,
         files: fileResponse.total_files,
         totalSize: fileResponse.total_size
@@ -55,7 +56,7 @@ const FileManagementView: React.FC<FileManagementViewProps> = () => {
       setData(fileResponse);
       setStats(statsResponse);
     } catch (error) {
-      console.error('❌ Desktop Files - 파일 데이터 로딩 실패:', error);
+      uiLogger.error('❌ Desktop Files - 파일 데이터 로딩 실패:', error);
       // 에러 상태 처리
       setData({
         images: [],
@@ -88,11 +89,11 @@ const FileManagementView: React.FC<FileManagementViewProps> = () => {
     }
 
     try {
-      console.log('🗑️ Desktop Files - 파일 삭제 시작:', file.filename);
+      uiLogger.debug('🗑️ Desktop Files - 파일 삭제 시작:', file.filename);
       
       await api.files.deleteAttachment(file.id);
       
-      console.log('✅ Desktop Files - 파일 삭제 성공');
+      uiLogger.debug('✅ Desktop Files - 파일 삭제 성공');
       
       // 데이터 새로고침
       await loadFileData();
@@ -103,7 +104,7 @@ const FileManagementView: React.FC<FileManagementViewProps> = () => {
         setShowImageModal(false);
       }
     } catch (error) {
-      console.error('❌ Desktop Files - 파일 삭제 실패:', error);
+      uiLogger.error('❌ Desktop Files - 파일 삭제 실패:', error);
       alert(t('files.errors.delete_failed'));
     }
   };
@@ -111,16 +112,16 @@ const FileManagementView: React.FC<FileManagementViewProps> = () => {
   // 메모로 이동
   const handleGoToMemo = async (file: AttachmentFileInfo) => {
     try {
-      console.log('📝 Desktop Files - 메모로 이동:', file.memo_id);
+      uiLogger.debug('📝 Desktop Files - 메모로 이동:', file.memo_id);
       
       // 메모 상세 정보를 가져와서 처리
       const memo = await api.memo.getById(file.memo_id);
       
       // TODO: 메모 에디터 모달 열기 또는 메모 화면으로 이동
-      console.log('📝 연결된 메모:', memo);
+      uiLogger.debug('📝 연결된 메모:', memo);
       alert(`연결된 메모: ${memo.title}`);
     } catch (error) {
-      console.error('❌ Desktop Files - 메모 이동 실패:', error);
+      uiLogger.error('❌ Desktop Files - 메모 이동 실패:', error);
       alert(t('files.errors.memo_load_failed'));
     }
   };

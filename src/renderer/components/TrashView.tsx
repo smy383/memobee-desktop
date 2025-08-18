@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api, TrashItem, TrashStats } from '../../shared/services/apiService';
 import './TrashView.css';
@@ -79,10 +80,10 @@ const TrashView: React.FC<TrashViewProps> = () => {
   const loadTrashItems = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('🗑️ 휴지통 항목 로드 시작');
+      uiLogger.debug('🗑️ 휴지통 항목 로드 시작');
 
       const itemsData = await api.trash.getList(selectedType || undefined, 0, 100);
-      console.log('✅ 휴지통 데이터 로드 성공:', itemsData.length);
+      uiLogger.debug('✅ 휴지통 데이터 로드 성공:', itemsData.length);
 
       setTrashItems(itemsData);
 
@@ -92,7 +93,7 @@ const TrashView: React.FC<TrashViewProps> = () => {
 
       setError(null);
     } catch (err: any) {
-      console.error('❌ 휴지통 로드 실패:', err);
+      uiLogger.error('❌ 휴지통 로드 실패:', err);
       setError('휴지통 데이터를 불러오는데 실패했습니다.');
       setTrashItems([]);
     } finally {
@@ -111,13 +112,13 @@ const TrashView: React.FC<TrashViewProps> = () => {
     }
 
     try {
-      console.log('♻️ 항목 복원 시작:', trashItem.id);
+      uiLogger.debug('♻️ 항목 복원 시작:', trashItem.id);
       await api.trash.restore(trashItem.id);
-      console.log('✅ 항목 복원 성공');
+      uiLogger.debug('✅ 항목 복원 성공');
       alert(t('trash.messages.restored'));
       loadTrashItems();
     } catch (error: any) {
-      console.error('❌ 항목 복원 실패:', error);
+      uiLogger.error('❌ 항목 복원 실패:', error);
       alert(t('trash.messages.restore_error'));
     }
   };
@@ -129,13 +130,13 @@ const TrashView: React.FC<TrashViewProps> = () => {
     }
 
     try {
-      console.log('🔥 개별 항목 영구 삭제 시작:', trashItem.id);
+      uiLogger.debug('🔥 개별 항목 영구 삭제 시작:', trashItem.id);
       await api.trash.permanentDelete(trashItem.id);
-      console.log('✅ 개별 항목 영구 삭제 성공');
+      uiLogger.debug('✅ 개별 항목 영구 삭제 성공');
       alert(t('trash.messages.permanently_deleted'));
       loadTrashItems();
     } catch (error: any) {
-      console.error('❌ 개별 항목 영구 삭제 실패:', error);
+      uiLogger.error('❌ 개별 항목 영구 삭제 실패:', error);
       alert(t('trash.messages.delete_error'));
     }
   };
@@ -147,13 +148,13 @@ const TrashView: React.FC<TrashViewProps> = () => {
     }
 
     try {
-      console.log('🗑️ 휴지통 전체 비우기 시작');
+      uiLogger.debug('🗑️ 휴지통 전체 비우기 시작');
       const result = await api.trash.emptyTrash();
-      console.log('✅ 휴지통 전체 비우기 성공:', result.deleted_count);
+      uiLogger.debug('✅ 휴지통 전체 비우기 성공:', result.deleted_count);
       alert(t('trash.messages.emptied', { count: result.deleted_count }));
       loadTrashItems();
     } catch (error: any) {
-      console.error('❌ 휴지통 전체 비우기 실패:', error);
+      uiLogger.error('❌ 휴지통 전체 비우기 실패:', error);
       alert(t('trash.messages.empty_error'));
     }
   };
@@ -178,7 +179,7 @@ const TrashView: React.FC<TrashViewProps> = () => {
       setSelectAll(false);
       loadTrashItems();
     } catch (error: any) {
-      console.error('❌ 선택된 항목들 복원 실패:', error);
+      uiLogger.error('❌ 선택된 항목들 복원 실패:', error);
       alert(t('trash.messages.restore_error'));
     }
   };
@@ -203,7 +204,7 @@ const TrashView: React.FC<TrashViewProps> = () => {
       setSelectAll(false);
       loadTrashItems();
     } catch (error: any) {
-      console.error('❌ 선택된 항목들 영구 삭제 실패:', error);
+      uiLogger.error('❌ 선택된 항목들 영구 삭제 실패:', error);
       alert(t('trash.messages.delete_error'));
     }
   };

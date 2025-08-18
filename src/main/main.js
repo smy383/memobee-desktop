@@ -4,6 +4,9 @@ const path = require('path');
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
+
+// 로그 시스템 import
+const { updaterLogger, appLogger, serverLogger } = require('../shared/utils/logger.js');
 // 더 정확한 개발 모드 감지 - 패키징되지 않은 경우만 개발 모드
 const isDev = !app.isPackaged || 
               process.env.NODE_ENV === 'development' || 
@@ -20,9 +23,9 @@ let updateAvailable = false;
 
 // Configure auto-updater
 function configureAutoUpdater() {
-  console.log('🔄 자동 업데이트 초기화 시작...');
-  console.log('🔧 isDev:', isDev);
-  console.log('🔧 autoUpdater.getFeedURL():', autoUpdater.getFeedURL());
+  updaterLogger.info('자동 업데이트 초기화 시작...');
+  updaterLogger.debug('개발 모드:', isDev);
+  updaterLogger.debug('Feed URL:', autoUpdater.getFeedURL());
   
   // electron-updater 최대 디버그 로깅 활성화
   process.env.ELECTRON_ENABLE_LOGGING = true;
@@ -32,44 +35,44 @@ function configureAutoUpdater() {
   autoUpdater.autoDownload = false; // 수동 다운로드 제어
   autoUpdater.autoInstallOnAppQuit = true; // 앱 종료시 자동 설치!
   
-  console.log('🔧 autoUpdater 설정 완료:');
-  console.log('🔧 autoDownload:', autoUpdater.autoDownload);
-  console.log('🔧 autoInstallOnAppQuit:', autoUpdater.autoInstallOnAppQuit);
+  updaterLogger.info('autoUpdater 설정 완료');
+  updaterLogger.debug('autoDownload:', autoUpdater.autoDownload);
+  updaterLogger.debug('autoInstallOnAppQuit:', autoUpdater.autoInstallOnAppQuit);
   
   // 상세한 로깅 시스템 설정
   autoUpdater.logger = {
     info: (message) => {
-      console.log('📝 autoUpdater INFO:', message);
+      updaterLogger.info('electron-updater:', message);
       if (typeof message === 'object') {
-        console.log('📝 INFO 상세:', JSON.stringify(message, null, 2));
+        updaterLogger.debug('상세 정보:', JSON.stringify(message, null, 2));
       }
     },
     warn: (message) => {
-      console.warn('⚠️ autoUpdater WARN:', message);
+      updaterLogger.warn('electron-updater:', message);
       if (typeof message === 'object') {
-        console.warn('⚠️ WARN 상세:', JSON.stringify(message, null, 2));
+        updaterLogger.warn('상세 경고:', JSON.stringify(message, null, 2));
       }
     },
     error: (message) => {
-      console.error('❌ autoUpdater ERROR:', message);
+      updaterLogger.error('electron-updater:', message);
       if (typeof message === 'object') {
-        console.error('❌ ERROR 상세:', JSON.stringify(message, null, 2));
+        updaterLogger.error('상세 오류:', JSON.stringify(message, null, 2));
       }
     },
     debug: (message) => {
-      console.log('🔧 autoUpdater DEBUG:', message);
+      updaterLogger.debug('electron-updater:', message);
       if (typeof message === 'object') {
-        console.log('🔧 DEBUG 상세:', JSON.stringify(message, null, 2));
+        updaterLogger.debug('상세 디버그:', JSON.stringify(message, null, 2));
       }
     }
   };
   
   // 개발 모드에서도 설정은 진행 (테스트용)
   if (isDev) {
-    console.log('🔄 개발 모드: 자동 업데이트 설정은 진행, 자동 확인만 비활성화');
+    updaterLogger.info('개발 모드: 자동 업데이트 설정은 진행, 자동 확인만 비활성화');
   }
 
-  console.log('🔄 자동 업데이트 초기화 중...');
+  updaterLogger.info('자동 업데이트 초기화 중...');
   
   // 강제로 GitHub 설정
   autoUpdater.setFeedURL({
@@ -78,18 +81,18 @@ function configureAutoUpdater() {
     repo: 'memobee-desktop'
   });
   
-  console.log('🔧 설정된 FeedURL:', autoUpdater.getFeedURL());
+  updaterLogger.debug('설정된 FeedURL:', autoUpdater.getFeedURL());
   
   // GitHub에서 업데이트 확인
   autoUpdater.checkForUpdatesAndNotify();
 
   // 업데이트 이벤트 리스너들
   autoUpdater.on('checking-for-update', () => {
-    console.log('🔍 업데이트 확인 중...');
+    updaterLogger.info('업데이트 확인 중...');
   });
 
   autoUpdater.on('update-available', (info) => {
-    console.log('✨ 새 업데이트 발견:', info.version);
+    updaterLogger.info('새 업데이트 발견:', info.version);
     updateAvailable = true;
     
     // 사용자에게 업데이트 알림
@@ -97,20 +100,20 @@ function configureAutoUpdater() {
   });
 
   autoUpdater.on('update-not-available', (info) => {
-    console.log('✅ 최신 버전 사용 중:', info.version);
+    updaterLogger.info('최신 버전 사용 중:', info.version);
     updateAvailable = false;
   });
 
   autoUpdater.on('error', (err) => {
-    console.error('❌ 업데이트 오류:', err);
-    console.error('❌ 오류 상세:', {
+    updaterLogger.error('업데이트 오류:', err);
+    updaterLogger.error('오류 상세:', {
       message: err.message,
       stack: err.stack,
       name: err.name,
       code: err.code,
       errno: err.errno
     });
-    console.error('❌ autoUpdater 상태:', {
+    updaterLogger.error('autoUpdater 상태:', {
       feedURL: autoUpdater.getFeedURL(),
       updateAvailable: updateAvailable
     });
@@ -121,11 +124,11 @@ function configureAutoUpdater() {
     let logMessage = `⬇️ 다운로드 진행률: ${progressObj.percent.toFixed(2)}%`;
     logMessage += ` (${progressObj.transferred}/${progressObj.total})`;
     logMessage += ` 속도: ${(progressObj.bytesPerSecond / 1024 / 1024).toFixed(2)}MB/s`;
-    console.log(logMessage);
-    console.log('🔧 전체 progressObj:', JSON.stringify(progressObj, null, 2));
+    updaterLogger.debug(logMessage);
+    updaterLogger.debug('전체 progressObj:', JSON.stringify(progressObj, null, 2));
     
     // 다운로드 스피드 및 상태 모니터링
-    console.log('⏱️ 다운로드 상태 체크:', {
+    updaterLogger.debug('다운로드 상태 체크:', {
       percent: progressObj.percent,
       transferred: progressObj.transferred,
       total: progressObj.total,
@@ -136,7 +139,7 @@ function configureAutoUpdater() {
     
     // 렌더러 프로세스에 진행률 전송
     if (mainWindow && mainWindow.webContents) {
-      console.log('📡 진행률 이벤트 전송:', progressObj.percent);
+      updaterLogger.debug('진행률 이벤트 전송:', progressObj.percent);
       mainWindow.webContents.send('update-download-progress', {
         percent: progressObj.percent,
         transferred: progressObj.transferred,
@@ -145,7 +148,7 @@ function configureAutoUpdater() {
       
       // 추가: 브로드캐스트도 시도
       mainWindow.webContents.executeJavaScript(`
-        console.log('🔄 진행률 업데이트:', ${progressObj.percent});
+        updaterLogger.debug('진행률 업데이트:', ${progressObj.percent});
         if (window.updateProgressHandler) {
           window.updateProgressHandler({
             percent: ${progressObj.percent},
@@ -158,11 +161,11 @@ function configureAutoUpdater() {
   });
 
   autoUpdater.on('update-downloaded', (info) => {
-    console.log('✅ 업데이트 다운로드 완료:', info.version);
+    updaterLogger.info('업데이트 다운로드 완료:', info.version);
     
     // 렌더러 프로세스에 다운로드 완료 알림
     if (mainWindow && mainWindow.webContents) {
-      console.log('📡 렌더러에 update-downloaded 이벤트 전송');
+      updaterLogger.debug('렌더러에 update-downloaded 이벤트 전송');
       mainWindow.webContents.send('update-downloaded', {
         version: info.version,
         releaseDate: info.releaseDate,
@@ -177,7 +180,7 @@ function configureAutoUpdater() {
   // 1시간마다 업데이트 확인
   setInterval(() => {
     if (!isDev && !updateAvailable) {
-      console.log('🔄 주기적 업데이트 확인...');
+      updaterLogger.debug('주기적 업데이트 확인...');
       autoUpdater.checkForUpdatesAndNotify();
     }
   }, 60 * 60 * 1000); // 1시간
@@ -200,7 +203,7 @@ function showUpdateDialog(info) {
   dialog.showMessageBox(mainWindow, options).then((result) => {
     if (result.response === 1) {
       // 사용자가 다운로드 선택
-      console.log('📥 사용자가 업데이트 다운로드 선택');
+      updaterLogger.info('사용자가 업데이트 다운로드 선택');
       autoUpdater.downloadUpdate();
       
       // 다운로드 시작 알림
@@ -228,12 +231,12 @@ function showUpdateReadyDialog(info) {
   dialog.showMessageBox(mainWindow, options).then((result) => {
     if (result.response === 1) {
       // 사용자가 앱 종료 선택 - 종료시 자동 설치 진행
-      console.log('🚪 사용자가 앱 종료를 선택함');
-      console.log('💾 autoInstallOnAppQuit=true 설정으로 앱 종료시 자동 설치 진행');
+      updaterLogger.info('사용자가 앱 종료를 선택함');
+      updaterLogger.info('autoInstallOnAppQuit=true 설정으로 앱 종료시 자동 설치 진행');
       
       // macOS 자동 재시작 설정
       if (process.platform === 'darwin') {
-        console.log('🍎 macOS 자동 재시작 설정 시도...');
+        updaterLogger.debug('macOS 자동 재시작 설정 시도...');
         app.setLoginItemSettings({
           openAtLogin: false,
           openAsHidden: false,
@@ -258,7 +261,7 @@ function showUpdateReadyDialog(info) {
           fs.writeFileSync(scriptPath, restartScript);
           fs.chmodSync(scriptPath, '755');
           
-          console.log('📝 재시작 스크립트 생성:', scriptPath);
+          updaterLogger.debug('재시작 스크립트 생성:', scriptPath);
           
           // 백그라운드에서 재시작 스크립트 실행
           const restartProcess = spawn('sh', [scriptPath], {
@@ -267,20 +270,20 @@ function showUpdateReadyDialog(info) {
           });
           restartProcess.unref();
           
-          console.log('🚀 백그라운드 재시작 프로세스 시작');
+          updaterLogger.debug('백그라운드 재시작 프로세스 시작');
         } catch (error) {
-          console.error('❌ 재시작 스크립트 생성 실패:', error);
+          updaterLogger.error('재시작 스크립트 생성 실패:', error);
         }
       }
       
       // 간단하게 앱 종료 - autoInstallOnAppQuit이 처리
       setTimeout(() => {
-        console.log('🚪 앱 종료 시작... (종료 과정에서 업데이트 자동 설치됨)');
+        updaterLogger.info('앱 종료 시작... (종료 과정에서 업데이트 자동 설치됨)');
         app.quit();
       }, 1000);
     } else {
       // 나중에 재시작 선택 - 앱 종료 시 자동 업데이트
-      console.log('⏰ 사용자가 나중에 재시작 선택 (앱 종료시 자동 설치)');
+      updaterLogger.info('사용자가 나중에 재시작 선택 (앱 종료시 자동 설치)');
     }
   });
 }
@@ -333,11 +336,11 @@ function createServer() {
     let port = 3000;
     const tryPort = (port) => {
       server.listen(port, 'localhost', () => {
-        console.log(`✅ HTTP 서버 시작됨: http://localhost:${port}`);
+        serverLogger.info(`HTTP 서버 시작됨: http://localhost:${port}`);
         resolve(`http://localhost:${port}`);
       }).on('error', (err) => {
         if (err.code === 'EADDRINUSE') {
-          console.log(`포트 ${port} 사용 중, 다음 포트 시도...`);
+          serverLogger.debug(`포트 ${port} 사용 중, 다음 포트 시도...`);
           tryPort(port + 1);
         } else {
           reject(err);
@@ -376,14 +379,14 @@ function createWindow() {
   } else {
     // 프로덕션 모드: 내장 HTTP 서버 사용
     createServer().then((serverUrl) => {
-      console.log('🚀 서버 URL로 앱 로딩:', serverUrl);
+      appLogger.info('서버 URL로 앱 로딩:', serverUrl);
       mainWindow.loadURL(serverUrl);
     }).catch((error) => {
-      console.error('❌ 서버 시작 실패:', error);
+      appLogger.error('서버 시작 실패:', error);
       
       // 서버 시작 실패 시 fallback으로 file:// 사용
       const indexPath = path.join(__dirname, '../../dist/renderer/index.html');
-      console.log('📁 Fallback: 파일 경로로 로딩:', indexPath);
+      appLogger.info('Fallback: 파일 경로로 로딩:', indexPath);
       mainWindow.loadFile(indexPath);
     });
   }
@@ -416,7 +419,7 @@ ipcMain.handle('open-external-url', async (event, url) => {
     await shell.openExternal(url);
     return { success: true };
   } catch (error) {
-    console.error('외부 URL 열기 실패:', error);
+    appLogger.error('외부 URL 열기 실패:', error);
     return { success: false, error: error.message };
   }
 });
@@ -447,7 +450,7 @@ ipcMain.handle('show-input-dialog', async (event, { title, message }) => {
       return null; // 취소
     }
   } catch (error) {
-    console.error('입력 다이얼로그 실패:', error);
+    appLogger.error('입력 다이얼로그 실패:', error);
     return null;
   }
 });
@@ -513,9 +516,9 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   // Close server if running
   if (server) {
-    console.log('🔄 HTTP 서버 종료 중...');
+    serverLogger.info('HTTP 서버 종료 중...');
     server.close(() => {
-      console.log('✅ HTTP 서버 종료됨');
+      serverLogger.info('HTTP 서버 종료됨');
     });
   }
   
@@ -528,17 +531,17 @@ app.on('window-all-closed', () => {
 // 수동 업데이트 IPC 핸들러들
 ipcMain.handle('manual-check-for-updates', async () => {
   try {
-    console.log('🔍 수동 업데이트 확인 요청');
-    console.log('🔧 isDev:', isDev);
-    console.log('🔧 app.isPackaged:', app.isPackaged);
-    console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
-    console.log('🔧 argv:', process.argv);
-    console.log('🔧 현재 앱 버전:', app.getVersion());
+    updaterLogger.info('수동 업데이트 확인 요청');
+    updaterLogger.debug('개발 모드:', isDev);
+    updaterLogger.debug('앱 패키지 여부:', app.isPackaged);
+    updaterLogger.debug('NODE_ENV:', process.env.NODE_ENV);
+    updaterLogger.debug('프로세스 인자:', process.argv);
+    updaterLogger.debug('현재 앱 버전:', app.getVersion());
     
     
     // 개발 모드에서는 시뮬레이션
     if (isDev) {
-      console.log('ℹ️ 개발 모드: 업데이트 시뮬레이션');
+      updaterLogger.info('개발 모드: 업데이트 시뮬레이션');
       
       // v1.0.7이 배포되어 있으므로 업데이트 available로 시뮬레이션
       return {
@@ -550,14 +553,14 @@ ipcMain.handle('manual-check-for-updates', async () => {
       };
     }
     
-    console.log('🚀 프로덕션 모드: 실제 업데이트 확인 시작');
-    console.log('🔧 현재 Feed URL:', autoUpdater.getFeedURL());
+    updaterLogger.info('프로덕션 모드: 실제 업데이트 확인 시작');
+    updaterLogger.debug('현재 Feed URL:', autoUpdater.getFeedURL());
     
     // GitHub API 직접 확인 추가
     try {
       const https = require('https');
       const apiUrl = 'https://api.github.com/repos/smy383/memobee-desktop/releases/latest';
-      console.log('🌐 GitHub API 직접 확인:', apiUrl);
+      updaterLogger.debug('GitHub API 직접 확인:', apiUrl);
       
       https.get(apiUrl, { headers: { 'User-Agent': 'MemoBee-Desktop' } }, (res) => {
         let data = '';
@@ -565,25 +568,25 @@ ipcMain.handle('manual-check-for-updates', async () => {
         res.on('end', () => {
           try {
             const release = JSON.parse(data);
-            console.log('🔧 GitHub API 응답:', {
+            updaterLogger.debug('GitHub API 응답:', {
               tag_name: release.tag_name,
               published_at: release.published_at,
               assets: release.assets.map(a => a.name)
             });
           } catch (e) {
-            console.error('GitHub API 파싱 실패:', e);
+            updaterLogger.error('GitHub API 파싱 실패:', e);
           }
         });
       }).on('error', (e) => {
-        console.error('🌐 GitHub API 요청 실패:', e);
+        updaterLogger.error('GitHub API 요청 실패:', e);
       });
     } catch (apiErr) {
-      console.error('🌐 GitHub API 확인 실패:', apiErr);
+      updaterLogger.error('GitHub API 확인 실패:', apiErr);
     }
     
     // 프로덕션 모드에서는 실제 업데이트 확인
     return new Promise((resolve) => {
-      console.log('📡 autoUpdater.checkForUpdates() 호출');
+      updaterLogger.info('autoUpdater.checkForUpdates() 호출');
       autoUpdater.checkForUpdates();
       
       // 타임아웃 설정 (10초)
@@ -616,17 +619,17 @@ ipcMain.handle('manual-check-for-updates', async () => {
       });
     });
   } catch (error) {
-    console.error('❌ 수동 업데이트 확인 실패:', error);
+    updaterLogger.error('수동 업데이트 확인 실패:', error);
     return { available: false, error: error.message };
   }
 });
 
 ipcMain.handle('manual-download-update', async () => {
   try {
-    console.log('📥 수동 업데이트 다운로드 요청');
+    updaterLogger.info('수동 업데이트 다운로드 요청');
     
     if (isDev) {
-      console.log('ℹ️ 개발 모드: 다운로드 시뮬레이션');
+      updaterLogger.info('개발 모드: 다운로드 시뮬레이션');
       // 개발 모드에서 진행률 시뮬레이션
       let progress = 0;
       const simulateProgress = setInterval(() => {
@@ -681,15 +684,15 @@ ipcMain.handle('manual-download-update', async () => {
       autoUpdater.once('error', handleDownloadError);
       
       try {
-        console.log('🚀 autoUpdater.downloadUpdate() 호출 시작');
-        console.log('🔧 현재 Feed URL:', autoUpdater.getFeedURL());
-        console.log('🔧 사용 가능한 업데이트 정보:', updateAvailable);
-        console.log('🔧 앱 버전:', require('electron').app.getVersion());
-        console.log('🔧 플랫폼:', process.platform);
-        console.log('🔧 아키텍처:', process.arch);
+        updaterLogger.info('autoUpdater.downloadUpdate() 호출 시작');
+        updaterLogger.debug('현재 Feed URL:', autoUpdater.getFeedURL());
+        updaterLogger.debug('사용 가능한 업데이트 정보:', updateAvailable);
+        updaterLogger.debug('앱 버전:', require('electron').app.getVersion());
+        updaterLogger.debug('플랫폼:', process.platform);
+        updaterLogger.debug('아키텍처:', process.arch);
         
         // autoUpdater 내부 상태 로깅
-        console.log('🔧 autoUpdater 객체 상태:', {
+        updaterLogger.debug('autoUpdater 객체 상태:', {
           'autoUpdater.netSession': autoUpdater.netSession ? 'exists' : 'null',
           'autoUpdater.requestHeaders': autoUpdater.requestHeaders || 'undefined',
           'autoUpdater.autoDownload': autoUpdater.autoDownload,
@@ -697,23 +700,23 @@ ipcMain.handle('manual-download-update', async () => {
         });
         
         const result = autoUpdater.downloadUpdate();
-        console.log('🔧 downloadUpdate 결과:', result);
-        console.log('🔧 downloadUpdate Promise 타입:', typeof result);
+        updaterLogger.debug('downloadUpdate 결과:', result);
+        updaterLogger.debug('downloadUpdate Promise 타입:', typeof result);
         
         // Promise 타입 확인
         if (result && typeof result.then === 'function') {
-          console.log('📡 downloadUpdate가 Promise를 반환했습니다');
+          updaterLogger.debug('downloadUpdate가 Promise를 반환했습니다');
           result.then(() => {
-            console.log('✅ downloadUpdate Promise resolved');
+            updaterLogger.debug('downloadUpdate Promise resolved');
           }).catch((promiseError) => {
-            console.error('❌ downloadUpdate Promise rejected:', promiseError);
+            updaterLogger.error('downloadUpdate Promise rejected:', promiseError);
           });
         } else {
-          console.log('⚠️ downloadUpdate가 Promise를 반환하지 않았습니다');
+          updaterLogger.warn('downloadUpdate가 Promise를 반환하지 않았습니다');
         }
       } catch (error) {
-        console.error('💥 downloadUpdate 호출 실패:', error);
-        console.error('💥 호출 실패 상세:', {
+        updaterLogger.error('downloadUpdate 호출 실패:', error);
+        updaterLogger.error('호출 실패 상세:', {
           name: error.name,
           message: error.message,
           stack: error.stack
@@ -723,28 +726,28 @@ ipcMain.handle('manual-download-update', async () => {
       }
     });
   } catch (error) {
-    console.error('❌ 수동 업데이트 다운로드 실패:', error);
+    updaterLogger.error('수동 업데이트 다운로드 실패:', error);
     return { success: false, error: error.message };
   }
 });
 
 ipcMain.handle('manual-install-update', async () => {
   try {
-    console.log('🔄 수동 업데이트 설치 요청 - 간단한 재시작');
+    updaterLogger.info('수동 업데이트 설치 요청 - 간단한 재시작');
     
     if (isDev) {
-      console.log('ℹ️ 개발 모드: 설치 시뮬레이션');
+      updaterLogger.info('개발 모드: 설치 시뮬레이션');
       return { 
         success: true, 
         message: '개발 모드에서는 실제 재시작되지 않습니다'
       };
     }
     
-    console.log('💾 autoInstallOnAppQuit=true 설정으로 앱 종료');
+    updaterLogger.info('autoInstallOnAppQuit=true 설정으로 앱 종료');
     
     // 간단하게 앱 종료 - autoInstallOnAppQuit이 자동으로 설치 처리
     setTimeout(() => {
-      console.log('🚪 앱 종료... (종료시 자동 업데이트 설치)');
+      updaterLogger.info('앱 종료... (종료시 자동 업데이트 설치)');
       app.quit();
     }, 1000);
     
@@ -753,7 +756,7 @@ ipcMain.handle('manual-install-update', async () => {
       message: '앱이 종료되면서 자동으로 업데이트가 설치됩니다'
     };
   } catch (error) {
-    console.error('❌ 수동 업데이트 설치 실패:', error);
+    updaterLogger.error('수동 업데이트 설치 실패:', error);
     return { 
       success: false, 
       error: error.message
@@ -763,12 +766,12 @@ ipcMain.handle('manual-install-update', async () => {
 
 // Handle app quit
 app.on('before-quit', (event) => {
-  console.log('🔄 앱 종료 시작...');
+  appLogger.info('앱 종료 시작...');
   if (server) {
-    console.log('🔧 HTTP 서버 종료 중...');
+    serverLogger.info('HTTP 서버 종료 중...');
     server.close();
   }
-  console.log('✅ 앱 종료 완료');
+  appLogger.info('앱 종료 완료');
 });
 
 // Security: Prevent new window creation
@@ -792,7 +795,7 @@ function createMenu() {
           accelerator: 'Cmd+,',
           click: () => {
             // TODO: 환경설정 창 열기
-            console.log('환경설정 열기');
+            appLogger.debug('환경설정 열기');
           }
         },
         { type: 'separator' },
@@ -927,7 +930,7 @@ function createMenu() {
                 buttons: ['확인']
               });
             } else {
-              console.log('🔍 수동 업데이트 확인 시작');
+              updaterLogger.info('수동 업데이트 확인 시작');
               autoUpdater.checkForUpdatesAndNotify();
             }
           }

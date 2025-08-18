@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../shared/services/apiService';
 import './SecurityView.css';
@@ -80,12 +81,12 @@ const SecurityView: React.FC = () => {
     const initializeSecurity = async () => {
         try {
             setLoading(true);
-            console.log('🔒 Desktop Security - 초기화 시작');
+            uiLogger.debug('🔒 Desktop Security - 초기화 시작');
 
             // 보안 상태 조회
             await loadSecurityStatus();
         } catch (error) {
-            console.error('❌ Desktop Security - 초기화 실패:', error);
+            uiLogger.error('❌ Desktop Security - 초기화 실패:', error);
             setError(t('security.errors.initialization_failed'));
         } finally {
             setLoading(false);
@@ -94,9 +95,9 @@ const SecurityView: React.FC = () => {
 
     const loadSecurityStatus = async () => {
         try {
-            console.log('🔍 Desktop Security - 보안 상태 조회');
+            uiLogger.debug('🔍 Desktop Security - 보안 상태 조회');
             const statusData = await api.user.getSecurityStatus();
-            console.log('✅ Desktop Security - 보안 상태:', statusData);
+            uiLogger.debug('✅ Desktop Security - 보안 상태:', statusData);
 
             setSecurityStatus(statusData);
 
@@ -107,7 +108,7 @@ const SecurityView: React.FC = () => {
                 setError(t('security.password.not_set'));
             }
         } catch (error) {
-            console.error('❌ Desktop Security - 보안 상태 조회 실패:', error);
+            uiLogger.error('❌ Desktop Security - 보안 상태 조회 실패:', error);
             setError(t('security.errors.status_check_failed'));
         }
     };
@@ -124,12 +125,12 @@ const SecurityView: React.FC = () => {
         setAuthError('');
 
         try {
-            console.log('🔐 Desktop Security - 보안 인증 시작');
+            uiLogger.debug('🔐 Desktop Security - 보안 인증 시작');
 
             const authResult = await api.user.authenticateSecurityPassword(authPassword);
 
             if (authResult.success && authResult.token) {
-                console.log('✅ Desktop Security - 보안 인증 성공');
+                uiLogger.debug('✅ Desktop Security - 보안 인증 성공');
 
                 setShowAuthModal(false);
                 setAuthPassword('');
@@ -141,7 +142,7 @@ const SecurityView: React.FC = () => {
                 setAuthError(authResult.message || t('security.password.incorrect'));
             }
         } catch (error: any) {
-            console.error('❌ Desktop Security - 보안 인증 실패:', error);
+            uiLogger.error('❌ Desktop Security - 보안 인증 실패:', error);
             if (error.response?.status === 401) {
                 setAuthError(t('security.password.incorrect'));
             } else {
@@ -155,10 +156,10 @@ const SecurityView: React.FC = () => {
     const loadSecurityInfos = async (securityToken: string) => {
         try {
             setSecurityInfosLoading(true);
-            console.log('📋 Desktop Security - 보안 정보 로드 시작');
+            uiLogger.debug('📋 Desktop Security - 보안 정보 로드 시작');
 
             const securityInfosResponse = await api.user.getSecurityInfos(securityToken);
-            console.log('📊 Desktop Security - 보안 정보 응답:', securityInfosResponse);
+            uiLogger.debug('📊 Desktop Security - 보안 정보 응답:', securityInfosResponse);
 
             // 백엔드 응답 처리
             const rawData = Array.isArray(securityInfosResponse)
@@ -172,7 +173,7 @@ const SecurityView: React.FC = () => {
             } else if (rawData && Array.isArray(rawData.data)) {
                 securityInfosData = rawData.data;
             } else {
-                console.warn('⚠️ Desktop Security - 응답 데이터가 배열이 아님:', rawData);
+                uiLogger.warn('⚠️ Desktop Security - 응답 데이터가 배열이 아님:', rawData);
                 setSecurityInfos([]);
                 return;
             }
@@ -191,11 +192,11 @@ const SecurityView: React.FC = () => {
                 isVisible: false,
             }));
 
-            console.log('✅ Desktop Security - 보안 정보 로드 성공:', transformedData.length);
+            uiLogger.debug('✅ Desktop Security - 보안 정보 로드 성공:', transformedData.length);
             setSecurityInfos(transformedData);
 
         } catch (error: any) {
-            console.error('❌ Desktop Security - 보안 정보 로드 실패:', error);
+            uiLogger.error('❌ Desktop Security - 보안 정보 로드 실패:', error);
 
             if (error.response?.status === 401) {
                 setNeedsAuth(true);
@@ -402,10 +403,10 @@ const SecurityView: React.FC = () => {
             try {
                 const memo = await api.memo.getById(info.memo_id);
                 // TODO: 메모 에디터 모달 열기 또는 메모 화면으로 이동
-                console.log('📝 연결된 메모:', memo);
+                uiLogger.debug('📝 연결된 메모:', memo);
                 alert(`연결된 메모: ${memo.title}`);
             } catch (error) {
-                console.error('메모 로드 실패:', error);
+                uiLogger.error('메모 로드 실패:', error);
                 alert(t('security.errors.memo_load_failed'));
             }
         } else {

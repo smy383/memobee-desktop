@@ -6,6 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Memo, api } from '../services/apiService';
 import { authService } from '../services/authService';
+import { authLogger } from '../utils/logger';
 
 interface MemoState {
   memos: Memo[];
@@ -74,9 +75,9 @@ export const useMemos = (): MemoState & MemoActions => {
         }));
       }
 
-      console.log('✅ 메모 로드 성공:', memos.length, '개');
+      authLogger.debug('✅ 메모 로드 성공:', memos.length, '개');
     } catch (error: any) {
-      console.error('❌ 메모 로드 실패:', error);
+      authLogger.error('❌ 메모 로드 실패:', error);
       setMemoState(prev => ({
         ...prev,
         loading: false,
@@ -95,7 +96,7 @@ export const useMemos = (): MemoState & MemoActions => {
         totalCount: stats.total_count,
       }));
     } catch (error) {
-      console.error('❌ 카테고리 통계 로드 실패:', error);
+      authLogger.error('❌ 카테고리 통계 로드 실패:', error);
     }
   }, []);
 
@@ -112,10 +113,10 @@ export const useMemos = (): MemoState & MemoActions => {
         totalCount: prev.totalCount + 1,
       }));
 
-      console.log('✅ 메모 생성 성공:', newMemo.id);
+      authLogger.debug('✅ 메모 생성 성공:', newMemo.id);
       return newMemo;
     } catch (error: any) {
-      console.error('❌ 메모 생성 실패:', error);
+      authLogger.error('❌ 메모 생성 실패:', error);
       setMemoState(prev => ({
         ...prev,
         error: error.message || '메모 생성에 실패했습니다.',
@@ -138,10 +139,10 @@ export const useMemos = (): MemoState & MemoActions => {
         ),
       }));
 
-      console.log('✅ 메모 수정 성공:', id);
+      authLogger.debug('✅ 메모 수정 성공:', id);
       return true;
     } catch (error: any) {
-      console.error('❌ 메모 수정 실패:', error);
+      authLogger.error('❌ 메모 수정 실패:', error);
       setMemoState(prev => ({
         ...prev,
         error: error.message || '메모 수정에 실패했습니다.',
@@ -163,10 +164,10 @@ export const useMemos = (): MemoState & MemoActions => {
         totalCount: prev.totalCount - 1,
       }));
 
-      console.log('✅ 메모 삭제 성공:', id);
+      authLogger.debug('✅ 메모 삭제 성공:', id);
       return true;
     } catch (error: any) {
-      console.error('❌ 메모 삭제 실패:', error);
+      authLogger.error('❌ 메모 삭제 실패:', error);
       setMemoState(prev => ({
         ...prev,
         error: error.message || '메모 삭제에 실패했습니다.',
@@ -189,10 +190,10 @@ export const useMemos = (): MemoState & MemoActions => {
         ),
       }));
 
-      console.log('✅ 즐겨찾기 토글 성공:', id, isFavorited);
+      authLogger.debug('✅ 즐겨찾기 토글 성공:', id, isFavorited);
       return true;
     } catch (error: any) {
-      console.error('❌ 즐겨찾기 토글 실패:', error);
+      authLogger.error('❌ 즐겨찾기 토글 실패:', error);
       setMemoState(prev => ({
         ...prev,
         error: error.message || '즐겨찾기 변경에 실패했습니다.',
@@ -225,11 +226,11 @@ export const useMemos = (): MemoState & MemoActions => {
     try {
       setMemoState(prev => ({ ...prev, error: null }));
 
-      console.log('🤖 AI 질문 처리 시작:', question);
+      authLogger.debug('🤖 AI 질문 처리 시작:', question);
       
       const result = await api.memo.askAIQuestion(question);
       
-      console.log('✅ AI 질문 처리 성공:', result);
+      authLogger.debug('✅ AI 질문 처리 성공:', result);
       
       // 새로운 메모가 생성된 경우 메모 리스트 업데이트
       if (result.type === 'generated_memo' && result.new_memo && result.new_memo.id) {
@@ -238,7 +239,7 @@ export const useMemos = (): MemoState & MemoActions => {
       
       return result;
     } catch (error: any) {
-      console.error('❌ AI 질문 처리 실패:', error);
+      authLogger.error('❌ AI 질문 처리 실패:', error);
       setMemoState(prev => ({
         ...prev,
         error: error.message || 'AI 질문 처리에 실패했습니다.',
@@ -256,11 +257,11 @@ export const useMemos = (): MemoState & MemoActions => {
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
     if (currentUser) {
-      console.log('🔄 useMemos 훅 초기화 - 인증된 사용자, 메모 로드 시작');
+      authLogger.debug('🔄 useMemos 훅 초기화 - 인증된 사용자, 메모 로드 시작');
       loadMemos(undefined, undefined, true);
       loadCategoryStats();
     } else {
-      console.log('⚠️ useMemos 훅 초기화 - 사용자 인증 대기 중');
+      authLogger.debug('⚠️ useMemos 훅 초기화 - 사용자 인증 대기 중');
     }
   }, []); // 의존성 배열을 비워서 한 번만 실행
 

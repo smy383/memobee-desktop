@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api, Task, CreateTaskRequest, UpdateTaskRequest } from '../../shared/services/apiService';
 import './TodoView.css';
@@ -97,12 +98,12 @@ const TodoView: React.FC<TodoViewProps> = () => {
   const loadTasks = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('📝 할일 목록 로드 시작');
+      uiLogger.debug('📝 할일 목록 로드 시작');
 
       const tasksData = await api.tasks.getList(
         0, 100, selectedCategory, selectedPriority, selectedStatus, showCompleted
       );
-      console.log('✅ 할일 데이터 로드 성공:', tasksData.length);
+      uiLogger.debug('✅ 할일 데이터 로드 성공:', tasksData.length);
 
       setTasks(tasksData);
 
@@ -122,7 +123,7 @@ const TodoView: React.FC<TodoViewProps> = () => {
       setStats(newStats);
       setError(null);
     } catch (err: any) {
-      console.error('❌ 할일 로드 실패:', err);
+      uiLogger.error('❌ 할일 로드 실패:', err);
       setError('할일을 불러오는데 실패했습니다.');
       setTasks([]);
     } finally {
@@ -178,22 +179,22 @@ const TodoView: React.FC<TodoViewProps> = () => {
         return;
       }
 
-      console.log('📝 할일 저장 시작:', modalMode);
+      uiLogger.debug('📝 할일 저장 시작:', modalMode);
 
       if (modalMode === 'create') {
         await api.tasks.create(formData);
-        console.log('✅ 새 할일 생성 성공');
+        uiLogger.debug('✅ 새 할일 생성 성공');
         alert('할일이 생성되었습니다.');
       } else if (selectedTask) {
         await api.tasks.update(selectedTask.id, formData);
-        console.log('✅ 할일 수정 성공');
+        uiLogger.debug('✅ 할일 수정 성공');
         alert('할일이 수정되었습니다.');
       }
 
       setShowModal(false);
       loadTasks();
     } catch (error: any) {
-      console.error('❌ 할일 저장 실패:', error);
+      uiLogger.error('❌ 할일 저장 실패:', error);
       alert('할일 저장에 실패했습니다.');
     }
   };
@@ -205,13 +206,13 @@ const TodoView: React.FC<TodoViewProps> = () => {
     }
 
     try {
-      console.log('📝 할일 삭제 시작:', task.id);
+      uiLogger.debug('📝 할일 삭제 시작:', task.id);
       await api.tasks.delete(task.id);
-      console.log('✅ 할일 삭제 성공');
+      uiLogger.debug('✅ 할일 삭제 성공');
       alert('할일이 삭제되었습니다.');
       loadTasks();
     } catch (error: any) {
-      console.error('❌ 할일 삭제 실패:', error);
+      uiLogger.error('❌ 할일 삭제 실패:', error);
       alert('할일 삭제에 실패했습니다.');
     }
   };
@@ -226,7 +227,7 @@ const TodoView: React.FC<TodoViewProps> = () => {
       }
       loadTasks();
     } catch (error: any) {
-      console.error('❌ 할일 완료 상태 변경 실패:', error);
+      uiLogger.error('❌ 할일 완료 상태 변경 실패:', error);
       alert('할일 상태 변경에 실패했습니다.');
     }
   };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api, Schedule, CreateScheduleRequest, UpdateScheduleRequest } from '../../shared/services/apiService';
 import DesktopCalendar from './DesktopCalendar';
@@ -152,12 +153,12 @@ const ScheduleView: React.FC<ScheduleViewProps> = () => {
   const loadSchedules = useCallback(async () => {
     try {
       setLoading(true);
-      console.log('📅 일정 목록 로드 시작');
+      uiLogger.debug('📅 일정 목록 로드 시작');
 
       const schedulesData = await api.schedules.getList(
         0, 100, selectedCategory, selectedStatus
       );
-      console.log('✅ 일정 데이터 로드 성공:', schedulesData.length);
+      uiLogger.debug('✅ 일정 데이터 로드 성공:', schedulesData.length);
 
       // 전체 일정 저장 (달력용)
       setAllSchedules(schedulesData);
@@ -214,7 +215,7 @@ const ScheduleView: React.FC<ScheduleViewProps> = () => {
       setStats(newStats);
       setError(null);
     } catch (err: any) {
-      console.error('❌ 일정 로드 실패:', err);
+      uiLogger.error('❌ 일정 로드 실패:', err);
       setError('일정을 불러오는데 실패했습니다.');
       setSchedules([]);
     } finally {
@@ -294,7 +295,7 @@ const ScheduleView: React.FC<ScheduleViewProps> = () => {
         return;
       }
 
-      console.log('📅 일정 저장 시작:', modalMode);
+      uiLogger.debug('📅 일정 저장 시작:', modalMode);
 
       if (modalMode === 'create') {
         const scheduleData = formData.is_all_day 
@@ -322,7 +323,7 @@ const ScheduleView: React.FC<ScheduleViewProps> = () => {
             };
 
         await api.schedules.create(scheduleData);
-        console.log('✅ 새 일정 생성 성공');
+        uiLogger.debug('✅ 새 일정 생성 성공');
         alert('일정이 생성되었습니다.');
       } else if (selectedSchedule) {
         const scheduleData = formData.is_all_day 
@@ -350,14 +351,14 @@ const ScheduleView: React.FC<ScheduleViewProps> = () => {
             };
 
         await api.schedules.update(selectedSchedule.id, scheduleData);
-        console.log('✅ 일정 수정 성공');
+        uiLogger.debug('✅ 일정 수정 성공');
         alert('일정이 수정되었습니다.');
       }
 
       setShowModal(false);
       loadSchedules();
     } catch (error: any) {
-      console.error('❌ 일정 저장 실패:', error);
+      uiLogger.error('❌ 일정 저장 실패:', error);
       alert('일정 저장에 실패했습니다.');
     }
   };
@@ -369,13 +370,13 @@ const ScheduleView: React.FC<ScheduleViewProps> = () => {
     }
 
     try {
-      console.log('📅 일정 삭제 시작:', schedule.id);
+      uiLogger.debug('📅 일정 삭제 시작:', schedule.id);
       await api.schedules.delete(schedule.id);
-      console.log('✅ 일정 삭제 성공');
+      uiLogger.debug('✅ 일정 삭제 성공');
       alert('일정이 삭제되었습니다.');
       loadSchedules();
     } catch (error: any) {
-      console.error('❌ 일정 삭제 실패:', error);
+      uiLogger.error('❌ 일정 삭제 실패:', error);
       alert('일정 삭제에 실패했습니다.');
     }
   };
@@ -390,7 +391,7 @@ const ScheduleView: React.FC<ScheduleViewProps> = () => {
 
   // 날짜 선택 핸들러
   const handleDateSelect = (date: string) => {
-    console.log('📅 달력 날짜 선택:', date);
+    uiLogger.debug('📅 달력 날짜 선택:', date);
     setSelectedDate(date === selectedDate ? '' : date);
   };
 

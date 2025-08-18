@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../shared/services/apiService';
 import './LinkManagementView.css';
@@ -50,19 +51,19 @@ const LinkManagementView: React.FC<LinkManagementViewProps> = () => {
   const loadLinks = useCallback(async (search?: string) => {
     try {
       setLoading(!refreshing);
-      console.log('🔗 Desktop Links - 링크 목록 로딩 시작');
+      uiLogger.debug('🔗 Desktop Links - 링크 목록 로딩 시작');
       
       // 실제 API 호출
       const response = await api.links.getList(search);
       
-      console.log('✅ Desktop Links - 링크 목록 로딩 성공:', response.links?.length || 0, '개');
+      uiLogger.debug('✅ Desktop Links - 링크 목록 로딩 성공:', response.links?.length || 0, '개');
       
       const linkResults = response.links || [];
       setLinks(linkResults);
       setFilteredLinks(linkResults);
       setStats({ total_links: linkResults.length });
     } catch (error) {
-      console.error('❌ Desktop Links - 링크 목록 로딩 실패:', error);
+      uiLogger.error('❌ Desktop Links - 링크 목록 로딩 실패:', error);
       setLinks([]);
       setFilteredLinks([]);
     } finally {
@@ -112,7 +113,7 @@ const LinkManagementView: React.FC<LinkManagementViewProps> = () => {
     }
 
     try {
-      console.log('🗑️ Desktop Links - 선택된 링크들 삭제:', Array.from(selectedLinks));
+      uiLogger.debug('🗑️ Desktop Links - 선택된 링크들 삭제:', Array.from(selectedLinks));
       
       // 실제 API 호출
       await api.links.deleteMultiple(Array.from(selectedLinks));
@@ -125,10 +126,10 @@ const LinkManagementView: React.FC<LinkManagementViewProps> = () => {
       setSelectionMode(false);
       setStats({ total_links: updatedLinks.length });
       
-      console.log('✅ Desktop Links - 링크 삭제 성공');
+      uiLogger.debug('✅ Desktop Links - 링크 삭제 성공');
       alert(t('linkManagement.alerts.delete_success', { count: selectedLinks.size }));
     } catch (error) {
-      console.error('❌ Desktop Links - 링크 삭제 실패:', error);
+      uiLogger.error('❌ Desktop Links - 링크 삭제 실패:', error);
       alert(t('linkManagement.alerts.delete_error'));
     }
   };
@@ -150,16 +151,16 @@ const LinkManagementView: React.FC<LinkManagementViewProps> = () => {
   // 관련 메모로 이동
   const handleGoToMemo = async (link: Link) => {
     try {
-      console.log('📝 Desktop Links - 관련 메모로 이동:', link.memo_id);
+      uiLogger.debug('📝 Desktop Links - 관련 메모로 이동:', link.memo_id);
       
       // 메모 상세 정보를 가져와서 처리
       const memo = await api.memo.getById(link.memo_id);
       
       // TODO: 메모 에디터 모달 열기 또는 메모 화면으로 이동
-      console.log('📝 연결된 메모:', memo);
+      uiLogger.debug('📝 연결된 메모:', memo);
       alert(`연결된 메모: ${memo.title || link.memo?.title || '제목 없음'}`);
     } catch (error) {
-      console.error('❌ Desktop Links - 메모 이동 실패:', error);
+      uiLogger.error('❌ Desktop Links - 메모 이동 실패:', error);
       alert(t('linkManagement.alerts.memo_load_error'));
     }
   };

@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { 
   ContentBlock, 
   EditorState, 
@@ -213,9 +214,9 @@ const HybridEditor = forwardRef<HybridEditorRef, HybridEditorProps>(({
         });
       }
 
-      console.log('✅ 파일 업로드 성공:', file.name);
+      uiLogger.debug('✅ 파일 업로드 성공:', file.name);
     } catch (error) {
-      console.error('❌ 파일 업로드 실패:', error);
+      uiLogger.error('❌ 파일 업로드 실패:', error);
       alert('파일 업로드에 실패했습니다.');
     } finally {
       setIsUploading(false);

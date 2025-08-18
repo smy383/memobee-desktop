@@ -23,6 +23,11 @@ import { FaStar, FaRegStar, FaSave, FaTrash, FaCheck, FaSpinner, FaRobot, FaSear
 import './i18n'; // i18n 초기화
 import './components/Layout.css';
 
+// 로그 시스템 import
+import { uiLogger, createLogger } from '../shared/utils/logger';
+const appLogger = createLogger('APP');
+const subscriptionLogger = createLogger('SUBSCRIPTION');
+
 // Layout 컴포넌트를 App.tsx 내부에 정의
 interface LayoutProps {
   onLogout: () => void;
@@ -34,7 +39,7 @@ interface LayoutProps {
 type ScreenType = 'memo' | 'schedule' | 'todo' | 'security' | 'analytics' | 'share' | 'files' | 'links' | 'trash' | 'support' | 'settings';
 
 const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
-  console.log('🏠 Layout 컴포넌트 시작!');
+  uiLogger.debug('Layout 컴포넌트 시작');
   
   const { t } = useTranslation();
   const [currentScreen, setCurrentScreen] = useState<ScreenType>('memo');
@@ -48,14 +53,14 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
 
-  console.log('📞 useSubscription 훅 호출 시작...');
+  subscriptionLogger.debug('useSubscription 훅 호출 시작');
   // 구독 상태 관리
   const { subscriptionData, isLoading: isSubscriptionLoading, isPro } = useSubscription();
-  console.log('📞 useSubscription 훅 호출 완료!');
+  subscriptionLogger.debug('useSubscription 훅 호출 완료');
   
   // 디버깅 로그 추가
-  console.log('🎯 App.tsx - isPro 상태:', isPro);
-  console.log('🎯 App.tsx - subscriptionData:', subscriptionData);
+  subscriptionLogger.debug('isPro 상태:', isPro);
+  subscriptionLogger.debug('subscriptionData:', subscriptionData);
 
   // Pro 업그레이드 모달 상태
   const [showProUpgradeModal, setShowProUpgradeModal] = useState(false);
@@ -109,10 +114,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
 
   // 버전 업데이트 이벤트 리스너
   useEffect(() => {
-    console.log('🎯 버전 리스너 등록 시작');
+    appLogger.debug('버전 리스너 등록 시작');
     
     const handleVersionUpdate = (event: CustomEvent) => {
-      console.log('🔄 버전 업데이트 이벤트 수신:', event.detail.version);
+      appLogger.debug('버전 업데이트 이벤트 수신:', event.detail.version);
       setAppVersion(event.detail.version);
     };
 
@@ -120,19 +125,19 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     
     // 직접 electronAPI를 통해 버전 가져오기 (확실한 방법)
     if (window.electronAPI?.getAppVersion) {
-      console.log('🚀 electronAPI로 버전 직접 요청');
+      appLogger.debug('electronAPI로 버전 직접 요청');
       window.electronAPI.getAppVersion().then(version => {
-        console.log('✅ electronAPI에서 버전 수신:', version);
+        appLogger.debug('electronAPI에서 버전 수신:', version);
         setAppVersion(version);
       }).catch(err => {
-        console.error('❌ electronAPI 버전 요청 실패:', err);
+        appLogger.error('electronAPI 버전 요청 실패:', err);
       });
     }
     
     // fallback: window.memobeeDesktop 확인
-    console.log('🔍 현재 window.memobeeDesktop:', window.memobeeDesktop);
+    uiLogger.debug('🔍 현재 window.memobeeDesktop:', window.memobeeDesktop);
     if (window.memobeeDesktop?.version && window.memobeeDesktop.version !== 'Loading...') {
-      console.log('🔄 초기 버전 설정:', window.memobeeDesktop.version);
+      uiLogger.debug('🔄 초기 버전 설정:', window.memobeeDesktop.version);
       setAppVersion(window.memobeeDesktop.version);
     }
     
@@ -146,25 +151,25 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     if (!window.electronAPI) return;
 
     const handleDownloadProgress = (event: any, progress: {percent: number; transferred: number; total: number}) => {
-      console.log('📊 다운로드 진행률 수신:', progress);
-      console.log('📊 현재 상태:', updateStatus);
+      uiLogger.debug('📊 다운로드 진행률 수신:', progress);
+      uiLogger.debug('📊 현재 상태:', updateStatus);
       setDownloadProgress(progress);
       
       // 전역 핸들러도 설정
       window.updateProgressHandler = (progress) => {
-        console.log('🌍 전역 진행률 핸들러:', progress);
+        uiLogger.debug('🌍 전역 진행률 핸들러:', progress);
         setDownloadProgress(progress);
       };
     };
 
     const handleDownloadComplete = () => {
-      console.log('✅ 다운로드 완료');
+      uiLogger.debug('✅ 다운로드 완료');
       setUpdateStatus('ready');
       setDownloadProgress(null);
     };
 
     const handleDownloadStarted = () => {
-      console.log('🚀 다운로드 시작됨');
+      uiLogger.debug('🚀 다운로드 시작됨');
       setUpdateStatus('downloading');
       setDownloadProgress(null);
     };
@@ -188,7 +193,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   useEffect(() => {
     const handleVersionUpdate = (event: any) => {
       const newVersion = event.detail.version;
-      console.log('🔄 버전 업데이트 감지:', newVersion);
+      uiLogger.debug('🔄 버전 업데이트 감지:', newVersion);
       setAppVersion(newVersion);
     };
 
@@ -214,16 +219,16 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     try {
       const profile = await api.user.getProfile();
       setUserProfile(profile);
-      console.log('✅ 사용자 프로필 로드 성공:', profile);
+      uiLogger.debug('✅ 사용자 프로필 로드 성공:', profile);
     } catch (error) {
-      console.error('❌ 사용자 프로필 로드 실패:', error);
+      uiLogger.error('❌ 사용자 프로필 로드 실패:', error);
     }
   };
 
   const loadMemos = async () => {
     try {
       setLoading(true);
-      console.log('🔄 메모 목록 로드 시작...');
+      uiLogger.debug('🔄 메모 목록 로드 시작...');
       
       // 페이지네이션으로 모든 메모 가져오기
       let allMemos: Memo[] = [];
@@ -233,7 +238,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       
       while (hasMore) {
         try {
-          console.log(`📄 페이지 ${currentPage} 로드 중...`);
+          uiLogger.debug(`📄 페이지 ${currentPage} 로드 중...`);
           const memoList = await api.memo.getList(undefined, currentPage, pageSize);
           
           if (memoList.length === 0) {
@@ -252,12 +257,12 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
           
           // 무한 루프 방지 (최대 100페이지)
           if (currentPage > 100) {
-            console.warn('⚠️ 최대 페이지 수 도달, 로드 중단');
+            uiLogger.warn('⚠️ 최대 페이지 수 도달, 로드 중단');
             hasMore = false;
           }
         } catch (pageError: any) {
-          console.error(`❌ 페이지 ${currentPage} 로드 실패:`, pageError);
-          console.error('에러 상세:', {
+          uiLogger.error(`❌ 페이지 ${currentPage} 로드 실패:`, pageError);
+          uiLogger.error('에러 상세:', {
             status: pageError.response?.status,
             statusText: pageError.response?.statusText,
             data: pageError.response?.data,
@@ -267,10 +272,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         }
       }
       
-      console.log('✅ 메모 목록 로드 성공:', allMemos.length, '개 (총', currentPage - 1, '페이지)');
+      uiLogger.debug('✅ 메모 목록 로드 성공:', allMemos.length, '개 (총', currentPage - 1, '페이지)');
       setMemos(sortMemosByFavorite(allMemos));
     } catch (error) {
-      console.error('❌ 메모 로드 실패:', error);
+      uiLogger.error('❌ 메모 로드 실패:', error);
       
       // 에러 발생 시 빈 배열로 설정
       setMemos([]);
@@ -297,7 +302,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const handleMemoClick = async (memo: Memo) => {
     // 보안 메모인지 확인
     if (memo.is_security_memo) {
-      console.log('🔒 보안 메모 감지:', memo.id, memo.title || memo.ai_title);
+      uiLogger.debug('🔒 보안 메모 감지:', memo.id, memo.title || memo.ai_title);
       setPendingSecurityMemo(memo);
       setShowSecurityModal(true);
       return;
@@ -324,7 +329,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   // 보안 인증 성공 핸들러
   const handleSecurityAuthenticated = () => {
     if (pendingSecurityMemo) {
-      console.log('✅ 보안 인증 성공, 메모 열기:', pendingSecurityMemo.id);
+      uiLogger.debug('✅ 보안 인증 성공, 메모 열기:', pendingSecurityMemo.id);
       openMemoEditor(pendingSecurityMemo);
       setPendingSecurityMemo(null);
     }
@@ -339,10 +344,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   // 🆕 모바일 앱과 완전히 동일한 문장 감지 함수
   const isSentence = (text: string): boolean => {
     const trimmedText = text.trim();
-    console.log(`🔍 [App.tsx 문장감지] 입력: "${trimmedText}" (길이: ${trimmedText.length})`);
+    uiLogger.debug(`🔍 [App.tsx 문장감지] 입력: "${trimmedText}" (길이: ${trimmedText.length})`);
     
     if (trimmedText.length < 5) {
-      console.log(`❌ [App.tsx 문장감지] 너무 짧음 (최소 5자 필요)`);
+      uiLogger.debug(`❌ [App.tsx 문장감지] 너무 짧음 (최소 5자 필요)`);
       return false; // 모바일 앱과 동일: 최소 5자
     }
 
@@ -460,12 +465,12 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     );
 
     // 상세 로그
-    console.log(`📝 [App.tsx 문장감지] 한국어 종결어미: ${hasKoreanEnding}`);
-    console.log(`📝 [App.tsx 문장감지] 문장부호: ${hasPunctuation}`);
-    console.log(`📝 [App.tsx 문장감지] 의문문 패턴: ${isQuestion}`);
+    uiLogger.debug(`📝 [App.tsx 문장감지] 한국어 종결어미: ${hasKoreanEnding}`);
+    uiLogger.debug(`📝 [App.tsx 문장감지] 문장부호: ${hasPunctuation}`);
+    uiLogger.debug(`📝 [App.tsx 문장감지] 의문문 패턴: ${isQuestion}`);
 
     const result = hasKoreanEnding || hasPunctuation || isQuestion;
-    console.log(`✅ [App.tsx 문장감지] 최종 결과: ${result}`);
+    uiLogger.debug(`✅ [App.tsx 문장감지] 최종 결과: ${result}`);
 
     return result;
   };
@@ -482,7 +487,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       
       // Invalid Date 체크
       if (isNaN(date.getTime())) {
-        console.warn(`[formatDate] 잘못된 날짜 형식: "${dateString}"`);
+        uiLogger.warn(`[formatDate] 잘못된 날짜 형식: "${dateString}"`);
         return '날짜 형식 오류';
       }
 
@@ -500,7 +505,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         day: 'numeric'
       });
     } catch (error) {
-      console.error(`[formatDate] 날짜 파싱 오류:`, error, `원본: "${dateString}"`);
+      uiLogger.error(`[formatDate] 날짜 파싱 오류:`, error, `원본: "${dateString}"`);
       return '날짜 오류';
     }
   };
@@ -530,15 +535,15 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
 
     try {
       setIsSearching(true);
-      console.log('🔍 검색 시작:', query);
+      uiLogger.debug('🔍 검색 시작:', query);
       
       // 서버 사이드 검색 (모바일과 동일)
       const searchResults = await api.memo.getList(query, 1, 100);
-      console.log('✅ 검색 완료:', searchResults.length, '개 결과');
+      uiLogger.debug('✅ 검색 완료:', searchResults.length, '개 결과');
       
       setFilteredMemos(searchResults);
     } catch (error) {
-      console.error('❌ 검색 실패:', error);
+      uiLogger.error('❌ 검색 실패:', error);
       setFilteredMemos([]);
     } finally {
       setIsSearching(false);
@@ -576,10 +581,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
 
     try {
       setIsAiLoading(true);
-      console.log('🤖 AI 질문 시작:', questionText);
+      uiLogger.debug('🤖 AI 질문 시작:', questionText);
       
       const result = await api.memo.askAIQuestion(questionText);
-      console.log('✅ AI 응답:', result);
+      uiLogger.debug('✅ AI 응답:', result);
       
       setAiResult(result);
       setShowAiResult(true);
@@ -597,7 +602,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         loadMemos();
       }
     } catch (error) {
-      console.error('❌ AI 질문 실패:', error);
+      uiLogger.error('❌ AI 질문 실패:', error);
       alert('AI 질문 처리 중 오류가 발생했습니다.');
     } finally {
       setIsAiLoading(false);
@@ -606,7 +611,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
 
   const handleSaveMemo = async (memo: Memo) => {
     try {
-      console.log('🔄 메모 저장 시작:', memo.id);
+      uiLogger.debug('🔄 메모 저장 시작:', memo.id);
       
       // HybridEditor에서 최종 내용 가져오기
       let finalContent = memo.content;
@@ -623,13 +628,13 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         content: finalContent
       });
       
-      console.log('✅ 메모 저장 성공:', updatedMemo.id);
+      uiLogger.debug('✅ 메모 저장 성공:', updatedMemo.id);
       
       // 메모 목록 업데이트
       setMemos(memos.map(m => m.id === updatedMemo.id ? updatedMemo : m));
       setSelectedMemo(updatedMemo);
     } catch (error) {
-      console.error('❌ 메모 저장 실패:', error);
+      uiLogger.error('❌ 메모 저장 실패:', error);
       alert(t('memo.save_error'));
     }
   };
@@ -640,7 +645,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     
     try {
       setSaveButtonState('saving');
-      console.log('💾 즉시 저장 시작:', memo.id);
+      uiLogger.debug('💾 즉시 저장 시작:', memo.id);
       
       // HybridEditor에서 최종 내용 가져오기
       let finalContent = memo.content;
@@ -657,7 +662,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         content: finalContent
       });
       
-      console.log('✅ 즉시 저장 성공:', updatedMemo.id);
+      uiLogger.debug('✅ 즉시 저장 성공:', updatedMemo.id);
       
       // 메모 목록 업데이트
       setMemos(memos.map(m => m.id === updatedMemo.id ? updatedMemo : m));
@@ -672,7 +677,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       }, 2000);
       
     } catch (error) {
-      console.error('❌ 즉시 저장 실패:', error);
+      uiLogger.error('❌ 즉시 저장 실패:', error);
       setSaveButtonState('normal');
       alert('저장 중 오류가 발생했습니다.');
     }
@@ -682,10 +687,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const handleToggleFavorite = async (memo: Memo, e: React.MouseEvent) => {
     e.stopPropagation(); // 메모 클릭 이벤트 방지
     try {
-      console.log('⭐ 즐겨찾기 토글:', memo.id, !memo.is_favorited);
+      uiLogger.debug('⭐ 즐겨찾기 토글:', memo.id, !memo.is_favorited);
       
       const updatedMemo = await api.memo.toggleFavorite(memo.id, !memo.is_favorited);
-      console.log('✅ 즐겨찾기 토글 성공:', updatedMemo.is_favorited);
+      uiLogger.debug('✅ 즐겨찾기 토글 성공:', updatedMemo.is_favorited);
       
       // 메모 목록 업데이트 후 다시 정렬
       const updatedMemos = memos.map(m => m.id === updatedMemo.id ? updatedMemo : m);
@@ -696,7 +701,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         setSelectedMemo(updatedMemo);
       }
     } catch (error) {
-      console.error('❌ 즐겨찾기 토글 실패:', error);
+      uiLogger.error('❌ 즐겨찾기 토글 실패:', error);
       alert('즐겨찾기 설정 중 오류가 발생했습니다.');
     }
   };
@@ -711,10 +716,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     }
 
     try {
-      console.log('🗑️ 메모 삭제:', memo.id);
+      uiLogger.debug('🗑️ 메모 삭제:', memo.id);
       
       await api.memo.delete(memo.id);
-      console.log('✅ 메모 삭제 성공');
+      uiLogger.debug('✅ 메모 삭제 성공');
       
       // 메모 목록에서 제거
       setMemos(memos.filter(m => m.id !== memo.id));
@@ -725,7 +730,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         setIsEditorOpen(false);
       }
     } catch (error) {
-      console.error('❌ 메모 삭제 실패:', error);
+      uiLogger.error('❌ 메모 삭제 실패:', error);
       alert('메모 삭제 중 오류가 발생했습니다.');
     }
   };
@@ -734,10 +739,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const handleToggleFavoriteInEditor = async (memo: Memo, e: React.MouseEvent) => {
     e.preventDefault();
     try {
-      console.log('⭐ 에디터 내 즐겨찾기 토글:', memo.id, !memo.is_favorited);
+      uiLogger.debug('⭐ 에디터 내 즐겨찾기 토글:', memo.id, !memo.is_favorited);
       
       const updatedMemo = await api.memo.toggleFavorite(memo.id, !memo.is_favorited);
-      console.log('✅ 에디터 내 즐겨찾기 토글 성공:', updatedMemo.is_favorited);
+      uiLogger.debug('✅ 에디터 내 즐겨찾기 토글 성공:', updatedMemo.is_favorited);
       
       // 메모 목록 업데이트 후 다시 정렬
       const updatedMemos = memos.map(m => m.id === updatedMemo.id ? updatedMemo : m);
@@ -747,7 +752,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       setSelectedMemo(updatedMemo);
       
     } catch (error) {
-      console.error('❌ 에디터 내 즐겨찾기 토글 실패:', error);
+      uiLogger.error('❌ 에디터 내 즐겨찾기 토글 실패:', error);
       alert('즐겨찾기 설정 중 오류가 발생했습니다.');
     }
   };
@@ -762,10 +767,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     }
 
     try {
-      console.log('🗑️ 에디터 내 메모 삭제:', memo.id);
+      uiLogger.debug('🗑️ 에디터 내 메모 삭제:', memo.id);
       
       await api.memo.delete(memo.id);
-      console.log('✅ 에디터 내 메모 삭제 성공');
+      uiLogger.debug('✅ 에디터 내 메모 삭제 성공');
       
       // 메모 목록에서 제거
       setMemos(memos.filter(m => m.id !== memo.id));
@@ -775,7 +780,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
       setIsEditorOpen(false);
       
     } catch (error) {
-      console.error('❌ 에디터 내 메모 삭제 실패:', error);
+      uiLogger.error('❌ 에디터 내 메모 삭제 실패:', error);
       alert('메모 삭제 중 오류가 발생했습니다.');
     }
   };
@@ -846,17 +851,17 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   // 파일 업로드 핸들러
   const handleFileUpload = async (file: File): Promise<any> => {
     try {
-      console.log('📁 파일 업로드 시작:', file.name);
+      uiLogger.debug('📁 파일 업로드 시작:', file.name);
       
       const formData = new FormData();
       formData.append('file', file);
       
       const uploadedAttachment = await api.memo.uploadAttachment(formData);
-      console.log('✅ 파일 업로드 성공:', uploadedAttachment);
+      uiLogger.debug('✅ 파일 업로드 성공:', uploadedAttachment);
       
       return uploadedAttachment;
     } catch (error) {
-      console.error('❌ 파일 업로드 실패:', error);
+      uiLogger.error('❌ 파일 업로드 실패:', error);
       throw error;
     }
   };
@@ -864,13 +869,13 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const handleNewMemo = async () => {
     // Free 사용자는 새 메모 생성 불가
     if (!isPro) {
-      console.log('🚫 Free 사용자 - 메모 생성 차단');
+      uiLogger.debug('🚫 Free 사용자 - 메모 생성 차단');
       setShowProUpgradeModal(true);
       return;
     }
 
     try {
-      console.log('🔄 새 메모 생성 시작...');
+      uiLogger.debug('🔄 새 메모 생성 시작...');
       
       // 실제 API를 통한 메모 생성
       const newMemo = await api.memo.create({
@@ -878,21 +883,21 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         content: ''
       });
       
-      console.log('✅ 새 메모 생성 성공:', newMemo.id);
+      uiLogger.debug('✅ 새 메모 생성 성공:', newMemo.id);
       
       // 메모 목록에 추가 후 정렬
       const updatedMemos = [newMemo, ...memos];
       setMemos(sortMemosByFavorite(updatedMemos));
       openMemoEditor(newMemo);
     } catch (error) {
-      console.error('❌ 새 메모 생성 실패:', error);
+      uiLogger.error('❌ 새 메모 생성 실패:', error);
       alert(t('memo.create_error'));
     }
   };
 
   // Pro 업그레이드 핸들러
   const handleProUpgrade = () => {
-    console.log('🌐 Pro 업그레이드 요청 - 웹사이트 안내');
+    uiLogger.debug('🌐 Pro 업그레이드 요청 - 웹사이트 안내');
     
     // 데스크탑에서는 웹사이트 구독 페이지로 안내
     const message = `MemoBee Pro 구독은 웹사이트에서 가능합니다.\n\n웹사이트에서 Pro 구독 후 모든 기기에서 이용하세요.`;
@@ -914,12 +919,12 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
     try {
       setIsCheckingUpdate(true);
       setUpdateStatus('checking');
-      console.log('🔍 수동 업데이트 확인 시작...');
+      uiLogger.debug('🔍 수동 업데이트 확인 시작...');
       
       // Electron Main 프로세스에 업데이트 확인 요청
       if (window.electronAPI?.checkForUpdates) {
         const result = await window.electronAPI.checkForUpdates();
-        console.log('✅ 업데이트 확인 결과:', result);
+        uiLogger.debug('✅ 업데이트 확인 결과:', result);
         
         if (result.available) {
           setUpdateInfo(result);
@@ -931,14 +936,14 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
           }, 3000);
         }
       } else {
-        console.log('ℹ️ 개발 모드 또는 electronAPI 없음');
+        uiLogger.debug('ℹ️ 개발 모드 또는 electronAPI 없음');
         setUpdateStatus('not-available');
         setTimeout(() => {
           setUpdateStatus('idle');
         }, 3000);
       }
     } catch (error) {
-      console.error('❌ 업데이트 확인 실패:', error);
+      uiLogger.error('❌ 업데이트 확인 실패:', error);
       setUpdateStatus('idle');
     } finally {
       setIsCheckingUpdate(false);
@@ -949,11 +954,11 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   const handleDownloadUpdate = async () => {
     try {
       setUpdateStatus('downloading');
-      console.log('📥 업데이트 다운로드 시작...');
+      uiLogger.debug('📥 업데이트 다운로드 시작...');
       
       // 다운로드 타임아웃 설정 (10분)
       const downloadTimeout = setTimeout(() => {
-        console.log('⏱️ 다운로드 타임아웃');
+        uiLogger.debug('⏱️ 다운로드 타임아웃');
         setUpdateStatus('available');
         alert('다운로드가 너무 오래 걸리고 있습니다. 네트워크 상태를 확인하고 다시 시도해주세요.');
       }, 10 * 60 * 1000);
@@ -963,10 +968,10 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         clearTimeout(downloadTimeout);
         
         if (result.success) {
-          console.log('✅ 다운로드 완료:', result.message);
+          uiLogger.debug('✅ 다운로드 완료:', result.message);
           // auto-updater 이벤트에서 'ready' 상태로 변경될 것임
         } else {
-          console.error('❌ 다운로드 실패:', result.error);
+          uiLogger.error('❌ 다운로드 실패:', result.error);
           setUpdateStatus('available');
           const retry = confirm(`다운로드 실패: ${result.error}\n\n다시 시도하시겠습니까?`);
           if (retry) {
@@ -975,7 +980,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
         }
       }
     } catch (error) {
-      console.error('❌ 업데이트 다운로드 실패:', error);
+      uiLogger.error('❌ 업데이트 다운로드 실패:', error);
       setUpdateStatus('available');
       const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
       alert(`다운로드 중 오류 발생: ${errorMessage}`);
@@ -985,13 +990,13 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
   // 업데이트 설치 핸들러
   const handleInstallUpdate = async () => {
     try {
-      console.log('🔄 업데이트 설치 시작...');
+      uiLogger.debug('🔄 업데이트 설치 시작...');
       
       if (window.electronAPI?.installUpdate) {
         await window.electronAPI.installUpdate();
       }
     } catch (error) {
-      console.error('❌ 업데이트 설치 실패:', error);
+      uiLogger.error('❌ 업데이트 설치 실패:', error);
     }
   };
 
@@ -1281,7 +1286,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
                               <button 
                                 className="generate-memo-btn"
                                 onClick={() => {
-                                  console.log('🤖 AI 메모 생성 요청');
+                                  uiLogger.debug('🤖 AI 메모 생성 요청');
                                   // TODO: AI 메모 생성 API 호출
                                 }}
                               >
@@ -1734,7 +1739,7 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
 };
 
 const App: React.FC = () => {
-  console.log('🚀 App 컴포넌트 시작!');
+  uiLogger.debug('🚀 App 컴포넌트 시작!');
   
   const { t } = useTranslation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -1742,20 +1747,20 @@ const App: React.FC = () => {
   const [initializing, setInitializing] = useState(true); // 초기화 상태 추가
   const [userInfo, setUserInfo] = useState<any>(null);
   
-  console.log('🎯 App 상태 - isLoggedIn:', isLoggedIn, '/ initializing:', initializing);
+  uiLogger.debug('🎯 App 상태 - isLoggedIn:', isLoggedIn, '/ initializing:', initializing);
 
   // Firebase 인증 상태 리스너 설정
   useEffect(() => {
-    console.log('🔍 Firebase 인증 상태 확인 중...');
+    uiLogger.debug('🔍 Firebase 인증 상태 확인 중...');
     
     // Firebase 인증 상태 변경 리스너
     const unsubscribe = authService.onAuthStateChanged((user) => {
-      console.log('🔄 Firebase 인증 상태 변경:', user ? 'authenticated' : 'not authenticated');
+      uiLogger.debug('🔄 Firebase 인증 상태 변경:', user ? 'authenticated' : 'not authenticated');
       
       if (user) {
-        console.log('✅ Firebase 사용자 인증됨:', user.uid);
-        console.log('📧 이메일:', user.email);
-        console.log('👤 이름:', user.displayName);
+        uiLogger.debug('✅ Firebase 사용자 인증됨:', user.uid);
+        uiLogger.debug('📧 이메일:', user.email);
+        uiLogger.debug('👤 이름:', user.displayName);
         
         const userInfo = {
           uid: user.uid,
@@ -1772,9 +1777,9 @@ const App: React.FC = () => {
         // Firebase 사용자 정보 로컬 저장
         localStorage.setItem('memobee_firebase_user', JSON.stringify(userInfo));
         
-        console.log('🎉 자동 로그인 완료');
+        uiLogger.debug('🎉 자동 로그인 완료');
       } else {
-        console.log('ℹ️ Firebase 사용자 인증되지 않음');
+        uiLogger.debug('ℹ️ Firebase 사용자 인증되지 않음');
         
         // 로그아웃 상태 처리
         setUserInfo(null);
@@ -1788,7 +1793,7 @@ const App: React.FC = () => {
 
     // 컴포넌트 언마운트 시 리스너 해제
     return () => {
-      console.log('🔄 Firebase 인증 리스너 해제');
+      uiLogger.debug('🔄 Firebase 인증 리스너 해제');
       unsubscribe();
     };
   }, []);
@@ -1796,33 +1801,33 @@ const App: React.FC = () => {
   const handleGoogleLogin = async () => {
     // 이미 로그인된 상태라면 중복 실행 방지
     if (isLoggedIn) {
-      console.log('⚠️ 이미 로그인된 상태입니다.');
+      uiLogger.debug('⚠️ 이미 로그인된 상태입니다.');
       return;
     }
 
     setLoading(true);
-    console.log('🔵 Google Firebase 인증 시작...');
+    uiLogger.debug('🔵 Google Firebase 인증 시작...');
 
     try {
-      console.log('🔄 Firebase Google 로그인 시도...');
+      uiLogger.debug('🔄 Firebase Google 로그인 시도...');
       
       // Firebase authService 사용
       const user = await authService.signInWithGoogle();
       
       if (user) {
-        console.log('✅ Google 로그인 성공:', user.uid);
-        console.log('📧 사용자 이메일:', user.email);
-        console.log('👤 사용자 이름:', user.displayName);
+        uiLogger.debug('✅ Google 로그인 성공:', user.uid);
+        uiLogger.debug('📧 사용자 이메일:', user.email);
+        uiLogger.debug('👤 사용자 이름:', user.displayName);
 
         // 상태는 Firebase 인증 리스너에서 자동으로 업데이트됨
-        console.log('ℹ️ 사용자 상태는 Firebase 리스너에서 자동 업데이트됩니다.');
+        uiLogger.debug('ℹ️ 사용자 상태는 Firebase 리스너에서 자동 업데이트됩니다.');
         
       } else {
         throw new Error('Google 로그인이 취소되었거나 실패했습니다.');
       }
 
     } catch (error: any) {
-      console.error('❌ Google 로그인 실패:', error);
+      uiLogger.error('❌ Google 로그인 실패:', error);
       
       // 에러 타입별 메시지
       let errorMessage = '알 수 없는 오류가 발생했습니다.';
@@ -1849,21 +1854,21 @@ const App: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      console.log('🚪 Firebase 로그아웃 시작...');
+      uiLogger.debug('🚪 Firebase 로그아웃 시작...');
       await authService.signOut();
-      console.log('✅ Firebase 로그아웃 완료');
+      uiLogger.debug('✅ Firebase 로그아웃 완료');
       
       // 상태는 Firebase 인증 리스너에서 자동으로 처리됨
       alert('로그아웃되었습니다.');
     } catch (error) {
-      console.error('❌ 로그아웃 실패:', error);
+      uiLogger.error('❌ 로그아웃 실패:', error);
       alert('로그아웃 중 오류가 발생했습니다.');
     }
   };
 
   // 초기화 중일 때 로딩 화면 표시
   if (initializing) {
-    console.log('⏳ 초기화 중 - 로딩 화면 표시');
+    uiLogger.debug('⏳ 초기화 중 - 로딩 화면 표시');
     return (
       <div style={{ 
         display: 'flex', 
@@ -1886,11 +1891,11 @@ const App: React.FC = () => {
   }
 
   if (isLoggedIn) {
-    console.log('✅ 로그인됨 - Layout 컴포넌트 렌더링');
+    uiLogger.debug('✅ 로그인됨 - Layout 컴포넌트 렌더링');
     return <Layout onLogout={handleLogout} />;
   }
 
-  console.log('❌ 로그인되지 않음 - 로그인 화면 표시');
+  uiLogger.debug('❌ 로그인되지 않음 - 로그인 화면 표시');
 
   return (
     <div style={{ padding: '50px', textAlign: 'center', maxWidth: '400px', margin: '0 auto' }}>

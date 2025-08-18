@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import { uiLogger } from '../../shared/utils/logger';
 
 // 번역 파일들 import
 import ko from './locales/ko.json';
@@ -71,7 +72,7 @@ export const changeLanguage = (language: string) => {
     i18n.changeLanguage(language);
     localStorage.setItem('memobee_language', language);
   } else {
-    console.warn(`Unsupported language: ${language}. Falling back to English.`);
+    uiLogger.warn(`Unsupported language: ${language}. Falling back to English.`);
     i18n.changeLanguage('en');
     localStorage.setItem('memobee_language', 'en');
   }
@@ -103,10 +104,10 @@ export const detectAndSetSystemLanguage = () => {
   const systemLang = navigator.language.split('-')[0]; // 'ko-KR' -> 'ko'
   
   if (supportedLanguages.includes(systemLang)) {
-    console.log(`🌐 System language detected: ${systemLang}`);
+    uiLogger.debug(`🌐 System language detected: ${systemLang}`);
     return systemLang;
   } else {
-    console.log(`🌐 System language '${systemLang}' not supported. Using English.`);
+    uiLogger.debug(`🌐 System language '${systemLang}' not supported. Using English.`);
     return 'en';
   }
 };

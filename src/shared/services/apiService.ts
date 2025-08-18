@@ -5,6 +5,7 @@
 
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { authService } from './authService';
+import { authLogger } from '../utils/logger';
 
 // 환경별 API URL 설정 (데스크톱용)
 const getApiBaseUrl = () => {
@@ -14,7 +15,7 @@ const getApiBaseUrl = () => {
 
 const API_BASE_URL = getApiBaseUrl();
 
-console.log('🔧 Desktop API_BASE_URL:', API_BASE_URL);
+authLogger.debug('🔧 Desktop API_BASE_URL:', API_BASE_URL);
 
 // Axios 인스턴스 생성
 const apiClient: AxiosInstance = axios.create({
@@ -38,28 +39,28 @@ const uploadClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   async config => {
     try {
-      console.log('🌐 Desktop API 요청 URL:', (config.baseURL || '') + (config.url || ''));
-      console.log('🌐 Method:', config.method && config.method.toUpperCase());
+      authLogger.debug('🌐 Desktop API 요청 URL:', (config.baseURL || '') + (config.url || ''));
+      authLogger.debug('🌐 Method:', config.method && config.method.toUpperCase());
 
       if (!config.headers.Authorization) {
-        console.log('🔑 Desktop ID 토큰 가져오기 시도...');
+        authLogger.debug('🔑 Desktop ID 토큰 가져오기 시도...');
         const idToken = await authService.getIdToken();
         if (idToken) {
           config.headers.Authorization = `Bearer ${idToken}`;
-          console.log('✅ Desktop Authorization 헤더 추가됨');
+          authLogger.debug('✅ Desktop Authorization 헤더 추가됨');
         } else {
-          console.warn('⚠️ 현재 사용자 없음 - 토큰 첨부 불가');
+          authLogger.warn('⚠️ 현재 사용자 없음 - 토큰 첨부 불가');
         }
       }
     } catch (error) {
-      console.error('❌ Desktop Firebase ID Token 가져오기 실패:', error);
-      console.warn('⚠️ 토큰 없이 API 요청을 계속 진행합니다');
+      authLogger.error('❌ Desktop Firebase ID Token 가져오기 실패:', error);
+      authLogger.warn('⚠️ 토큰 없이 API 요청을 계속 진행합니다');
     }
 
     return config;
   },
   error => {
-    console.error('🚨 Desktop Request Error:', error);
+    authLogger.error('🚨 Desktop Request Error:', error);
     return Promise.reject(error);
   },
 );
@@ -67,17 +68,17 @@ apiClient.interceptors.request.use(
 // Response Interceptor - 에러 처리
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(`✅ Desktop API 성공: ${response.status} ${response.config.url}`);
+    authLogger.debug(`✅ Desktop API 성공: ${response.status} ${response.config.url}`);
     return response;
   },
   async (error: AxiosError) => {
-    console.error(
+    authLogger.error(
       `❌ Desktop API Error: ${error.config && error.config.method && error.config.method.toUpperCase()} ${error.config && error.config.url
       } - ${error.response && error.response.status}`,
     );
 
     if (error.response && error.response.status === 401) {
-      console.warn('Desktop Unauthorized access - token may be expired');
+      authLogger.warn('Desktop Unauthorized access - token may be expired');
     }
 
     return Promise.reject(error);
@@ -95,24 +96,24 @@ uploadClient.interceptors.request.use(
         }
       }
     } catch (error) {
-      console.error('❌ Desktop Upload Client - Firebase ID Token 가져오기 실패:', error);
+      authLogger.error('❌ Desktop Upload Client - Firebase ID Token 가져오기 실패:', error);
     }
 
     return config;
   },
   error => {
-    console.error('🚨 Desktop Upload Request Error:', error);
+    authLogger.error('🚨 Desktop Upload Request Error:', error);
     return Promise.reject(error);
   },
 );
 
 uploadClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(`✅ Desktop Upload 성공: ${response.status} ${response.config.url}`);
+    authLogger.debug(`✅ Desktop Upload 성공: ${response.status} ${response.config.url}`);
     return response;
   },
   async (error: AxiosError) => {
-    console.error(
+    authLogger.error(
       `❌ Desktop Upload Error: ${error.config && error.config.method && error.config.method.toUpperCase()} ${error.config && error.config.url
       } - ${error.response && error.response.status}`,
     );
@@ -412,12 +413,12 @@ export interface ShareToggleResponse {
 // 연결 테스트 함수
 export const testConnection = async (): Promise<boolean> => {
   try {
-    console.log('🔄 Desktop 백엔드 연결 테스트...');
+    authLogger.debug('🔄 Desktop 백엔드 연결 테스트...');
     const response = await apiClient.get('/health');
-    console.log('✅ Desktop 백엔드 연결 성공:', response.status);
+    authLogger.debug('✅ Desktop 백엔드 연결 성공:', response.status);
     return true;
   } catch (error) {
-    console.error('❌ Desktop 백엔드 연결 실패:', error);
+    authLogger.error('❌ Desktop 백엔드 연결 실패:', error);
     return false;
   }
 };
@@ -434,7 +435,7 @@ export const api = {
   auth: {
     // Firebase 토큰 검증
     async verifyFirebaseToken(idToken: string): Promise<any> {
-      console.log('🌐 Desktop Firebase 토큰 검증 API 요청...');
+      authLogger.debug('🌐 Desktop Firebase 토큰 검증 API 요청...');
       const response = await apiClient.post('/api/auth/firebase/verify', {
         id_token: idToken,
       });
@@ -519,7 +520,7 @@ export const api = {
     // AI 질문 처리
     async askAIQuestion(question: string): Promise<AIQuestionResponse> {
       try {
-        console.log('🤖 Desktop AI 질문 API 요청', { question_length: question.length });
+        authLogger.debug('🤖 Desktop AI 질문 API 요청', { question_length: question.length });
 
         const currentUser = authService.getCurrentUser();
         if (!currentUser) {
@@ -527,7 +528,7 @@ export const api = {
         }
 
         const userUid = currentUser.uid;
-        console.log('👤 현재 사용자 UID:', userUid.substring(0, 8) + '...');
+        authLogger.debug('👤 현재 사용자 UID:', userUid.substring(0, 8) + '...');
 
         const idToken = await authService.getIdToken();
         if (!idToken) {
@@ -539,17 +540,17 @@ export const api = {
           id_token: idToken,
         });
         const userId = userResponse.data.id;
-        console.log('👤 Desktop 데이터베이스 사용자 ID:', userId);
+        authLogger.debug('👤 Desktop 데이터베이스 사용자 ID:', userId);
 
         const response = await apiClient.post(
           `/api/ai/question?user_id=${userId}`,
           { question: question },
         );
 
-        console.log('✅ Desktop AI 질문 API 응답 성공');
+        authLogger.debug('✅ Desktop AI 질문 API 응답 성공');
         return response.data;
       } catch (error) {
-        console.error('❌ Desktop AI 질문 API 실패:', error);
+        authLogger.error('❌ Desktop AI 질문 API 실패:', error);
         throw error;
       }
     },
@@ -561,7 +562,7 @@ export const api = {
       detected_language: string;
     }): Promise<any> {
       try {
-        console.log('🧠 Desktop AI 지식 기반 메모 생성 API 요청', {
+        authLogger.debug('🧠 Desktop AI 지식 기반 메모 생성 API 요청', {
           question_length: request.original_question.length,
           language: request.detected_language,
         });
@@ -582,10 +583,10 @@ export const api = {
           },
         );
 
-        console.log('✅ Desktop AI 지식 기반 메모 생성 성공');
+        authLogger.debug('✅ Desktop AI 지식 기반 메모 생성 성공');
         return response.data;
       } catch (error: any) {
-        console.error('❌ Desktop AI 지식 기반 메모 생성 실패:', error);
+        authLogger.error('❌ Desktop AI 지식 기반 메모 생성 실패:', error);
         throw error;
       }
     },
@@ -598,7 +599,7 @@ export const api = {
       source_memos_count: number;
     }): Promise<any> {
       try {
-        console.log('📝 Desktop 기존 메모 기반 AI 메모 생성 API 요청');
+        authLogger.debug('📝 Desktop 기존 메모 기반 AI 메모 생성 API 요청');
 
         const currentUser = authService.getCurrentUser();
         if (!currentUser) {
@@ -616,10 +617,10 @@ export const api = {
           },
         );
 
-        console.log('✅ Desktop 기존 메모 기반 AI 메모 생성 성공');
+        authLogger.debug('✅ Desktop 기존 메모 기반 AI 메모 생성 성공');
         return response.data;
       } catch (error: any) {
-        console.error('❌ Desktop 기존 메모 기반 AI 메모 생성 실패:', error);
+        authLogger.error('❌ Desktop 기존 메모 기반 AI 메모 생성 실패:', error);
         throw error;
       }
     },
@@ -685,7 +686,7 @@ export const api = {
         });
         return response.data;
       } catch (error) {
-        console.error('Desktop 보안 정보 목록 조회 실패:', error);
+        authLogger.error('Desktop 보안 정보 목록 조회 실패:', error);
         throw error;
       }
     },
@@ -1017,7 +1018,7 @@ export const api = {
 
       return response.data;
     } catch (error) {
-      console.error('Desktop AI 질문 히스토리 조회 실패:', error);
+      authLogger.error('Desktop AI 질문 히스토리 조회 실패:', error);
       throw error;
     }
   },
@@ -1038,7 +1039,7 @@ export const api = {
 
       return response.data;
     } catch (error) {
-      console.error('Desktop AI 질문 히스토리 삭제 실패:', error);
+      authLogger.error('Desktop AI 질문 히스토리 삭제 실패:', error);
       throw error;
     }
   },
@@ -1059,7 +1060,7 @@ export const api = {
 
       return response.data;
     } catch (error) {
-      console.error('Desktop AI 질문 히스토리 전체 삭제 실패:', error);
+      authLogger.error('Desktop AI 질문 히스토리 전체 삭제 실패:', error);
       throw error;
     }
   },
@@ -1072,7 +1073,7 @@ export const api = {
       skip: number = 0,
       limit: number = 100
     ): Promise<TrashItem[]> {
-      console.log('🗑️ 휴지통 목록 조회 API 요청...');
+      authLogger.debug('🗑️ 휴지통 목록 조회 API 요청...');
 
       try {
         // 현재는 메모만 지원되므로 메모 휴지통 API 사용
@@ -1102,7 +1103,7 @@ export const api = {
       } catch (error: any) {
         // 백엔드 API가 아직 구현되지 않은 경우 목 데이터 반환
         if (error.response?.status === 404) {
-          console.log('⚠️ 휴지통 API가 아직 구현되지 않음 - 목 데이터 사용');
+          authLogger.debug('⚠️ 휴지통 API가 아직 구현되지 않음 - 목 데이터 사용');
           return this.getMockTrashItems(item_type);
         }
         throw error;
@@ -1111,7 +1112,7 @@ export const api = {
 
     // 휴지통 통계 조회
     async getStats(): Promise<TrashStats> {
-      console.log('📊 휴지통 통계 조회 API 요청...');
+      authLogger.debug('📊 휴지통 통계 조회 API 요청...');
 
       try {
         // 실제 휴지통 데이터를 가져와서 통계 계산
@@ -1133,7 +1134,7 @@ export const api = {
         };
       } catch (error: any) {
         // 백엔드 API가 아직 구현되지 않은 경우 목 데이터 반환
-        console.log('⚠️ 휴지통 통계 계산 중 오류 발생 - 목 데이터 사용');
+        authLogger.debug('⚠️ 휴지통 통계 계산 중 오류 발생 - 목 데이터 사용');
         return {
           total: 0,
           memos: 0,
@@ -1206,33 +1207,33 @@ export const api = {
 
     // 항목 복원
     async restore(trashItemId: number): Promise<any> {
-      console.log('♻️ 항목 복원 API 요청:', trashItemId);
+      authLogger.debug('♻️ 항목 복원 API 요청:', trashItemId);
       try {
         // 실제 백엔드 복원 API 사용 (메모 전용)
         const response = await apiClient.put(`/api/notes/${trashItemId}/restore`);
         return response.data;
       } catch (error: any) {
-        console.error('복원 API 에러:', error);
+        authLogger.error('복원 API 에러:', error);
         throw error;
       }
     },
 
     // 개별 항목 영구 삭제
     async permanentDelete(trashItemId: number): Promise<any> {
-      console.log('🔥 개별 항목 영구 삭제 API 요청:', trashItemId);
+      authLogger.debug('🔥 개별 항목 영구 삭제 API 요청:', trashItemId);
       try {
         // 실제 백엔드 영구삭제 API 사용 (메모 전용)
         const response = await apiClient.delete(`/api/notes/${trashItemId}?permanent=true`);
         return { success: true, message: '항목이 영구 삭제되었습니다.' };
       } catch (error: any) {
-        console.error('영구 삭제 API 에러:', error);
+        authLogger.error('영구 삭제 API 에러:', error);
         throw error;
       }
     },
 
     // 휴지통 비우기 (전체 삭제)
     async emptyTrash(): Promise<{ deleted_count: number }> {
-      console.log('🗑️ 휴지통 전체 비우기 API 요청...');
+      authLogger.debug('🗑️ 휴지통 전체 비우기 API 요청...');
       try {
         // 실제 백엔드 휴지통 비우기 API 사용
         const trashItems = await this.getList(); // 현재 항목 수 확인
@@ -1241,38 +1242,38 @@ export const api = {
         await apiClient.delete('/api/notes/trash/empty');
         return { deleted_count: itemCount };
       } catch (error: any) {
-        console.error('휴지통 비우기 API 에러:', error);
+        authLogger.error('휴지통 비우기 API 에러:', error);
         throw error;
       }
     },
 
     // 만료된 항목 자동 정리
     async cleanup(): Promise<{ cleaned_count: number }> {
-      console.log('🧹 만료된 항목 자동 정리 API 요청...');
+      authLogger.debug('🧹 만료된 항목 자동 정리 API 요청...');
       try {
         // 실제 백엔드 자동 정리 API 사용
         const response = await apiClient.post('/api/notes/trash/cleanup');
         return response.data;
       } catch (error: any) {
-        console.error('자동 정리 API 에러:', error);
+        authLogger.error('자동 정리 API 에러:', error);
         throw error;
       }
     },
 
     // 특정 타입의 항목을 휴지통으로 이동
     async moveToTrash(item_type: 'memo' | 'schedule' | 'task', item_id: number): Promise<any> {
-      console.log(`🗑️ ${item_type} ${item_id}를 휴지통으로 이동 API 요청...`);
+      authLogger.debug(`🗑️ ${item_type} ${item_id}를 휴지통으로 이동 API 요청...`);
       try {
         if (item_type === 'memo') {
           // 메모를 휴지통으로 이동 (soft delete)
           await apiClient.delete(`/api/notes/${item_id}?permanent=false`);
           return { success: true, message: '메모가 휴지통으로 이동되었습니다.' };
         } else {
-          console.log(`⚠️ ${item_type} 타입의 휴지통 이동은 아직 지원되지 않음`);
+          authLogger.debug(`⚠️ ${item_type} 타입의 휴지통 이동은 아직 지원되지 않음`);
           return { success: false, message: '아직 지원되지 않는 항목 타입입니다.' };
         }
       } catch (error: any) {
-        console.error('휴지통 이동 API 에러:', error);
+        authLogger.error('휴지통 이동 API 에러:', error);
         throw error;
       }
     },
@@ -1319,7 +1320,7 @@ export const api = {
 
         return response.data;
       } catch (error) {
-        console.error('Desktop 공유 메모 목록 조회 실패:', error);
+        authLogger.error('Desktop 공유 메모 목록 조회 실패:', error);
         throw error;
       }
     },
@@ -1344,7 +1345,7 @@ export const api = {
 
         return response.data;
       } catch (error) {
-        console.error('Desktop 메모 공유 토글 실패:', error);
+        authLogger.error('Desktop 메모 공유 토글 실패:', error);
         throw error;
       }
     },
@@ -1355,7 +1356,7 @@ export const api = {
         const response = await apiClient.get(`/api/shared/${token}`);
         return response.data;
       } catch (error) {
-        console.error('Desktop 공유 메모 조회 실패:', error);
+        authLogger.error('Desktop 공유 메모 조회 실패:', error);
         throw error;
       }
     },
@@ -1380,7 +1381,7 @@ export const api = {
 
         return response.data;
       } catch (error) {
-        console.error('Desktop 링크 목록 조회 실패:', error);
+        authLogger.error('Desktop 링크 목록 조회 실패:', error);
         throw error;
       }
     },
@@ -1401,7 +1402,7 @@ export const api = {
 
         return response.data;
       } catch (error) {
-        console.error('Desktop 링크 상세 조회 실패:', error);
+        authLogger.error('Desktop 링크 상세 조회 실패:', error);
         throw error;
       }
     },
@@ -1422,7 +1423,7 @@ export const api = {
 
         return response.data;
       } catch (error) {
-        console.error('Desktop 링크 통계 조회 실패:', error);
+        authLogger.error('Desktop 링크 통계 조회 실패:', error);
         throw error;
       }
     },
@@ -1446,7 +1447,7 @@ export const api = {
 
         return response.data;
       } catch (error) {
-        console.error('Desktop 링크 일괄 삭제 실패:', error);
+        authLogger.error('Desktop 링크 일괄 삭제 실패:', error);
         throw error;
       }
     },
@@ -1467,7 +1468,7 @@ export const api = {
 
         return response.data;
       } catch (error) {
-        console.error('Desktop 링크 삭제 실패:', error);
+        authLogger.error('Desktop 링크 삭제 실패:', error);
         throw error;
       }
     },
@@ -1489,7 +1490,7 @@ export const checkNetworkStatus = async (): Promise<{
       latency: latency,
     };
   } catch (error) {
-    console.error('Desktop Network status check failed:', error);
+    authLogger.error('Desktop Network status check failed:', error);
     return {
       isConnected: false,
     };

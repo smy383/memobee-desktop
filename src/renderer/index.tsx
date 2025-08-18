@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
+import { uiLogger } from '../shared/utils/logger';
 
-console.log('🚀 MemoBee Desktop 시작!');
+uiLogger.info('🚀 MemoBee Desktop 시작!');
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

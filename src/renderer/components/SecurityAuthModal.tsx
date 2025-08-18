@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { api } from '../../shared/services/apiService';
 import './SecurityAuthModal.css';
 
@@ -44,19 +45,19 @@ const SecurityAuthModal: React.FC<SecurityAuthModalProps> = ({
     setError('');
 
     try {
-      console.log('🔒 보안 메모 인증 시도...');
+      uiLogger.debug('🔒 보안 메모 인증 시도...');
       
       const result = await api.user.authenticateSecurityPassword(password);
       
       if (result.success) {
-        console.log('✅ 보안 인증 성공');
+        uiLogger.debug('✅ 보안 인증 성공');
         onAuthenticated();
         onClose();
       } else {
         setError(result.message || '보안 비밀번호가 올바르지 않습니다.');
       }
     } catch (error: any) {
-      console.error('❌ 보안 인증 실패:', error);
+      uiLogger.error('❌ 보안 인증 실패:', error);
       
       if (error.response?.status === 401) {
         setError('보안 비밀번호가 올바르지 않습니다.');

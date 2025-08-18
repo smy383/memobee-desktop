@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../shared/services/apiService';
 import './SupportView.css';
@@ -87,15 +88,15 @@ const SupportView: React.FC<SupportViewProps> = () => {
   const loadFeedbackHistory = useCallback(async () => {
     try {
       setIsLoadingHistory(true);
-      console.log('Loading feedback history from API');
+      uiLogger.debug('Loading feedback history from API');
       
       // 실제 API 호출
       const response = await api.feedback.getMyFeedbacks(0, 50);
       setFeedbacks(response.feedbacks);
       
-      console.log('Feedback history loaded successfully from API:', response.feedbacks.length, 'items');
+      uiLogger.debug('Feedback history loaded successfully from API:', response.feedbacks.length, 'items');
     } catch (error) {
-      console.error('Failed to load feedback history from API:', error);
+      uiLogger.error('Failed to load feedback history from API:', error);
       alert(t('support.alerts.history_load_error'));
     } finally {
       setIsLoadingHistory(false);
@@ -122,7 +123,7 @@ const SupportView: React.FC<SupportViewProps> = () => {
 
     try {
       setIsSubmitting(true);
-      console.log('Starting feedback submission to API');
+      uiLogger.debug('Starting feedback submission to API');
       
       // 실제 API 호출
       await api.feedback.submit({
@@ -134,7 +135,7 @@ const SupportView: React.FC<SupportViewProps> = () => {
         page_url: 'desktop_app',
       });
       
-      console.log('Feedback submitted successfully to API');
+      uiLogger.debug('Feedback submitted successfully to API');
       
       alert(t('support.alerts.submit_success_message'));
       
@@ -151,7 +152,7 @@ const SupportView: React.FC<SupportViewProps> = () => {
       }
       
     } catch (error) {
-      console.error('Failed to submit feedback to API:', error);
+      uiLogger.error('Failed to submit feedback to API:', error);
       alert(t('support.alerts.submit_error'));
     } finally {
       setIsSubmitting(false);

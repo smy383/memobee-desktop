@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api } from '../../shared/services/apiService';
 import './AnalyticsView.css';
@@ -107,7 +108,7 @@ const AnalyticsView: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('📊 Desktop Analytics - 분석 데이터 로드 시작');
+      uiLogger.debug('📊 Desktop Analytics - 분석 데이터 로드 시작');
 
       // 병렬로 데이터 로드 (실제 백엔드 엔드포인트 사용)
       const [
@@ -124,12 +125,12 @@ const AnalyticsView: React.FC = () => {
         api.analytics.getActivity(),
       ]);
 
-      console.log('✅ Desktop Analytics - 데이터 로드 성공');
-      console.log('🏷️ Category Response:', categoryResponse);
-      console.log('🏷️ Tag Response:', tagResponse);
-      console.log('😊 Sentiment Response:', sentimentResponse);
-      console.log('📈 Trends Response:', trendsResponse);
-      console.log('⏰ Activity Response:', activityResponse);
+      uiLogger.debug('✅ Desktop Analytics - 데이터 로드 성공');
+      uiLogger.debug('🏷️ Category Response:', categoryResponse);
+      uiLogger.debug('🏷️ Tag Response:', tagResponse);
+      uiLogger.debug('😊 Sentiment Response:', sentimentResponse);
+      uiLogger.debug('📈 Trends Response:', trendsResponse);
+      uiLogger.debug('⏰ Activity Response:', activityResponse);
 
       // 응답 데이터 구조 확인 및 파싱
       const categories = categoryResponse.data?.categories || (categoryResponse as any).categories || categoryResponse || [];
@@ -163,7 +164,7 @@ const AnalyticsView: React.FC = () => {
 
       setError(null);
     } catch (err: any) {
-      console.error('❌ Desktop Analytics - 분석 데이터 로드 실패:', err);
+      uiLogger.error('❌ Desktop Analytics - 분석 데이터 로드 실패:', err);
       setError(t('analytics.error'));
     } finally {
       setLoading(false);

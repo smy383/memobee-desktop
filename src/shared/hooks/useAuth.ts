@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { User } from 'firebase/auth';
 import { authService } from '../services/authService';
+import { authLogger } from '../utils/logger';
 
 interface AuthState {
   user: User | null;
@@ -31,11 +32,11 @@ export const useAuth = (): AuthState & AuthActions => {
   });
 
   useEffect(() => {
-    console.log('🔄 useAuth 훅 초기화');
+    authLogger.debug('🔄 useAuth 훅 초기화');
 
     // 타임아웃으로 무한 로딩 방지 (5초 후 강제로 로딩 완료)
     const timeoutId = setTimeout(() => {
-      console.log('⏰ Firebase 초기화 타임아웃 - 강제로 로딩 완료');
+      authLogger.debug('⏰ Firebase 초기화 타임아웃 - 강제로 로딩 완료');
       setAuthState(prev => ({
         ...prev,
         loading: false,
@@ -44,7 +45,7 @@ export const useAuth = (): AuthState & AuthActions => {
 
     // Firebase 인증 상태 리스너 등록
     const unsubscribe = authService.onAuthStateChanged((user) => {
-      console.log('👤 Auth state changed in hook:', user ? 'authenticated' : 'null');
+      authLogger.debug('👤 Auth state changed in hook:', user ? 'authenticated' : 'null');
       
       // 타임아웃 해제
       clearTimeout(timeoutId);
@@ -58,7 +59,7 @@ export const useAuth = (): AuthState & AuthActions => {
 
     // 컴포넌트 언마운트 시 리스너 해제
     return () => {
-      console.log('🔄 useAuth 훅 정리');
+      authLogger.debug('🔄 useAuth 훅 정리');
       clearTimeout(timeoutId);
       unsubscribe();
     };
@@ -72,7 +73,7 @@ export const useAuth = (): AuthState & AuthActions => {
       const user = await authService.signInWithGoogle();
       
       if (user) {
-        console.log('✅ useAuth: Google 로그인 성공');
+        authLogger.debug('✅ useAuth: Google 로그인 성공');
         return true;
       } else {
         setAuthState(prev => ({ 
@@ -83,7 +84,7 @@ export const useAuth = (): AuthState & AuthActions => {
         return false;
       }
     } catch (error: any) {
-      console.error('❌ useAuth: Google 로그인 실패:', error);
+      authLogger.error('❌ useAuth: Google 로그인 실패:', error);
       setAuthState(prev => ({ 
         ...prev, 
         loading: false, 
@@ -101,7 +102,7 @@ export const useAuth = (): AuthState & AuthActions => {
       const user = await authService.signInWithApple();
       
       if (user) {
-        console.log('✅ useAuth: Apple 로그인 성공');
+        authLogger.debug('✅ useAuth: Apple 로그인 성공');
         return true;
       } else {
         setAuthState(prev => ({ 
@@ -112,7 +113,7 @@ export const useAuth = (): AuthState & AuthActions => {
         return false;
       }
     } catch (error: any) {
-      console.error('❌ useAuth: Apple 로그인 실패:', error);
+      authLogger.error('❌ useAuth: Apple 로그인 실패:', error);
       setAuthState(prev => ({ 
         ...prev, 
         loading: false, 
@@ -130,7 +131,7 @@ export const useAuth = (): AuthState & AuthActions => {
       const user = await authService.signIn(email, password);
       
       if (user) {
-        console.log('✅ useAuth: 이메일 로그인 성공');
+        authLogger.debug('✅ useAuth: 이메일 로그인 성공');
         return true;
       } else {
         setAuthState(prev => ({ 
@@ -141,7 +142,7 @@ export const useAuth = (): AuthState & AuthActions => {
         return false;
       }
     } catch (error: any) {
-      console.error('❌ useAuth: 이메일 로그인 실패:', error);
+      authLogger.error('❌ useAuth: 이메일 로그인 실패:', error);
       setAuthState(prev => ({ 
         ...prev, 
         loading: false, 
@@ -159,7 +160,7 @@ export const useAuth = (): AuthState & AuthActions => {
       const user = await authService.signUp(email, password);
       
       if (user) {
-        console.log('✅ useAuth: 회원가입 성공');
+        authLogger.debug('✅ useAuth: 회원가입 성공');
         return true;
       } else {
         setAuthState(prev => ({ 
@@ -170,7 +171,7 @@ export const useAuth = (): AuthState & AuthActions => {
         return false;
       }
     } catch (error: any) {
-      console.error('❌ useAuth: 회원가입 실패:', error);
+      authLogger.error('❌ useAuth: 회원가입 실패:', error);
       setAuthState(prev => ({ 
         ...prev, 
         loading: false, 
@@ -187,9 +188,9 @@ export const useAuth = (): AuthState & AuthActions => {
       
       await authService.signOut();
       
-      console.log('✅ useAuth: 로그아웃 성공');
+      authLogger.debug('✅ useAuth: 로그아웃 성공');
     } catch (error: any) {
-      console.error('❌ useAuth: 로그아웃 실패:', error);
+      authLogger.error('❌ useAuth: 로그아웃 실패:', error);
       setAuthState(prev => ({ 
         ...prev, 
         loading: false, 
@@ -205,10 +206,10 @@ export const useAuth = (): AuthState & AuthActions => {
       
       await authService.resetPassword(email);
       
-      console.log('✅ useAuth: 비밀번호 재설정 이메일 발송 성공');
+      authLogger.debug('✅ useAuth: 비밀번호 재설정 이메일 발송 성공');
       return true;
     } catch (error: any) {
-      console.error('❌ useAuth: 비밀번호 재설정 실패:', error);
+      authLogger.error('❌ useAuth: 비밀번호 재설정 실패:', error);
       setAuthState(prev => ({ 
         ...prev, 
         error: error.message || '비밀번호 재설정에 실패했습니다.' 

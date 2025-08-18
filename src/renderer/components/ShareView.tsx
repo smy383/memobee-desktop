@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { uiLogger } from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import { api, SharedNote } from '../../shared/services/apiService';
 import './ShareView.css';
@@ -20,14 +21,14 @@ const ShareView: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      console.log('🔗 ShareView - 공유된 메모 목록 로드 시작');
+      uiLogger.debug('🔗 ShareView - 공유된 메모 목록 로드 시작');
       
       const data = await api.shared.getSharedNotes();
-      console.log('✅ ShareView - 데이터 로드 성공:', data.length);
+      uiLogger.debug('✅ ShareView - 데이터 로드 성공:', data.length);
       
       setSharedNotes(data);
     } catch (err: any) {
-      console.error('❌ ShareView - 데이터 로드 실패:', err);
+      uiLogger.error('❌ ShareView - 데이터 로드 실패:', err);
       setError(t('errors.load_failed'));
     } finally {
       setLoading(false);
@@ -40,7 +41,7 @@ const ShareView: React.FC = () => {
     }
 
     try {
-      console.log('🔗 ShareView - 공유 해제 시도:', noteId);
+      uiLogger.debug('🔗 ShareView - 공유 해제 시도:', noteId);
       await api.shared.toggleShare(noteId, false);
       
       // 목록에서 해당 메모 제거
@@ -53,7 +54,7 @@ const ShareView: React.FC = () => {
       
       alert(t('share.unshare_success'));
     } catch (err: any) {
-      console.error('❌ ShareView - 공유 해제 실패:', err);
+      uiLogger.error('❌ ShareView - 공유 해제 실패:', err);
       alert(t('share.unshare_error'));
     }
   };
@@ -64,7 +65,7 @@ const ShareView: React.FC = () => {
       await navigator.clipboard.writeText(shareUrl);
       alert(t('share.copy_success'));
     } catch (err) {
-      console.error('❌ ShareView - 링크 복사 실패:', err);
+      uiLogger.error('❌ ShareView - 링크 복사 실패:', err);
       alert(t('share.copy_error'));
     }
   };
@@ -86,7 +87,7 @@ const ShareView: React.FC = () => {
         alert(t('share.share_fallback'));
       }
     } catch (err) {
-      console.error('❌ ShareView - 공유 실패:', err);
+      uiLogger.error('❌ ShareView - 공유 실패:', err);
     }
   };
 
