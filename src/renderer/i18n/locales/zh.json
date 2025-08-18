@@ -12,11 +12,11 @@
     "logging_in": "登录中...",
     "logout": "登出",
     "features": {
-      "firebase_auth": "Firebase Google身份验证",
+      "firebase_auth": "Google账户集成",
       "auto_login": "自动登录支持",
       "secure_oauth": "安全OAuth 2.0"
     },
-    "checking_auth": "正在检查Firebase身份验证..."
+    "checking_auth": "正在启动MemoBee..."
   },
   "menu": {
     "memo": "备忘录",

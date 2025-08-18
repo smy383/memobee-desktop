@@ -12,11 +12,11 @@
     "logging_in": "로그인 중...",
     "logout": "로그아웃",
     "features": {
-      "firebase_auth": "Firebase Google 인증",
+      "firebase_auth": "Google 계정 연동",
       "auto_login": "자동 로그인 지원",
       "secure_oauth": "안전한 OAuth 2.0"
     },
-    "checking_auth": "Firebase 인증 확인 중..."
+    "checking_auth": "MemoBee 시작하는 중..."
   },
   "menu": {
     "memo": "메모",

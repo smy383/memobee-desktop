@@ -12,11 +12,11 @@
     "logging_in": "ログイン中...",
     "logout": "ログアウト",
     "features": {
-      "firebase_auth": "Firebase Google認証",
+      "firebase_auth": "Googleアカウント連携",
       "auto_login": "自動ログインサポート",
       "secure_oauth": "安全なOAuth 2.0"
     },
-    "checking_auth": "Firebase認証を確認中..."
+    "checking_auth": "MemoBeeを起動中..."
   },
   "menu": {
     "memo": "メモ",

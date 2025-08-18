@@ -12,11 +12,11 @@
     "logging_in": "Logging in...",
     "logout": "Logout",
     "features": {
-      "firebase_auth": "Firebase Google Authentication",
+      "firebase_auth": "Google Account Integration",
       "auto_login": "Auto-login Support",
       "secure_oauth": "Secure OAuth 2.0"
     },
-    "checking_auth": "Checking Firebase authentication..."
+    "checking_auth": "Starting MemoBee..."
   },
   "menu": {
     "memo": "Memo",
